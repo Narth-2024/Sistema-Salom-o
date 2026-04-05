@@ -9,6 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@clerk/clerk-js": "^6.4.0",
+    "@supabase/supabase-js": "^2.101.1",
     "@tailwindcss/vite": "^4.2.1",
     "axios": "^1.13.5"
   },

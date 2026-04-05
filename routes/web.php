@@ -5,32 +5,25 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 
-//rotas pública
-
+// Rotas públicas
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
-//autenticação
-
 Route::get('/auth', [AuthController::class, 'show'])->name('auth.show');
-
 Route::get('/login', [AuthController::class, 'showLogin']);
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/auth/verify-session', [AuthController::class, 'verifySession'])->name('auth.verify-session');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::post('/register', [AuthController::class, 'register'])->name('register');
+// Tela placeholder "funciona"
+Route::get('/work', function () {
+    return view('work');
+})->middleware('auth')->name('work');
 
-
-//rotas protegidas
-
+// Rotas protegidas
 Route::middleware(['auth'])->group(function () {
 
-Route::resource('categories', CategoryController::class);
-Route::resource('transactions', TransactionController::class);
-
-Route::get('/its-working', function () {
-    return view('its-working');
-});
-
+    Route::resource('categories', CategoryController::class);
+    Route::resource('transactions', TransactionController::class);
 
 });

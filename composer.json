@@ -10,7 +10,9 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "laravellegends/pt-br-validator": "^12.2"
+        "laravellegends/pt-br-validator": "^12.2",
+        "socialiteproviders/clerk": "^5.1",
+        "supabase/supabase-php": "^0.0.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
