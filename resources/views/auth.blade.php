@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1️⃣ Cadastro</title>
+<title>1✕ Cadastro</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
     input[type=number]::-webkit-inner-spin-button,
@@ -117,19 +117,12 @@
     </div>
 </div>
 
-<script
-    data-clerk-publishable-key="{{ config('services.clerk.publishable_key', '') }}"
-    src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
-    type="text/javascript"
-    crossorigin="anonymous"
-    defer></script>
-
-<script>
+<script type="text/javascript">
 window.CSRF_TOKEN = "{{ csrf_token() }}";
 window.VERIFY_SESSION_URL = "{{ route('auth.verify-session') }}";
 window.WORK_URL = "{{ route('work') }}";
 let isLogin = false;
-let clerkLoaded = false;
+let clerk = null;
 
 function toggleAuthMode() {
     const title = document.getElementById('formTitle');
@@ -137,12 +130,11 @@ function toggleAuthMode() {
     const toggleLink = document.getElementById('toggleLink');
     const registerFields = document.getElementById('registerFields');
     const submitButton = document.getElementById('submitButton');
-    const form = document.getElementById('authForm');
     isLogin = !isLogin;
     if (isLogin) {
         title.classList.add("opacity-0","-translate-y-2");
         setTimeout(() => {
-            document.title = "1️⃣ Login";
+            document.title = "1✕ Login";
             title.innerText = "Entrar na conta";
             text.innerText = "Não possui conta?";
             toggleLink.innerText = "Criar conta";
@@ -154,7 +146,7 @@ function toggleAuthMode() {
     } else {
         title.classList.add("opacity-0","-translate-y-2");
         setTimeout(() => {
-            document.title = "1️⃣ Cadastro";
+            document.title = "1✕ Cadastro";
             title.innerText = "Criar conta";
             text.innerText = "Já possui cadastro?";
             toggleLink.innerText = "Entrar";
@@ -180,14 +172,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-function waitForClerk() {
-    return new Promise((resolve, reject) => {
-        if (window.Clerk) { resolve(); return; }
-        const timer = setTimeout(() => reject(new Error('Clerk SDK não carregou. Verifique as credenciais.')), 10000);
-        const check = setInterval(() => { if (window.Clerk) { clearInterval(check); clearTimeout(timer); resolve(); } }, 50);
-    });
-}
-
 async function sendSessionToBackend(sessionId, cpf) {
     const body = new URLSearchParams();
     body.append('_token', window.CSRF_TOKEN);
@@ -209,15 +193,38 @@ async function sendSessionToBackend(sessionId, cpf) {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
+    // Load Clerk JS dynamically
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@6/dist/clerk.browser.js';
+    script.crossOrigin = 'anonymous';
+    document.head.appendChild(script);
+
+    // Wait for Clerk to load
     try {
-        await waitForClerk();
+        await new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error('Clerk SDK não carregou.')), 15000);
+            const check = setInterval(() => {
+                if (window.Clerk) { clearInterval(check); clearTimeout(timer); resolve(); }
+            }, 50);
+        });
+
+        clerk = window.Clerk;
+
+        // Initialize Clerk with publishable key
+        await clerk.load({
+            publishableKey: @js(config('services.clerk.publishable_key', ''))
+        });
+
+        console.log('Clerk initialized, session:', clerk.session);
     } catch (err) {
-        console.error(err);
+        console.error('Clerk init error:', err);
         return;
     }
 
+    // Handle submit
     const submitBtn = document.getElementById('submitButton');
     submitBtn.addEventListener('click', async function () {
+        console.log('[auth] Submit clicked, isLogin:', isLogin);
         submitBtn.disabled = true;
         submitBtn.innerHTML = 'Processando...';
 
@@ -233,33 +240,61 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         try {
             if (isLogin) {
-                const signIn = await Clerk.client.signIn.create({
-                    strategy: 'email_password',
+                // LOGIN
+                console.log('[auth] Attempting sign in...');
+                const signIn = await clerk.client.signIn.create({
                     identifier: email,
                     password: password,
                 });
+                console.log('[auth] signIn status:', signIn.status);
 
-                if (signIn.status === 'complete' && Clerk.session?.id) {
-                    await sendSessionToBackend(Clerk.session.id, null);
+                if (signIn.status === 'complete') {
+                    await clerk.setActive({ session: signIn.createdSessionId || clerk.client.activeSessions[0]?.id });
+                    console.log('[auth] session after login:', clerk.session?.id);
                 }
+
+                const activeSession = clerk.session ?? clerk.client.activeSessions[0];
+                if (!activeSession?.id) {
+                    throw new Error('Nenhuma sessão ativa encontrada. Verifique as configurações do Clerk (Sessions).');
+                }
+
+                console.log('[auth] Active session:', activeSession.id);
+                await sendSessionToBackend(activeSession.id, null);
             } else {
+                // SIGN UP
                 const cpf = document.getElementById('cpf')?.value?.replace(/\D/g, '') || '';
                 const firstName = document.getElementById('firstName')?.value || '';
+                console.log('[auth] Attempting sign up...', { email, cpf, firstName });
 
-                const signUp = await Clerk.client.signUp.create({
+                const signUp = await clerk.client.signUp.create({
                     emailAddress: email,
                     password: password,
                     firstName: firstName,
                     unsafeMetadata: cpf ? { cpf } : {},
                 });
 
-                if (signUp.status === 'complete' && Clerk.session?.id) {
-                    await sendSessionToBackend(Clerk.session.id, cpf);
+                console.log('[auth] signUp status:', signUp.status);
+                console.log('[auth] activeSessions:', clerk.client.activeSessions);
+
+                if (signUp.status === 'complete') {
+                    await clerk.setActive({ session: signUp.createdSessionId || clerk.client.activeSessions[0]?.id });
+                    console.log('[auth] session after signup:', clerk.session?.id);
+
+                    const activeSession = clerk.session ?? clerk.client.activeSessions[0];
+                    if (!activeSession?.id) {
+                        throw new Error('Nenhuma sessão ativa encontrada.');
+                    }
+                    console.log('[auth] Sending session to backend:', activeSession.id);
+                    await sendSessionToBackend(activeSession.id, cpf);
+                } else {
+                    console.warn('[auth] Sign up incomplete, status:', signUp.status, signUp);
+                    throw new Error('Cadastro incompleto. Verifique seu email para continuar.');
                 }
             }
         } catch (err) {
             console.error('Clerk auth error:', err);
-            alert(err.message || 'Erro ao autenticar.');
+            console.error('Clerk auth detail:', JSON.stringify(err.errors || err.response?.data || err, null, 2));
+            alert(err.errors?.[0]?.longMessage || err.message || 'Erro ao autenticar.');
             submitBtn.disabled = false;
             submitBtn.innerHTML = isLogin ? 'Logar' : 'Criar conta';
         }
