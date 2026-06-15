@@ -2,28 +2,32 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ClerkCallbackController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
 
 // Rotas públicas
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::get('/auth', [AuthController::class, 'show'])->name('auth.show');
-Route::get('/login', [AuthController::class, 'showLogin']);
-Route::post('/auth/verify-session', [AuthController::class, 'verifySession'])->name('auth.verify-session');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+// Clerk callback (após login/registro via Clerk)
+Route::get('/auth/clerk-callback', [ClerkCallbackController::class, 'show'])
+    ->middleware('guest')
+    ->name('clerk.callback');
 
-// Tela placeholder "funciona"
-Route::get('/work', function () {
-    return view('work');
-})->middleware('auth')->name('work');
+Route::post('/auth/clerk-exchange', [ClerkCallbackController::class, 'exchange'])
+    ->middleware('guest');
+
+// Rotas de autenticação (renderizam Inertia com Clerk)
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Rotas protegidas
 Route::middleware(['auth'])->group(function () {
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', CategoryController::class);
     Route::resource('transactions', TransactionController::class);
-
 });

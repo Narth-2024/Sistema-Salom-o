@@ -31,17 +31,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'cpf_api' => [
-        'access_token' => env('CPF_API_TOKEN'),
-    ],
-    'clerk' => [
-        'publishable_key' => env('CLERK_PUBLISHABLE_KEY'),
-        'secret_key' => env('CLERK_SECRET_KEY'),
-        'frontend_api_url' => env('CLERK_FRONTEND_API_URL'),
-    ],
     'supabase' => [
         'url' => env('SUPABASE_URL'),
         'key' => env('SUPABASE_SERVICE_KEY'),
+    ],
+
+    'clerk' => [
+        'secret_key' => env('CLERK_SECRET_KEY'),
+        'publishable_key' => env('CLERK_PUBLISHABLE_KEY'),
+        'frontend_api_url' => env('CLERK_FRONTEND_API_URL'),
+        'webhook_secret' => env('CLERK_WEBHOOK_SECRET'),
     ],
 
 ];
