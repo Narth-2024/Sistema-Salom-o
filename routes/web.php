@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ClerkCallbackController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AnalyticsController;
 
 // Rotas públicas
 Route::get('/', function () {
@@ -28,6 +29,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rotas protegidas
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics');
     Route::resource('categories', CategoryController::class);
     Route::resource('transactions', TransactionController::class);
 });

@@ -1,1 +1,49 @@
 @import "tailwindcss";
+
+@theme {
+  /* Brand greens - unified palette */
+  --color-green-50: #f0f7da;
+  --color-green-100: #d9ead3;
+  --color-green-200: #c9df8a;
+  --color-green-300: #93c47d;
+  --color-green-400: #77ab59;
+  --color-green-500: #6aa84f;
+  --color-green-600: #36802d;
+  --color-green-700: #2a623d;
+  --color-green-800: #234d20;
+  --color-green-900: #1a472a;
+
+  /* Neutrals */
+  --color-gray-50: #f8faf9;
+  --color-gray-100: #f0f2f1;
+  --color-gray-200: #e0e3e1;
+  --color-gray-300: #c5c9c6;
+  --color-gray-400: #aaaaaa;
+  --color-gray-500: #8a8a8a;
+  --color-gray-600: #5d5d5d;
+  --color-gray-700: #3d3d3d;
+  --color-gray-800: #1f1f1f;
+  --color-gray-900: #000000;
+
+  /* Colors for income/danger/info */
+  --color-success: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-danger: #dc2626;
+  --color-danger-light: #fef2f2;
+  --color-info: #2563eb;
+  --color-info-light: #eff6ff;
+
+  /* Surfaces */
+  --color-surface: #ffffff;
+  --color-background: #f0f7da;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-gray-800 font-sans antialiased;
+  }
+}

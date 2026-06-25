@@ -1,5 +1,13 @@
 import { Link } from '@inertiajs/react'
 import { useAuth } from '@clerk/clerk-react'
+import { LayoutDashboard, Tags, ArrowLeftRight, LogOut, Coins, BarChart3, Home } from 'lucide-react'
+
+const navLinks = [
+    { href: '/dashboard', label: 'Início', icon: Home },
+    { href: '/analytics', label: 'Dashboard', icon: BarChart3 },
+    { href: '/categories', label: 'Categorias', icon: Tags },
+    { href: '/transactions', label: 'Transações', icon: ArrowLeftRight },
+]
 
 export default function AppLayout({ children }) {
     const { signOut } = useAuth()
@@ -17,28 +25,35 @@ export default function AppLayout({ children }) {
     }
 
     return (
-        <div className="bg-[#F4FDFF] min-h-screen">
-            <nav className="bg-[#3a5433] shadow-lg sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link href="/dashboard" className="text-white font-bold text-lg tracking-wide hover:opacity-90 transition">
-                        Sistema Salomão
-                    </Link>
-                    <div className="flex items-center gap-6">
-                        <Link href="/dashboard" className="text-white/80 hover:text-white text-sm font-medium transition">
-                            Dashboard
+        <div className="min-h-screen bg-background">
+            <nav className="bg-green-800 shadow-lg sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className="flex items-center justify-between h-16">
+                        <Link href="/dashboard" className="flex items-center gap-2 text-white font-bold text-lg tracking-wide hover:opacity-90 transition">
+                            <Coins className="w-6 h-6" />
+                            Salomão
                         </Link>
-                        <Link href="/categories" className="text-white/80 hover:text-white text-sm font-medium transition">
-                            Categorias
-                        </Link>
-                        <Link href="/transactions" className="text-white/80 hover:text-white text-sm font-medium transition">
-                            Transações
-                        </Link>
-                        <button
-                            onClick={handleLogout}
-                            className="bg-white/10 text-white/80 px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition cursor-pointer"
-                        >
-                            Sair
-                        </button>
+
+                        <div className="hidden md:flex items-center gap-1">
+                            {navLinks.map(link => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="flex items-center gap-2 text-white/80 hover:text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-white/10 transition"
+                                >
+                                    <link.icon className="w-4 h-4" />
+                                    {link.label}
+                                </Link>
+                            ))}
+                            <div className="w-px h-6 bg-white/20 mx-2" />
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center gap-2 text-white/80 hover:text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-white/10 transition cursor-pointer"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                Sair
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>

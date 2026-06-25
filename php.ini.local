@@ -1,0 +1,3 @@
+extension_dir=/home/nathan/tcc-salomao/app-salomao/php-ext
+extension=pdo_sqlite.so
+extension=sqlite3.so
