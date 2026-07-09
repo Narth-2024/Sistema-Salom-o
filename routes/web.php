@@ -4,9 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ClerkCallbackController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\ProfileController;
 
 // Rotas públicas
 Route::get('/', function () {
@@ -31,5 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics');
     Route::resource('categories', CategoryController::class);
+    Route::resource('tags', TagController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('transactions', TransactionController::class);
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
 });

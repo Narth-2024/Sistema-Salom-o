@@ -17,11 +17,11 @@ class AnalyticsController extends Controller
         });
 
         $monthlyData = $user->transactions()
-            ->selectRaw("strftime('%Y-%m', transaction_date) as month")
+            ->selectRaw("TO_CHAR(transaction_date, 'YYYY-MM') as month")
             ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income")
             ->selectRaw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense")
             ->where('transaction_date', '>=', now()->subMonths(12)->startOfMonth())
-            ->groupBy(DB::raw("strftime('%Y-%m', transaction_date)"))
+            ->groupBy(DB::raw("TO_CHAR(transaction_date, 'YYYY-MM')"))
             ->orderBy('month')
             ->get()
             ->keyBy('month');

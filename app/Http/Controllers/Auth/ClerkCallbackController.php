@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ClerkCallbackController extends Controller
@@ -51,7 +52,7 @@ class ClerkCallbackController extends Controller
                 [
                     'name' => $data['name'],
                     'email' => $data['email'],
-                    'password' => '',
+                    'password' => bcrypt(Str::random(40)),
                 ]
             );
 

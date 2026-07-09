@@ -9,7 +9,7 @@ export default function Login() {
                 <nav className="fixed top-0 w-full z-50 bg-[#3a5433] shadow-xl">
                     <div className="max-w-6xl mx-auto flex items-center justify-between px-8 py-5">
                         <Link href="/" className="text-lg font-bold text-white tracking-wide">Sistema Salomão</Link>
-                        <Link href="/" className="text-white/80 px-4 py-2 text-sm hover:text-white transition">Voltar</Link>
+                        <button onClick={() => window.history.back()} className="text-white/80 px-4 py-2 text-sm hover:text-white transition cursor-pointer">Voltar</button>
                     </div>
                 </nav>
 

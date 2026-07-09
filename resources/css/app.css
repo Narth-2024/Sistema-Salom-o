@@ -1,41 +1,65 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand greens - unified palette */
-  --color-green-50: #f0f7da;
-  --color-green-100: #d9ead3;
-  --color-green-200: #c9df8a;
-  --color-green-300: #93c47d;
-  --color-green-400: #77ab59;
-  --color-green-500: #6aa84f;
-  --color-green-600: #36802d;
-  --color-green-700: #2a623d;
-  --color-green-800: #234d20;
-  --color-green-900: #1a472a;
+  /* Neutrals - warmer dark scale */
+  --color-gray-50: #18181b;
+  --color-gray-100: #1f1f23;
+  --color-gray-200: #27272a;
+  --color-gray-300: #3f3f46;
+  --color-gray-400: #52525b;
+  --color-gray-500: #8b8b95;
+  --color-gray-600: #b4b4bd;
+  --color-gray-700: #d4d4db;
+  --color-gray-800: #e8e8ed;
+  --color-gray-900: #fafafa;
 
-  /* Neutrals */
-  --color-gray-50: #f8faf9;
-  --color-gray-100: #f0f2f1;
-  --color-gray-200: #e0e3e1;
-  --color-gray-300: #c5c9c6;
-  --color-gray-400: #aaaaaa;
-  --color-gray-500: #8a8a8a;
-  --color-gray-600: #5d5d5d;
-  --color-gray-700: #3d3d3d;
-  --color-gray-800: #1f1f1f;
-  --color-gray-900: #000000;
+  /* Green accent */
+  --color-green-50: #052e16;
+  --color-green-100: #0a3d1f;
+  --color-green-200: #0f5a2e;
+  --color-green-300: #167a3e;
+  --color-green-400: #22a854;
+  --color-green-500: #2dd46b;
+  --color-green-600: #3ecf8e;
+  --color-green-700: #66e2a8;
+  --color-green-800: #9ff0c8;
+  --color-green-900: #d1fae5;
 
-  /* Colors for income/danger/info */
-  --color-success: #16a34a;
-  --color-success-light: #dcfce7;
-  --color-danger: #dc2626;
-  --color-danger-light: #fef2f2;
-  --color-info: #2563eb;
-  --color-info-light: #eff6ff;
+  /* Indigo accent (secondary) */
+  --color-indigo-50: #1e1035;
+  --color-indigo-100: #2e1e55;
+  --color-indigo-200: #3e2a7a;
+  --color-indigo-300: #4f36a0;
+  --color-indigo-400: #6d4fc9;
+  --color-indigo-500: #8b6fe0;
+  --color-indigo-600: #a58ff0;
+  --color-indigo-700: #c4b5f9;
+  --color-indigo-800: #ddd6fe;
+  --color-indigo-900: #ede9fe;
+
+  /* Volcanic orange (warm accent) */
+  --color-amber-50: #281a06;
+  --color-amber-100: #3d2b0e;
+  --color-amber-200: #5c4014;
+  --color-amber-300: #7c561a;
+  --color-amber-400: #a37222;
+  --color-amber-500: #d4942b;
+  --color-amber-600: #e8b34b;
+  --color-amber-700: #f2cc78;
+  --color-amber-800: #fae3ae;
+  --color-amber-900: #fef3c7;
+
+  /* Semantic colors */
+  --color-success: #2dd46b;
+  --color-danger: #f87171;
+  --color-info: #60a5fa;
+  --color-warning: #fbbf24;
 
   /* Surfaces */
-  --color-surface: #ffffff;
-  --color-background: #f0f7da;
+  --color-surface: #1c1c20;
+  --color-surface-elevated: #24242a;
+  --color-surface-accent: #2a2a32;
+  --color-background: #121214;
 }
 
 @layer base {
@@ -46,4 +70,111 @@
   body {
     @apply bg-background text-gray-800 font-sans antialiased;
   }
+
+  select, input, textarea {
+    @apply bg-surface-elevated border-gray-200 text-gray-800;
+  }
+
+  ::selection {
+    background-color: rgba(62, 207, 142, 0.3);
+    color: #fafafa;
+  }
+}
+
+@utility animate-in {
+  animation: animate-in 0.2s ease-out;
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-fade-in {
+  animation: animate-fade-in 0.3s ease-out;
+}
+
+@keyframes animate-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== LIGHT THEME ===== */
+.light {
+  --color-gray-50: #fafaf9;
+  --color-gray-100: #f5f3ee;
+  --color-gray-200: #e6e3db;
+  --color-gray-300: #d6d3cc;
+  --color-gray-400: #a8a59e;
+  --color-gray-500: #73716b;
+  --color-gray-600: #57554f;
+  --color-gray-700: #3d3b37;
+  --color-gray-800: #262522;
+  --color-gray-900: #171715;
+
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #2dd46b;
+  --color-green-600: #3ecf8e;
+  --color-green-700: #059669;
+  --color-green-800: #047857;
+  --color-green-900: #065f46;
+
+  --color-indigo-50: #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-300: #a5b4fc;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-indigo-800: #3730a3;
+  --color-indigo-900: #312e81;
+
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+  --color-amber-800: #92400e;
+  --color-amber-900: #78350f;
+
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+  --color-warning: #f59e0b;
+
+  --color-surface: #ffffff;
+  --color-surface-elevated: #fafaf9;
+  --color-surface-accent: #f5f3ee;
+  --color-background: #f8f6f3;
+}
+
+.light select,
+.light input,
+.light textarea {
+  @apply bg-surface-elevated border-gray-200 text-gray-800;
+}
+
+.light ::selection {
+  background-color: rgba(62, 207, 142, 0.3);
+  color: #171715;
 }

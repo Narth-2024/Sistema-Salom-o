@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Category;
+use App\Models\Tag;
 use App\Models\Transaction;
 
 class User extends Authenticatable
@@ -18,8 +19,8 @@ class User extends Authenticatable
         'clerk_id',
         'name',
         'email',
-        'password',
         'cpf',
+        'avatar_url',
     ];
 
     protected $hidden = [
@@ -29,7 +30,6 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
 
     public function categories()
@@ -40,5 +40,10 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
     }
 }

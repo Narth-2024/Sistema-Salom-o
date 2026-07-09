@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Svix\Webhook;
 
 class ClerkWebhookController extends Controller
@@ -51,7 +52,7 @@ class ClerkWebhookController extends Controller
             'clerk_id' => $clerkId,
             'name' => $name,
             'email' => $email,
-            'password' => '',
+            'password' => bcrypt(Str::random(40)),
         ]);
 
         Log::info('Clerk webhook: user created', ['clerk_id' => $clerkId, 'email' => $email]);

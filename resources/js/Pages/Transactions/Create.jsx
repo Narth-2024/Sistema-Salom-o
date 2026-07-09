@@ -1,16 +1,16 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Select } from '@/Components'
-import { ArrowLeft, Plus, AlertCircle } from 'lucide-react'
-import { AlertTriangle } from 'lucide-react'
+import { Card, Button, Input, Select, TagPicker } from '@/Components'
+import { ArrowLeft, Plus, AlertTriangle } from 'lucide-react'
 
-export default function TransactionsCreate({ categories }) {
+export default function TransactionsCreate({ categories, tags }) {
     const { data, setData, post, processing, errors } = useForm({
         type: 'expense',
         category_id: '',
         amount: '',
         transaction_date: new Date().toISOString().slice(0, 10),
         description: '',
+        tag_ids: [],
     })
 
     function handleSubmit(e) {
@@ -26,27 +26,27 @@ export default function TransactionsCreate({ categories }) {
 
             <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8">
-                    <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
+                    <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium mb-4 transition">
                         <ArrowLeft className="w-4 h-4" />
                         Voltar para transações
                     </Link>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Nova Transação</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Nova Transação</h1>
                     <p className="text-gray-500 mt-1">Registre uma nova entrada ou saída financeira.</p>
                 </div>
 
                 {Object.keys(errors).length > 0 && (
-                    <div className="bg-danger-light border border-danger/20 rounded-xl p-4 mb-6 flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-danger shrink-0 mt-0.5" />
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 flex items-start gap-3">
+                        <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                         <div>
-                            <p className="text-sm font-semibold text-danger mb-1">Verifique os campos abaixo</p>
-                            <ul className="list-disc list-inside text-sm text-danger space-y-0.5">
+                            <p className="text-sm font-semibold text-red-400 mb-1">Verifique os campos abaixo</p>
+                            <ul className="list-disc list-inside text-sm text-red-400 space-y-0.5">
                                 {Object.values(errors).map((error, i) => <li key={i}>{error}</li>)}
                             </ul>
                         </div>
                     </div>
                 )}
 
-                <Card>
+                <Card accent>
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
                             <Select
@@ -101,12 +101,20 @@ export default function TransactionsCreate({ categories }) {
                             />
                         </div>
 
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-gray-100">
+                        <div className="mb-6">
+                            <TagPicker
+                                tags={tags}
+                                selectedIds={data.tag_ids}
+                                onChange={ids => setData('tag_ids', ids)}
+                            />
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-gray-200/60">
                             <Button type="submit" variant="primary" disabled={processing} className="flex-1 sm:flex-none">
                                 <Plus className="w-4 h-4" />
                                 Registrar transação
                             </Button>
-                            <Link href="/transactions" className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm text-gray-600 hover:text-gray-800 font-medium rounded-xl hover:bg-gray-50 transition">
+                            <Link href="/transactions" className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm text-gray-500 hover:text-gray-300 font-medium rounded-xl hover:bg-gray-100 transition">
                                 <ArrowLeft className="w-4 h-4" />
                                 Cancelar
                             </Link>

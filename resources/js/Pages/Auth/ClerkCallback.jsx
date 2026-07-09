@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Head } from '@inertiajs/react'
-import { useAuth, useUser } from '@clerk/clerk-react'
+import { useUser } from '@clerk/clerk-react'
 
 export default function ClerkCallback() {
-    const { getToken } = useAuth()
     const { user, isLoaded } = useUser()
     const [error, setError] = useState(null)
 
@@ -16,7 +15,6 @@ export default function ClerkCallback() {
 
         async function exchange() {
             try {
-                const token = await getToken()
                 const res = await fetch('/auth/clerk-exchange', {
                     method: 'POST',
                     headers: {
@@ -27,14 +25,8 @@ export default function ClerkCallback() {
                         clerk_id: user.id,
                         email: user.primaryEmailAddress?.emailAddress,
                         name: user.fullName,
-                        token,
                     }),
                 })
-
-                if (res.redirected) {
-                    window.location.href = res.url
-                    return
-                }
 
                 if (!res.ok) {
                     const text = await res.text()

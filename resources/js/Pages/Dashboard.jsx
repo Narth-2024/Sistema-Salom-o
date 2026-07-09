@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { Head, Link, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Badge, Button } from '@/Components'
+import { Card, Button } from '@/Components'
 import {
     TrendingUp, TrendingDown, Wallet, Plus, ArrowRight,
-    ArrowUpRight, ArrowDownRight, CalendarDays, Sparkles
+    ArrowUpRight, ArrowDownRight, CalendarDays, Sparkles,
+    ArrowLeftRight, Tags as TagsIcon
 } from 'lucide-react'
 
 function formatBR(value) {
@@ -33,7 +34,7 @@ function formatDate() {
     return `${getWeekday()}, ${hoje.toLocaleDateString('pt-BR')}`
 }
 
-export default function Dashboard({ income, expense, balance, recentTransactions, expensesByCategory }) {
+export default function Dashboard({ income, expense, balance, recentTransactions, expensesByCategory, incomeTrend, expenseTrend }) {
     const { auth } = usePage().props
     const chartRef = useRef(null)
     const chartInstance = useRef(null)
@@ -53,7 +54,9 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                     labels: expensesByCategory.map(c => c.name),
                     datasets: [{
                         data: expensesByCategory.map(c => c.total),
-                        backgroundColor: ['#36802d', '#77ab59', '#93c47d', '#234d20', '#c9df8a', '#2a623d', '#6aa84f'],
+                        backgroundColor: expensesByCategory.map((c, i) =>
+                            c.color || ['#3ecf8e', '#6366f1', '#f59e0b', '#ec4899', '#14b8a6', '#f97316', '#8b5cf6'][i % 7]
+                        ),
                         borderWidth: 0,
                     }]
                 },
@@ -67,7 +70,8 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                 padding: 16,
                                 usePointStyle: true,
                                 pointStyleWidth: 8,
-                                font: { family: 'Inter', size: 11 }
+                                color: '#b4b4bd',
+                                font: { family: 'Inter, system-ui, sans-serif', size: 11 }
                             }
                         }
                     }
@@ -81,55 +85,81 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
     const initial = auth.user.name?.charAt(0).toUpperCase() || '?'
 
+    function trendInfo(label, value) {
+        if (value === 0) return null
+        const isUp = value > 0
+        const isIncome = label === 'Receitas'
+        const isGood = isIncome ? isUp : !isUp
+        return {
+            display: `${isUp ? '+' : ''}${value}%`,
+            icon: isUp ? ArrowUpRight : ArrowDownRight,
+            color: isGood ? 'text-green-600' : 'text-red-400',
+            bg: isGood ? 'bg-green-600/10' : 'bg-red-500/10',
+        }
+    }
+
     const summaryCards = [
         {
             label: 'Receitas', value: income,
-            color: 'text-success', bg: 'bg-success-light',
-            icon: TrendingUp, iconBg: 'bg-success/10',
-            trend: '+12%', trendColor: 'text-success'
+            color: 'text-green-600', bg: 'bg-gradient-to-br from-green-600/5 to-green-600/[0.02]',
+            icon: TrendingUp, iconBg: 'bg-green-600/10 text-green-600',
+            accent: 'bg-green-600',
+            trend: trendInfo('Receitas', incomeTrend),
         },
         {
             label: 'Despesas', value: expense,
-            color: 'text-danger', bg: 'bg-danger-light',
-            icon: TrendingDown, iconBg: 'bg-danger/10',
-            trend: '+8%', trendColor: 'text-danger'
+            color: 'text-red-400', bg: 'bg-gradient-to-br from-red-500/5 to-red-500/[0.02]',
+            icon: TrendingDown, iconBg: 'bg-red-500/10 text-red-400',
+            accent: 'bg-red-400',
+            trend: trendInfo('Despesas', expenseTrend),
         },
         {
             label: 'Saldo', value: balance,
-            color: balance >= 0 ? 'text-success' : 'text-danger',
-            bg: balance >= 0 ? 'bg-success-light' : 'bg-danger-light',
-            icon: Wallet, iconBg: balance >= 0 ? 'bg-success/10' : 'bg-danger/10',
-            trend: null, trendColor: ''
+            color: balance >= 0 ? 'text-green-600' : 'text-red-400',
+            bg: balance >= 0 ? 'bg-gradient-to-br from-green-600/5 to-green-600/[0.02]' : 'bg-gradient-to-br from-red-500/5 to-red-500/[0.02]',
+            icon: Wallet, iconBg: balance >= 0 ? 'bg-green-600/10 text-green-600' : 'bg-red-500/10 text-red-400',
+            accent: balance >= 0 ? 'bg-green-600' : 'bg-red-400',
+            trend: null,
         },
+    ]
+
+    const quickActions = [
+        { href: '/transactions/create', label: 'Nova transação', desc: 'Registre entrada ou saída', icon: Plus, color: 'text-green-600', bg: 'bg-green-600/10', gradient: 'from-green-600/5 to-transparent' },
+        { href: '/categories', label: 'Categorias', desc: 'Gerencie categorias', icon: TagsIcon, color: 'text-indigo-400', bg: 'bg-indigo-500/10', gradient: 'from-indigo-500/5 to-transparent' },
+        { href: '/transactions', label: 'Transações', desc: 'Veja todas', icon: ArrowLeftRight, color: 'text-amber-400', bg: 'bg-amber-500/10', gradient: 'from-amber-500/5 to-transparent' },
     ]
 
     return (
         <AppLayout>
-            <Head title="Dashboard" />
+            <Head title="Início" />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Welcome banner */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-green-800 via-green-700 to-green-600 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8">
-                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
-                    <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-green-500/10 rounded-full blur-3xl" />
+                <div className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-950/90 to-emerald-950/80 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-800/20 shadow-lg shadow-emerald-950/30">
+                    <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-600/5 rounded-full blur-3xl" />
+                    <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl" />
                     <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/15 rounded-xl flex items-center justify-center text-white text-xl sm:text-2xl font-bold backdrop-blur-sm">
-                                {initial}
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg shadow-green-600/20 ring-1 ring-green-400/20 shrink-0">
+                                {auth.user.avatar_url ? (
+                                    <img src={'/storage/' + auth.user.avatar_url} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                    initial
+                                )}
                             </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                                     {getGreeting()}, {auth.user.name?.split(' ')[0]}
-                                    <Sparkles className="w-5 h-5 text-yellow-300" />
+                                    <Sparkles className="w-5 h-5 text-amber-400" />
                                 </h1>
-                                <p className="text-white/60 text-sm flex items-center gap-1.5 mt-0.5">
+                                <p className="text-emerald-200/70 text-sm flex items-center gap-1.5 mt-0.5">
                                     <CalendarDays className="w-3.5 h-3.5" />
                                     {formatDate()}
                                 </p>
                             </div>
                         </div>
                         <Link href="/transactions/create">
-                            <Button variant="primary" size="sm" className="shadow-lg w-full sm:w-auto">
+                            <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-lg shadow-green-600/15">
                                 <Plus className="w-4 h-4" />
                                 Nova transação
                             </Button>
@@ -139,37 +169,39 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
                 {/* Summary cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                    {summaryCards.map(card => (
-                        <Card key={card.label} className="relative overflow-hidden group hover:shadow-md transition-shadow">
-                            <div className="flex items-start justify-between mb-1">
-                                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{card.label}</span>
-                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.iconBg}`}>
-                                    <card.icon className={`w-4.5 h-4.5 ${card.color}`} />
+                    {summaryCards.map((card, idx) => (
+                        <div key={card.label} className={`${card.bg} rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden animate-fade-in`} style={{ animationDelay: `${idx * 80}ms` }}>
+                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                            <div className="flex items-start justify-between mb-3">
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{card.label}</span>
+                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.iconBg} ring-1 ring-white/5`}>
+                                    <card.icon className="w-[18px] h-[18px]" />
                                 </div>
                             </div>
-                            <p className={`text-2xl sm:text-3xl font-extrabold ${card.color} mb-1`}>
+                            <p className={`text-2xl sm:text-3xl font-extrabold ${card.color} mb-1 tabular-nums`}>
                                 {formatBR(card.value)}
                             </p>
                             {card.trend && (
-                                <p className={`text-xs font-medium flex items-center gap-0.5 ${card.trendColor}`}>
-                                    {card.label === 'Receitas' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                                    {card.trend} em relação ao mês passado
-                                </p>
+                                <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${card.trend.bg} ${card.trend.color} mt-1 ring-1 ring-white/5`}>
+                                    <card.trend.icon className="w-3 h-3" />
+                                    {card.trend.display} vs mês passado
+                                </div>
                             )}
                             {!card.trend && card.label === 'Saldo' && (
-                                <p className="text-xs text-gray-400">Saldo atual consolidado</p>
+                                <p className="text-xs text-gray-500 mt-1">Saldo atual consolidado</p>
                             )}
-                        </Card>
+                        </div>
                     ))}
                 </div>
 
                 {/* Chart + Recent transactions */}
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
-                    <Card className="lg:col-span-2">
-                        <h2 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <Card className="lg:col-span-2" accent>
+                        <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                            <Wallet className="w-4 h-4 text-green-600" />
                             Despesas por categoria
                             {expensesByCategory.length > 0 && (
-                                <span className="text-xs text-gray-400 font-normal">({expensesByCategory.length})</span>
+                                <span className="text-xs text-gray-500 font-normal">({expensesByCategory.length})</span>
                             )}
                         </h2>
                         <div className="flex justify-center">
@@ -178,52 +210,55 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                             </div>
                         </div>
                         {expensesByCategory.length === 0 && (
-                            <p className="text-gray-400 text-sm text-center py-6">
+                            <p className="text-gray-500 text-sm text-center py-6">
                                 Nenhuma despesa registrada ainda.
                             </p>
                         )}
                     </Card>
 
-                    <Card className="lg:col-span-3">
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-base font-semibold text-gray-900">Últimas transações</h2>
-                            <Link href="/transactions" className="text-sm text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1 transition">
+                    <Card className="lg:col-span-3" padding={false} accent>
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/60">
+                            <h2 className="text-base font-semibold text-gray-800 flex items-center gap-2">
+                                <ArrowLeftRight className="w-4 h-4 text-green-600" />
+                                Últimas transações
+                            </h2>
+                            <Link href="/transactions" className="text-sm text-green-600 hover:text-green-500 font-medium inline-flex items-center gap-1 transition-colors">
                                 Ver todas
                                 <ArrowRight className="w-3.5 h-3.5" />
                             </Link>
                         </div>
 
                         {recentTransactions.length === 0 ? (
-                            <div className="text-center py-8">
-                                <Wallet className="w-10 h-10 mx-auto text-gray-300 mb-3" />
-                                <p className="text-gray-400 text-sm">Nenhuma transação registrada.</p>
+                            <div className="text-center py-12">
+                                <Wallet className="w-10 h-10 mx-auto text-gray-500 mb-3" />
+                                <p className="text-gray-500 text-sm">Nenhuma transação registrada.</p>
                                 <Link href="/transactions/create" className="text-green-600 text-sm font-medium hover:underline mt-1 inline-block">
-                                    Registrar primeira transação
+                                    Nova transação
                                 </Link>
                             </div>
                         ) : (
-                            <div className="space-y-1">
+                            <div className="divide-y divide-gray-200/60">
                                 {recentTransactions.map(t => (
-                                    <div key={t.id} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-gray-50 transition -mx-3">
+                                    <div key={t.id} className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-100/40 transition-colors">
                                         <div className="flex items-center gap-3 min-w-0">
-                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-success-light' : 'bg-danger-light'}`}>
+                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-green-600/10 text-green-600' : 'bg-red-500/10 text-red-400'} ring-1 ring-white/5`}>
                                                 {t.type === 'income' ? (
-                                                    <TrendingUp className="w-4 h-4 text-success" />
+                                                    <TrendingUp className="w-4 h-4" />
                                                 ) : (
-                                                    <TrendingDown className="w-4 h-4 text-danger" />
+                                                    <TrendingDown className="w-4 h-4" />
                                                 )}
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="text-sm font-medium text-gray-800 truncate">{t.category?.name || 'Sem categoria'}</p>
-                                                <p className="text-xs text-gray-400 truncate">{t.description || parseDate(t.transaction_date)}</p>
+                                                <p className="text-sm font-medium text-gray-700 truncate">{t.category?.name || 'Sem categoria'}</p>
+                                                <p className="text-xs text-gray-500 truncate">{t.description || parseDate(t.transaction_date)}</p>
                                             </div>
                                         </div>
                                         <div className="text-right shrink-0 ml-3">
-                                            <p className={`text-sm font-semibold ${t.type === 'income' ? 'text-success' : 'text-danger'}`}>
+                                            <p className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-green-600' : 'text-red-400'}`}>
                                                 {t.type === 'income' ? '+' : '-'}{formatBR(t.amount)}
                                             </p>
                                             {t.description && (
-                                                <p className="text-xs text-gray-400">{parseDate(t.transaction_date)}</p>
+                                                <p className="text-xs text-gray-500">{parseDate(t.transaction_date)}</p>
                                             )}
                                         </div>
                                     </div>
@@ -235,38 +270,21 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
                 {/* Quick actions */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <Link href="/transactions/create"
-                        className="flex items-center gap-3 bg-white border border-green-200 rounded-xl p-4 hover:shadow-md hover:border-green-400 transition group">
-                        <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition">
-                            <Plus className="w-5 h-5 text-green-700" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-sm font-semibold text-gray-800">Nova transação</p>
-                            <p className="text-xs text-gray-400">Registre entrada ou saída</p>
-                        </div>
-                    </Link>
-                    <Link href="/categories"
-                        className="flex items-center gap-3 bg-white border border-green-200 rounded-xl p-4 hover:shadow-md hover:border-green-400 transition group">
-                        <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition">
-                            <TrendingUp className="w-5 h-5 text-green-700" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-sm font-semibold text-gray-800">Categorias</p>
-                            <p className="text-xs text-gray-400">Gerencie suas categorias</p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-gray-300 ml-auto group-hover:text-green-600 transition" />
-                    </Link>
-                    <Link href="/transactions"
-                        className="flex items-center gap-3 bg-white border border-green-200 rounded-xl p-4 hover:shadow-md hover:border-green-400 transition group">
-                        <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition">
-                            <Wallet className="w-5 h-5 text-green-700" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-sm font-semibold text-gray-800">Extrato</p>
-                            <p className="text-xs text-gray-400">Veja todas as transações</p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-gray-300 ml-auto group-hover:text-green-600 transition" />
-                    </Link>
+                    {quickActions.map((action, idx) => (
+                        <Link key={action.href} href={action.href}
+                            className={`group flex items-center gap-3 bg-gradient-to-r ${action.gradient} bg-surface border border-gray-200/60 rounded-2xl p-4 hover:border-gray-300/60 hover:-translate-y-0.5 transition-all duration-200 animate-fade-in relative overflow-hidden`}
+                            style={{ animationDelay: `${idx * 100}ms` }}
+                        >
+                            <div className={`w-10 h-10 rounded-xl ${action.bg} flex items-center justify-center group-hover:scale-110 transition-transform duration-200 ring-1 ring-white/5`}>
+                                <action.icon className={`w-5 h-5 ${action.color}`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-semibold text-gray-700">{action.label}</p>
+                                <p className="text-xs text-gray-500">{action.desc}</p>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-green-600 transition-colors shrink-0" />
+                        </Link>
+                    ))}
                 </div>
             </main>
         </AppLayout>

@@ -13,70 +13,61 @@ class CategoryController extends Controller
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        $categories = $user->categories()->get();
+        $categories = $user->categories()->paginate(18);
 
         return Inertia::render('Categories/Index', compact('categories'));
     }
 
     public function create()
     {
-        /** @var \App\Models\User $user */
-        $user = auth()->user();
-
-        $categories = $user->categories()->get();
-
-        return Inertia::render('Categories/Create', compact('categories'));
+        return Inertia::render('Categories/Create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:income,expense'
+            'type' => 'required|in:income,expense',
+            'color' => 'nullable|string|max:7',
         ]);
 
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        $user->categories()->create($request->only('name', 'type'));
+        $user->categories()->create($request->only('name', 'type', 'color'));
 
         return redirect()->route('categories.index');
     }
 
     public function show(Category $category)
     {
-        if ($category->user_id !== auth()->id()) {
-            abort(403, 'Não autorizado');
-        }
+        $this->authorize('view', $category);
 
         $transactions = $category->transactions()
             ->orderBy('transaction_date', 'desc')
-            ->get();
+            ->paginate(10);
 
         return Inertia::render('Categories/Show', compact('category', 'transactions'));
     }
 
     public function edit(Category $category)
     {
-        if ($category->user_id !== auth()->id()) {
-            abort(403, 'Não autorizado');
-        }
+        $this->authorize('update', $category);
 
         return Inertia::render('Categories/Edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
     {
-        if ($category->user_id !== auth()->id()) {
-            abort(403, 'Não autorizado');
-        }
+        $this->authorize('update', $category);
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:income,expense'
+            'type' => 'required|in:income,expense',
+            'color' => 'nullable|string|max:7',
         ]);
 
-        $category->update($request->only('name', 'type'));
+        $category->update($request->only('name', 'type', 'color'));
 
         return redirect()->route('categories.index')
             ->with('success', 'Categoria atualizada com sucesso.');
@@ -84,9 +75,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        if ($category->user_id !== auth()->id()) {
-            abort(403, 'Não autorizado');
-        }
+        $this->authorize('delete', $category);
 
         $category->delete();
 
