@@ -8,7 +8,7 @@
     <script>
         (function() {
             var theme = localStorage.getItem('salomao-theme');
-            if (theme === 'light') document.documentElement.classList.add('light');
+            if (theme !== 'dark') document.documentElement.classList.add('light');
         })();
     </script>
     <style>

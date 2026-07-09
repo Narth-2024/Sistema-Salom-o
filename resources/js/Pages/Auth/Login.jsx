@@ -1,19 +1,30 @@
 import { Head, Link } from '@inertiajs/react'
-import { SignIn } from '@clerk/clerk-react'
+import { SignIn } from '@clerk/react'
+import { ArrowLeft } from 'lucide-react'
 
 export default function Login() {
     return (
         <>
             <Head title="Entrar" />
-            <div className="min-h-screen bg-[#F4FDFF] flex items-center justify-center">
-                <nav className="fixed top-0 w-full z-50 bg-[#3a5433] shadow-xl">
-                    <div className="max-w-6xl mx-auto flex items-center justify-between px-8 py-5">
-                        <Link href="/" className="text-lg font-bold text-white tracking-wide">Sistema Salomão</Link>
-                        <button onClick={() => window.history.back()} className="text-white/80 px-4 py-2 text-sm hover:text-white transition cursor-pointer">Voltar</button>
+            <div className="min-h-screen bg-background flex items-center justify-center p-4">
+                <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-gray-200">
+                    <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-8 h-16">
+                        <Link href="/" className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-green-500 rounded-lg flex items-center justify-center shadow-sm">
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                                </svg>
+                            </div>
+                            <span className="text-lg font-bold text-gray-800 tracking-tight">Salomão</span>
+                        </Link>
+                        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition font-medium">
+                            <ArrowLeft className="w-4 h-4" />
+                            Voltar
+                        </Link>
                     </div>
                 </nav>
 
-                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+                <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-200/50">
                     <SignIn
                         afterSignInUrl="/auth/clerk-callback"
                         signUpUrl="/register"
@@ -21,15 +32,18 @@ export default function Login() {
                             elements: {
                                 rootBox: 'w-full',
                                 card: 'shadow-none p-0',
-                                headerTitle: 'text-2xl font-bold text-neutral-900',
-                                headerSubtitle: 'text-sm text-neutral-500',
-                                formButtonPrimary: 'bg-[#567c4b] hover:bg-[#3a5433] text-sm',
-                                formFieldLabel: 'text-sm text-neutral-600',
-                                formFieldInput: 'w-full px-4 py-3 rounded-lg border border-neutral-200 bg-[#F4FDFF] focus:ring-2 focus:ring-[#567c4b] focus:border-[#567c4b]',
-                                footerActionLink: 'text-[#567c4b] hover:text-[#3a5433]',
-                                dividerLine: 'bg-neutral-200',
-                                dividerText: 'text-xs text-neutral-400',
-                                socialButtonsBlockButton: 'border border-neutral-200 hover:bg-neutral-50 text-sm',
+                                headerTitle: 'text-2xl font-bold text-gray-800',
+                                headerSubtitle: 'text-sm text-gray-500',
+                                formButtonPrimary: 'bg-green-600 hover:bg-green-700 text-sm text-white font-semibold',
+                                formFieldLabel: 'text-sm text-gray-600',
+                                formFieldInput: 'w-full px-4 py-3 rounded-xl border border-gray-200 bg-surface-elevated text-gray-800 focus:ring-2 focus:ring-green-600/30 focus:border-green-600 placeholder-gray-400',
+                                footerActionLink: 'text-green-600 hover:text-green-700 font-medium',
+                                dividerLine: 'bg-gray-200',
+                                dividerText: 'text-xs text-gray-400',
+                                socialButtonsBlockButton: 'border border-gray-200 bg-surface hover:bg-surface-accent text-sm text-gray-700 rounded-xl',
+                                socialButtonsBlockButtonText: 'text-gray-700 font-medium',
+                                formHeaderTitle: 'text-2xl font-bold text-gray-800',
+                                formHeaderSubtitle: 'text-sm text-gray-500',
                             },
                         }}
                     />

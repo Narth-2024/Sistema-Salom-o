@@ -5,9 +5,9 @@ const STORAGE_KEY = 'salomao-theme'
 export default function useTheme() {
     const [theme, setThemeState] = useState(() => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem(STORAGE_KEY) || 'dark'
+            return localStorage.getItem(STORAGE_KEY) || 'light'
         }
-        return 'dark'
+        return 'light'
     })
 
     useEffect(() => {

@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react'
-import { useAuth } from '@clerk/clerk-react'
+import { useAuth } from '@clerk/react'
 import { Tags, ArrowLeftRight, LogOut, Coins, BarChart3, LayoutDashboard, Hash, Settings as SettingsIcon } from 'lucide-react'
 import { FlashMessage } from '@/Components'
 

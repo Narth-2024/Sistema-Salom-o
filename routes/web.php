@@ -10,10 +10,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProfileController;
+use Inertia\Inertia;
 
 // Rotas públicas
 Route::get('/', function () {
-    return view('home');
+    return Inertia::render('Home');
 })->name('home');
 
 Route::get('/health', function () {
