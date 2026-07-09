@@ -26,7 +26,7 @@ export default function Login() {
 
                 <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-200/50">
                     <SignIn
-                        afterSignInUrl="/auth/clerk-callback"
+                        fallbackRedirectUrl="/auth/clerk-callback"
                         signUpUrl="/register"
                         appearance={{
                             elements: {

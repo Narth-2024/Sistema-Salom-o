@@ -26,7 +26,7 @@ export default function Register() {
 
                 <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-200/50">
                     <SignUp
-                        afterSignUpUrl="/auth/clerk-callback"
+                        fallbackRedirectUrl="/auth/clerk-callback"
                         signInUrl="/login"
                         appearance={{
                             elements: {
