@@ -142,7 +142,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg shadow-green-600/20 ring-1 ring-green-400/20 shrink-0">
                                 {auth.user.avatar_url ? (
-                                    <img src={'/storage/' + auth.user.avatar_url} alt="" className="w-full h-full object-cover" />
+                                    <img src={auth.user.avatar_url} alt="" className="w-full h-full object-cover" />
                                 ) : (
                                     initial
                                 )}

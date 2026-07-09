@@ -35,7 +35,7 @@ export default function Settings() {
         reader.readAsDataURL(file)
     }
 
-    const avatarSrc = preview || (user.avatar_url ? '/storage/' + user.avatar_url : null)
+    const avatarSrc = preview || user.avatar_url || null
 
     return (
         <AppLayout>

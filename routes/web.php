@@ -16,6 +16,10 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok', 'timestamp' => now()->toIso8601String()]);
+});
+
 // Clerk callback (após login/registro via Clerk)
 Route::get('/auth/clerk-callback', [ClerkCallbackController::class, 'show'])
     ->middleware('guest')

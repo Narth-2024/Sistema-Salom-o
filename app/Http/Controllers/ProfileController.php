@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SupabaseStorageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function update(Request $request)
+    public function update(Request $request, SupabaseStorageService $storage)
     {
         $user = $request->user();
 
@@ -20,14 +20,28 @@ class ProfileController extends Controller
 
         if ($request->hasFile('avatar')) {
             if ($user->avatar_url) {
-                Storage::disk('public')->delete($user->avatar_url);
+                $oldPath = $this->extractPath($user->avatar_url);
+                if ($oldPath) {
+                    $storage->delete($oldPath);
+                }
             }
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar_url = $path;
+
+            $file = $request->file('avatar');
+            $path = 'avatars/' . $user->id . '_' . time() . '.' . $file->extension();
+            $user->avatar_url = $storage->upload($file, $path);
         }
 
         $user->save();
 
         return back()->with('success', 'Perfil atualizado com sucesso.');
+    }
+
+    private function extractPath(string $url): ?string
+    {
+        $baseUrl = rtrim(config('services.supabase.url'), '/') . '/storage/v1/object/public/avatars/';
+        if (str_starts_with($url, $baseUrl)) {
+            return substr($url, strlen($baseUrl));
+        }
+        return null;
     }
 }
