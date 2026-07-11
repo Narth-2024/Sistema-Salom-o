@@ -5,28 +5,58 @@ services:
     buildCommand: |
       composer install --no-dev --optimize-autoloader &&
       npm ci && npm run build &&
-      php artisan storage:link &&
       php artisan config:cache &&
       php artisan route:cache &&
-      php artisan view:cache &&
-      php artisan migrate --force
-    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+      php artisan view:cache
+    startCommand: php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
-      - key: LOG_LEVEL
-        value: error
       - key: APP_KEY
         sync: false
+      - key: APP_URL
+        value: https://seu-app.onrender.com
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
       - key: DB_CONNECTION
-        value: pgsql
+        value: supabase
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
       - key: SESSION_DRIVER
-        value: file
+        value: database
       - key: CACHE_DRIVER
-        value: file
-      - key: FILESYSTEM_DISK
-        value: local
+        value: database
       - key: QUEUE_CONNECTION
         value: sync
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: CLERK_PUBLISHABLE_KEY
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_FRONTEND_API_URL
+        sync: false
+      - key: CLERK_WEBHOOK_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: VITE_CLERK_PUBLISHABLE_KEY
+        sync: false
+      - key: INERTIA_SSR_ENABLED
+        value: false
+      - key: INERTIA_USE_SCRIPT_ELEMENT_FOR_INITIAL_PAGE
+        value: true

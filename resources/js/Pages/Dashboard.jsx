@@ -62,6 +62,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     cutout: '72%',
                     plugins: {
                         legend: {
@@ -205,7 +206,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                             )}
                         </h2>
                         <div className="flex justify-center">
-                            <div className="w-full max-w-[220px]">
+                            <div className="w-full max-w-[220px]" style={{ height: 220 }}>
                                 <canvas ref={chartRef} />
                             </div>
                         </div>

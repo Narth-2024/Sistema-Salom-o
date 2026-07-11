@@ -49,7 +49,7 @@ class TestClerkWebhook extends Command
             'svix-timestamp' => $svixTimestamp,
             'svix-signature' => $signature,
         ])->withBody($payloadJson, 'application/json')
-          ->post('http://localhost:8001/api/clerk/webhook');
+          ->post(env('APP_URL', 'http://localhost:8001') . '/api/clerk/webhook');
 
         $this->info("Event: {$event}");
         $this->info("Clerk ID: {$clerkId}");
