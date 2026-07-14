@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
+use App\Services\AnalyticsService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AnalyticsController extends Controller
 {
-    public function index()
+    public function index(AnalyticsService $analytics): Response
     {
         $user = auth()->user();
 
@@ -28,9 +31,10 @@ class AnalyticsController extends Controller
 
         $barChart = $months->map(function ($month) use ($monthlyData) {
             $data = $monthlyData->get($month);
+
             return [
                 'month' => $month,
-                'label' => \Carbon\Carbon::createFromFormat('Y-m', $month)->translatedFormat('M'),
+                'label' => Carbon::createFromFormat('Y-m', $month)->translatedFormat('M'),
                 'income' => (float) ($data->income ?? 0),
                 'expense' => (float) ($data->expense ?? 0),
             ];
@@ -40,6 +44,7 @@ class AnalyticsController extends Controller
         $runningBalance = 0;
         $timeline = $barChart->map(function ($item) use (&$runningBalance) {
             $runningBalance += $item['income'] - $item['expense'];
+
             return [
                 'month' => $item['month'],
                 'label' => $item['label'],
@@ -47,65 +52,37 @@ class AnalyticsController extends Controller
             ];
         });
 
-        // Current vs previous month comparison
-        $currentMonth = now()->startOfMonth();
-        $previousMonth = now()->subMonth()->startOfMonth();
-
-        $current = $user->transactions()
-            ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income")
-            ->selectRaw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense")
-            ->where('transaction_date', '>=', $currentMonth)
-            ->first();
-
-        $previous = $user->transactions()
-            ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income")
-            ->selectRaw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense")
-            ->where('transaction_date', '>=', $previousMonth)
-            ->where('transaction_date', '<', $currentMonth)
-            ->first();
-
-        $currentIncome = (float) ($current->income ?? 0);
-        $currentExpense = (float) ($current->expense ?? 0);
-        $previousIncome = (float) ($previous->income ?? 0);
-        $previousExpense = (float) ($previous->expense ?? 0);
+        // Comparison and totals via shared service
+        $comparison = $analytics->getMonthlyComparison($user);
+        $totals = $analytics->getTotals($user);
 
         $comparative = [
             'income' => [
-                'current' => $currentIncome,
-                'previous' => $previousIncome,
-                'change' => $previousIncome > 0 ? round((($currentIncome - $previousIncome) / $previousIncome) * 100, 1) : 0,
+                'current' => $comparison['current']['income'],
+                'previous' => $comparison['previous']['income'],
+                'change' => $comparison['incomeTrend'],
             ],
             'expense' => [
-                'current' => $currentExpense,
-                'previous' => $previousExpense,
-                'change' => $previousExpense > 0 ? round((($currentExpense - $previousExpense) / $previousExpense) * 100, 1) : 0,
+                'current' => $comparison['current']['expense'],
+                'previous' => $comparison['previous']['expense'],
+                'change' => $comparison['expenseTrend'],
             ],
             'balance' => [
-                'current' => $currentIncome - $currentExpense,
-                'previous' => $previousIncome - $previousExpense,
-                'change' => ($previousIncome - $previousExpense) != 0
-                    ? round((($currentIncome - $currentExpense) - ($previousIncome - $previousExpense)) / abs($previousIncome - $previousExpense) * 100, 1)
+                'current' => $comparison['current']['balance'],
+                'previous' => $comparison['previous']['balance'],
+                'change' => $comparison['previous']['balance'] != 0
+                    ? round((($comparison['current']['balance'] - $comparison['previous']['balance']) / abs($comparison['previous']['balance'])) * 100, 1)
                     : 0,
             ],
         ];
-
-        // Totals
-        $totals = $user->transactions()
-            ->selectRaw('type, SUM(amount) as total')
-            ->groupBy('type')
-            ->pluck('total', 'type');
-
-        $incomeTotal = $totals['income'] ?? 0;
-        $expenseTotal = $totals['expense'] ?? 0;
-        $balanceTotal = $incomeTotal - $expenseTotal;
 
         return Inertia::render('Analytics', [
             'barChart' => $barChart,
             'timeline' => $timeline,
             'comparative' => $comparative,
-            'incomeTotal' => $incomeTotal,
-            'expenseTotal' => $expenseTotal,
-            'balanceTotal' => $balanceTotal,
+            'incomeTotal' => $totals['income'],
+            'expenseTotal' => $totals['expense'],
+            'balanceTotal' => $totals['balance'],
         ]);
     }
 }

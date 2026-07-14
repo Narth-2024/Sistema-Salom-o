@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TransactionController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -32,7 +34,7 @@ class TransactionController extends Controller
 
         // Filtro por tag
         if ($tagId = $request->query('tag_id')) {
-            $query->whereHas('tags', fn($q) => $q->where('tags.id', $tagId));
+            $query->whereHas('tags', fn ($q) => $q->where('tags.id', $tagId));
         }
 
         // Filtro por período
@@ -68,7 +70,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -76,10 +78,13 @@ class TransactionController extends Controller
         $categories = $user->categories()->get();
         $tags = $user->tags()->get();
 
-        return Inertia::render('Transactions/Create', compact('categories', 'tags'));
+        return Inertia::render('Transactions/Create', [
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -95,7 +100,7 @@ class TransactionController extends Controller
         $user = auth()->user();
 
         $transaction = $user->transactions()->create(
-            $request->only(['category_id', 'type', 'amount', 'description', 'transaction_date'])
+            $request->safe()->only(['category_id', 'type', 'amount', 'description', 'transaction_date'])
         );
 
         if ($tagIds = $request->input('tag_ids')) {
@@ -105,16 +110,18 @@ class TransactionController extends Controller
         return redirect()->route('transactions.index');
     }
 
-    public function show(Transaction $transaction)
+    public function show(Transaction $transaction): Response
     {
         $this->authorize('view', $transaction);
 
         $transaction->load('category', 'tags');
 
-        return Inertia::render('Transactions/Show', compact('transaction'));
+        return Inertia::render('Transactions/Show', [
+            'transaction' => $transaction,
+        ]);
     }
 
-    public function edit(Transaction $transaction)
+    public function edit(Transaction $transaction): Response
     {
         $this->authorize('update', $transaction);
 
@@ -126,10 +133,14 @@ class TransactionController extends Controller
 
         $transaction->load('tags');
 
-        return Inertia::render('Transactions/Edit', compact('transaction', 'categories', 'tags'));
+        return Inertia::render('Transactions/Edit', [
+            'transaction' => $transaction,
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
     }
 
-    public function update(Request $request, Transaction $transaction)
+    public function update(Request $request, Transaction $transaction): RedirectResponse
     {
         $this->authorize('update', $transaction);
 
@@ -144,7 +155,7 @@ class TransactionController extends Controller
         ]);
 
         $transaction->update(
-            $request->only(['category_id', 'type', 'amount', 'description', 'transaction_date'])
+            $request->safe()->only(['category_id', 'type', 'amount', 'description', 'transaction_date'])
         );
 
         $transaction->tags()->sync($request->input('tag_ids', []));
@@ -153,7 +164,7 @@ class TransactionController extends Controller
             ->with('success', 'Transação atualizada com sucesso.');
     }
 
-    public function destroy(Transaction $transaction)
+    public function destroy(Transaction $transaction): RedirectResponse
     {
         $this->authorize('delete', $transaction);
 

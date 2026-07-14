@@ -2,8 +2,8 @@
 
 namespace App\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use App\Services\SupabaseService;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static mixed from(string $table)

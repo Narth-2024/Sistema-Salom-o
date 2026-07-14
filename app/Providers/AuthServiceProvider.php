@@ -8,7 +8,6 @@ use App\Models\Transaction;
 use App\Policies\CategoryPolicy;
 use App\Policies\TagPolicy;
 use App\Policies\TransactionPolicy;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

@@ -3,22 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TagController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        $tags = $user->tags()->withCount('transactions')->get();
+        $tags = $user->tags()->withCount('transactions')->paginate(20);
 
-        return Inertia::render('Tags/Index', compact('tags'));
+        return Inertia::render('Tags/Index', [
+            'tags' => $tags,
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:50',
@@ -34,7 +38,7 @@ class TagController extends Controller
             ->with('success', 'Tag criada com sucesso.');
     }
 
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, Tag $tag): RedirectResponse
     {
         $this->authorize('update', $tag);
 
@@ -49,7 +53,7 @@ class TagController extends Controller
             ->with('success', 'Tag atualizada com sucesso.');
     }
 
-    public function destroy(Tag $tag)
+    public function destroy(Tag $tag): RedirectResponse
     {
         $this->authorize('delete', $tag);
 

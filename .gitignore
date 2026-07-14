@@ -8,6 +8,7 @@
 .env
 .env.backup
 .env.production
+.env.*.local
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -20,3 +21,15 @@ yarn-error.log
 .env.clerk.backup
 server.log
 *.log
+*.sqlite
+*.sqlite3
+*.sage
+Thumbs.db
+.DS_Store
+.Directory
+.cache
+.project
+*.swp
+*.swo
+*~
+.DS_Store?

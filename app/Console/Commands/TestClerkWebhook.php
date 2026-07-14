@@ -19,7 +19,7 @@ class TestClerkWebhook extends Command
     public function handle()
     {
         $event = $this->argument('event');
-        $clerkId = $this->option('clerk-id') ?? 'test_' . uniqid();
+        $clerkId = $this->option('clerk-id') ?? 'test_'.uniqid();
         $email = $this->option('email') ?? 'test@example.com';
         $name = $this->option('name') ?? 'Test User';
 
@@ -38,7 +38,7 @@ class TestClerkWebhook extends Command
 
         $payloadJson = json_encode($payload);
 
-        $svixId = 'msg_' . bin2hex(random_bytes(8));
+        $svixId = 'msg_'.bin2hex(random_bytes(8));
         $svixTimestamp = (string) time();
 
         $wh = new Webhook(config('services.clerk.webhook_secret'));
@@ -49,12 +49,12 @@ class TestClerkWebhook extends Command
             'svix-timestamp' => $svixTimestamp,
             'svix-signature' => $signature,
         ])->withBody($payloadJson, 'application/json')
-          ->post(env('APP_URL', 'http://localhost:8001') . '/api/clerk/webhook');
+            ->post(env('APP_URL', 'http://localhost:8001').'/api/clerk/webhook');
 
         $this->info("Event: {$event}");
         $this->info("Clerk ID: {$clerkId}");
-        $this->info("Status: " . $response->status());
-        $this->info("Response: " . $response->body());
+        $this->info('Status: '.$response->status());
+        $this->info('Response: '.$response->body());
 
         return $response->successful() ? Command::SUCCESS : Command::FAILURE;
     }

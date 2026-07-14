@@ -8,24 +8,34 @@ use Illuminate\Support\Facades\Http;
 class SupabaseStorageService
 {
     private string $bucket;
+
     private string $baseUrl;
+
     private string $serviceKey;
+
+    private static bool $bucketEnsured = false;
 
     public function __construct()
     {
         $this->bucket = 'avatars';
-        $this->baseUrl = rtrim(config('services.supabase.url'), '/') . '/storage/v1';
+        $this->baseUrl = rtrim(config('services.supabase.url'), '/').'/storage/v1';
         $this->serviceKey = config('services.supabase.key');
     }
 
     public function ensureBucket(): void
     {
+        if (static::$bucketEnsured) {
+            return;
+        }
+
         Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->serviceKey,
+            'Authorization' => 'Bearer '.$this->serviceKey,
         ])->post("{$this->baseUrl}/bucket", [
             'id' => $this->bucket,
             'public' => true,
         ]);
+
+        static::$bucketEnsured = true;
     }
 
     public function upload(UploadedFile $file, string $path): string
@@ -35,7 +45,7 @@ class SupabaseStorageService
         $contentType = $file->getMimeType() ?: 'application/octet-stream';
 
         Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->serviceKey,
+            'Authorization' => 'Bearer '.$this->serviceKey,
             'Content-Type' => $contentType,
         ])->withBody(
             file_get_contents($file->getRealPath()),
@@ -50,7 +60,7 @@ class SupabaseStorageService
         $this->ensureBucket();
 
         Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->serviceKey,
+            'Authorization' => 'Bearer '.$this->serviceKey,
         ])->delete("{$this->baseUrl}/object/{$this->bucket}", [
             'prefixes' => [$path],
         ]);

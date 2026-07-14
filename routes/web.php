@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ClerkCallbackController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Rotas públicas

@@ -3,27 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
         $categories = $user->categories()->paginate(18);
 
-        return Inertia::render('Categories/Index', compact('categories'));
+        return Inertia::render('Categories/Index', [
+            'categories' => $categories,
+        ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Categories/Create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -39,7 +43,7 @@ class CategoryController extends Controller
         return redirect()->route('categories.index');
     }
 
-    public function show(Category $category)
+    public function show(Category $category): Response
     {
         $this->authorize('view', $category);
 
@@ -47,17 +51,22 @@ class CategoryController extends Controller
             ->orderBy('transaction_date', 'desc')
             ->paginate(10);
 
-        return Inertia::render('Categories/Show', compact('category', 'transactions'));
+        return Inertia::render('Categories/Show', [
+            'category' => $category,
+            'transactions' => $transactions,
+        ]);
     }
 
-    public function edit(Category $category)
+    public function edit(Category $category): Response
     {
         $this->authorize('update', $category);
 
-        return Inertia::render('Categories/Edit', compact('category'));
+        return Inertia::render('Categories/Edit', [
+            'category' => $category,
+        ]);
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $category): RedirectResponse
     {
         $this->authorize('update', $category);
 
@@ -73,7 +82,7 @@ class CategoryController extends Controller
             ->with('success', 'Categoria atualizada com sucesso.');
     }
 
-    public function destroy(Category $category)
+    public function destroy(Category $category): RedirectResponse
     {
         $this->authorize('delete', $category);
 
