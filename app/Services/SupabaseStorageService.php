@@ -28,12 +28,17 @@ class SupabaseStorageService
             return;
         }
 
-        Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$this->serviceKey,
         ])->post("{$this->baseUrl}/bucket", [
             'id' => $this->bucket,
+            'name' => $this->bucket,
             'public' => true,
         ]);
+
+        if (! $response->successful() && $response->status() !== 409) {
+            throw new \RuntimeException('Supabase Storage bucket: '.($response->body() ?: $response->status()));
+        }
 
         static::$bucketEnsured = true;
     }
@@ -44,13 +49,17 @@ class SupabaseStorageService
 
         $contentType = $file->getMimeType() ?: 'application/octet-stream';
 
-        Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$this->serviceKey,
             'Content-Type' => $contentType,
         ])->withBody(
             file_get_contents($file->getRealPath()),
             $contentType
         )->post("{$this->baseUrl}/object/{$this->bucket}/{$path}");
+
+        if (! $response->successful()) {
+            throw new \RuntimeException('Supabase Storage upload: '.($response->body() ?: $response->status()));
+        }
 
         return "{$this->baseUrl}/object/public/{$this->bucket}/{$path}";
     }

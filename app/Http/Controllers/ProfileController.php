@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\SupabaseStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -19,17 +20,26 @@ class ProfileController extends Controller
 
         $data = ['name' => $validated['name']];
 
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar_url) {
-                $oldPath = $this->extractPath($user->avatar_url);
-                if ($oldPath) {
-                    $storage->delete($oldPath);
+        try {
+            if ($request->hasFile('avatar')) {
+                if ($user->avatar_url) {
+                    $oldPath = $this->extractPath($user->avatar_url);
+                    if ($oldPath) {
+                        $storage->delete($oldPath);
+                    }
                 }
-            }
 
-            $file = $request->file('avatar');
-            $path = 'avatars/'.$user->id.'_'.time().'.'.$file->extension();
-            $data['avatar_url'] = $storage->upload($file, $path);
+                $file = $request->file('avatar');
+                $path = $user->id.'_'.time().'.'.$file->extension();
+                $data['avatar_url'] = $storage->upload($file, $path);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Profile avatar upload failed', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->with('error', 'Não foi possível enviar a imagem. Tente novamente.');
         }
 
         $user->update($data);
