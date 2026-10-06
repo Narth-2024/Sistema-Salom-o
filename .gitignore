@@ -1,4 +1,5 @@
 /.phpunit.cache
+/.vercel
 /node_modules
 /public/build
 /public/hot
@@ -33,3 +34,4 @@ Thumbs.db
 *.swo
 *~
 .DS_Store?
+/.env.local
