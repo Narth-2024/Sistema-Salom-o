@@ -181,7 +181,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                 </div>
 
                 {/* Period filter */}
-                <div className="flex items-center gap-2 mb-6 flex-wrap">
+                <div className="flex items-center gap-2 mb-6 flex-wrap" data-tour="dash-period">
                     <Filter className="w-4 h-4 text-gray-500" />
                     {periodOptions.map(opt => (
                         <button

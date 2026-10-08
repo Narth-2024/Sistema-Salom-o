@@ -111,7 +111,7 @@ export default function TransactionsCreate({ categories, tags }) {
                             />
                         </div>
 
-                        <label className="flex items-center gap-3 p-4 rounded-xl border border-border bg-surface-elevated mb-6 cursor-pointer hover:border-border-strong transition">
+                        <label className="flex items-center gap-3 p-4 rounded-xl border border-border bg-surface-elevated mb-6 cursor-pointer hover:border-border-strong transition" data-tour="tx-recurring">
                             <input
                                 type="checkbox"
                                 checked={data.is_recurring}

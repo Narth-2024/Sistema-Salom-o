@@ -80,7 +80,21 @@ const SEGMENTS = [
                 popover: {
                     title: 'Histórico',
                     description:
-                        'Cada linha é uma transação: data, descrição, categoria, tags, tipo e valor. Passe o mouse para ver os ícones de ver, editar e excluir.',
+                        'Cada linha é uma transação: data, descrição, categoria, tags, tipo e valor. Transações recorrentes exibem o selo "Recorrente" ao lado do tipo. Passe o mouse para ver os ícones de ver, editar e excluir — com confirmação antes de apagar.',
+                    side: 'top',
+                },
+            },
+        ],
+    },
+    {
+        path: '/transactions/create',
+        steps: [
+            {
+                element: '[data-tour="tx-recurring"]',
+                popover: {
+                    title: 'Transação recorrente',
+                    description:
+                        'Marque esta opção para despesas fixas como aluguel, internet ou salário. O sistema replica a transação automaticamente todo mês — você nunca mais esquece de registrar.',
                     side: 'top',
                 },
             },
@@ -217,11 +231,21 @@ const SEGMENTS = [
                 },
             },
             {
+                element: '[data-tour="dash-period"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Filtro de período',
+                    description:
+                        'Escolha o recorte dos dados: este mês, mês passado, últimos 3 meses, ano inteiro ou tudo. O resumo, o gráfico e as transações recentes se ajustam na hora.',
+                    side: 'bottom',
+                },
+            },
+            {
                 element: '[data-tour="dash-banner"]',
                 popover: {
                     title: 'Tour concluído!',
                     description:
-                        'Esse é o seu Dashboard: saudação, resumo do mês e atalhos. O botão ? no canto da tela reassiste este tour a qualquer momento.',
+                        'Esse é o seu Dashboard: saudação, resumo do período e atalhos. O botão ? no canto da tela reassiste este tour a qualquer momento.',
                     side: 'bottom',
                 },
             },
