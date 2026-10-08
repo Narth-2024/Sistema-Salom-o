@@ -137,7 +137,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Welcome banner */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-950/90 to-emerald-950/80 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-800/20 shadow-lg shadow-emerald-950/30">
+                <div className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-950/90 to-emerald-950/80 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-800/20 shadow-lg shadow-emerald-950/30" data-tour="dash-banner">
                     <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-600/5 rounded-full blur-3xl" />
                     <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl" />
                     <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">

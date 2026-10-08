@@ -178,3 +178,100 @@
   background-color: rgba(62, 207, 142, 0.3);
   color: #171715;
 }
+
+/* ===== Tour guiado (driver.js) ===== */
+.driver-popover.salomao-tour {
+  background-color: var(--color-surface);
+  color: var(--color-gray-800);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 16px;
+  min-width: 280px;
+  max-width: 340px;
+  padding: 1.15rem;
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.45);
+}
+
+.driver-popover.salomao-tour .driver-popover-title {
+  color: var(--color-gray-800);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.driver-popover.salomao-tour .driver-popover-description {
+  color: var(--color-gray-500);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.driver-popover.salomao-tour .driver-popover-footer {
+  border-top: 1px solid var(--color-gray-200);
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+}
+
+.driver-popover.salomao-tour .driver-popover-progress-text {
+  color: var(--color-green-600);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.driver-popover.salomao-tour .driver-popover-footer-btn {
+  background-color: transparent;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+  color: var(--color-gray-600);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  transition: all 0.15s ease;
+}
+
+.driver-popover.salomao-tour .driver-popover-footer-btn:hover {
+  background-color: var(--color-gray-100);
+}
+
+.driver-popover.salomao-tour .driver-popover-next-btn,
+.driver-popover.salomao-tour .driver-popover-next-btn:hover {
+  background-color: var(--color-green-600);
+  border-color: var(--color-green-600);
+  color: #ffffff;
+}
+
+.driver-popover.salomao-tour .driver-popover-next-btn:hover {
+  background-color: var(--color-green-500);
+  border-color: var(--color-green-500);
+}
+
+.driver-popover.salomao-tour .driver-popover-close-btn {
+  color: var(--color-gray-500);
+}
+
+.driver-popover.salomao-tour .driver-popover-close-btn:hover {
+  color: var(--color-gray-800);
+}
+
+.driver-popover.salomao-tour .driver-popover-arrow {
+  border-color: transparent;
+}
+
+.driver-popover.salomao-tour .driver-popover-arrow-side-bottom {
+  border-bottom-color: var(--color-surface);
+}
+
+.driver-popover.salomao-tour .driver-popover-arrow-side-top {
+  border-top-color: var(--color-surface);
+}
+
+.driver-popover.salomao-tour .driver-popover-arrow-side-left {
+  border-left-color: var(--color-surface);
+}
+
+.driver-popover.salomao-tour .driver-popover-arrow-side-right {
+  border-right-color: var(--color-surface);
+}
+
+.driver-popover.salomao-tour .driver-popover-arrow-side-center,
+.driver-popover.salomao-tour .driver-popover-arrow-side-over,
+.driver-popover.salomao-tour .driver-popover-arrow-none {
+  display: none;
+}

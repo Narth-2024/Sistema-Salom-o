@@ -86,13 +86,13 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
 
             <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6" data-tour="tx-header">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Transações</h1>
                         <p className="text-gray-500 mt-1">Registre e acompanhe suas movimentações financeiras.</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        <Link href="/transactions/create">
+                        <Link href="/transactions/create" data-tour="tx-create">
                             <Button variant="primary">
                                 <Plus className="w-4 h-4" />
                                 Nova transação
@@ -102,7 +102,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                 </div>
 
                 {/* Stats bar */}
-                <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+                <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6" data-tour="tx-stats">
                     <div className="bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Receitas</p>
@@ -123,7 +123,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                 </div>
 
                 {/* Search and filter bar */}
-                <div className="flex flex-col sm:flex-row gap-3 mb-6">
+                <div className="flex flex-col sm:flex-row gap-3 mb-6" data-tour="tx-filters">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                         <input
@@ -195,7 +195,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                 </div>
 
                 {/* Transactions table */}
-                <Card padding={false} accent>
+                <Card padding={false} accent data-tour="tx-table">
                     <div className="px-6 py-4 border-b border-gray-200/60 flex items-center justify-between">
                         <h2 className="text-base font-semibold text-gray-800">Histórico</h2>
                         <Badge variant="default">{meta?.total || data.length} registro(s)</Badge>

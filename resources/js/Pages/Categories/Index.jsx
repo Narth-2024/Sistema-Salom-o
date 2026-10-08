@@ -36,7 +36,7 @@ export default function CategoriesIndex({ categories }) {
 
             <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6" data-tour="cat-header">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Categorias</h1>
                         <p className="text-gray-500 mt-1">Organize suas receitas e despesas em categorias.</p>
@@ -44,7 +44,7 @@ export default function CategoriesIndex({ categories }) {
                 </div>
 
                 {/* Quick add card */}
-                <div className="mb-8 bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden">
+                <div className="mb-8 bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden" data-tour="cat-form">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <Plus className="w-5 h-5 text-green-600" />
@@ -89,7 +89,7 @@ export default function CategoriesIndex({ categories }) {
                 </div>
 
                 {items.length === 0 ? (
-                    <Card className="text-center py-16">
+                    <Card className="text-center py-16" data-tour="cat-list">
                         <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-white/5">
                             <FolderOpen className="w-8 h-8 text-gray-500" />
                         </div>
@@ -97,7 +97,7 @@ export default function CategoriesIndex({ categories }) {
                         <p className="text-gray-500 text-sm mt-1">Crie categorias para organizar suas finanças.</p>
                     </Card>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tour="cat-list">
                         {items.map(category => (
                             <Card key={category.id} className="relative group" hover accent={category.type === 'income' ? true : 'danger'}>
                                 <div className="flex items-start justify-between mb-3">

@@ -147,7 +147,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
             <Head title="Dashboard" />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-                <div className="mb-6 sm:mb-8">
+                <div className="mb-6 sm:mb-8" data-tour="an-header">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
                         <BarChart3 className="w-7 h-7 text-green-600" />
                         Dashboard
@@ -155,7 +155,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                     <p className="text-gray-500 mt-1">Análise detalhada das suas finanças.</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" data-tour="an-totals">
                     <div className="bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Receitas</p>
@@ -179,7 +179,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                     <LineChart className="w-5 h-5 text-green-600" />
                     Comparativo: mês atual vs anterior
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" data-tour="an-compare">
                     {compItems.map((item, idx) => {
                         const data = comparative[item.key]
                         const isPositive = data.change >= 0
@@ -209,7 +209,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                     })}
                 </div>
 
-                <Card className="mb-8" accent>
+                <Card className="mb-8" accent data-tour="an-bars">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <BarChart3 className="w-5 h-5 text-green-600" />
                         Receitas vs Despesas por mês
@@ -219,7 +219,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                     </div>
                 </Card>
 
-                <Card accent>
+                <Card accent data-tour="an-timeline">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <LineChart className="w-5 h-5 text-green-600" />
                         Evolução do saldo

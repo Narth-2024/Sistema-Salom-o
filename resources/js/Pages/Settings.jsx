@@ -1,6 +1,7 @@
 import { Head, Link, usePage, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, ONBOARDING_STORAGE, OPEN_TOUR_EVENT } from '@/Components'
+import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
+import { startAppTour } from '@/tour/AppTour'
 import useTheme from '@/hooks/useTheme'
 import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw } from 'lucide-react'
 import { useRef, useState } from 'react'
@@ -36,9 +37,8 @@ export default function Settings() {
     }
 
     function restartTutorial() {
-        localStorage.removeItem(ONBOARDING_STORAGE.WELCOME)
         localStorage.removeItem(ONBOARDING_STORAGE.DISMISSED)
-        window.dispatchEvent(new CustomEvent(OPEN_TOUR_EVENT))
+        startAppTour()
     }
 
     const avatarSrc = preview || user.avatar_url || null

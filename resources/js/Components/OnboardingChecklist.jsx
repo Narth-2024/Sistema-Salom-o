@@ -25,7 +25,7 @@ export default function OnboardingChecklist() {
     }
 
     return (
-        <Card accent className="mb-6 sm:mb-8 animate-fade-in">
+        <Card accent className="mb-6 sm:mb-8 animate-fade-in" data-tour="checklist">
             <div className="flex items-start justify-between">
                 <div>
                     <h2 className="text-base font-semibold text-gray-800 flex items-center gap-2">
