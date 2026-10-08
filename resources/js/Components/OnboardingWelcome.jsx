@@ -3,26 +3,22 @@ import { usePage } from '@inertiajs/react'
 import Modal from './Modal'
 import Button from './Button'
 import { ONBOARDING_STORAGE } from './OnboardingChecklist'
-import { startAppTour } from '@/tour/AppTour'
+import { startAppTour, isTourRunning } from '@/tour/AppTour'
 import { ArrowRight, Rocket, CircleHelp, Tags, ArrowLeftRight, Hash, LineChart } from 'lucide-react'
 
 export default function OnboardingWelcome() {
     const { onboarding } = usePage().props
     const [open, setOpen] = useState(false)
 
-    function close() {
-        localStorage.setItem(ONBOARDING_STORAGE.WELCOME, '1')
-        setOpen(false)
-    }
-
     function startTour() {
-        close()
-        startAppTour()
+        setOpen(false)
+        startAppTour({ locked: true })
     }
 
     useEffect(() => {
         if (
             onboarding?.inProgress &&
+            !isTourRunning() &&
             localStorage.getItem(ONBOARDING_STORAGE.WELCOME) !== '1' &&
             localStorage.getItem(ONBOARDING_STORAGE.DISMISSED) !== '1'
         ) {
@@ -53,7 +49,7 @@ export default function OnboardingWelcome() {
                 )}
             </button>
 
-            <Modal open={open} onClose={close} title="Tour guiado pelo Salomão">
+            <Modal open={open} onClose={() => {}} title="Tour guiado pelo Salomão" dismissible={false}>
                 <div className="flex items-start gap-3.5 mb-4">
                     <div className="w-11 h-11 rounded-xl bg-primary/10 text-accent-text flex items-center justify-center shrink-0 ring-1 ring-primary/20">
                         <Rocket className="w-5 h-5" />
@@ -84,13 +80,10 @@ export default function OnboardingWelcome() {
                 </ul>
 
                 <p className="text-xs text-gray-500 mb-1">
-                    Menos de 2 minutos — você pode pular ou reassistir quando quiser pelo botão ? da tela.
+                    Menos de 2 minutos — depois você pode reassistir quando quiser pelo botão ? da tela.
                 </p>
 
                 <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                    <Button variant="ghost" size="sm" onClick={close}>
-                        Agora não
-                    </Button>
                     <Button variant="primary" size="sm" onClick={startTour}>
                         Iniciar tour
                         <ArrowRight className="w-3.5 h-3.5" />

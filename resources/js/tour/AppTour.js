@@ -270,7 +270,7 @@ function visitPath(path) {
     })
 }
 
-function driveSegment(steps) {
+function driveSegment(steps, { locked = false } = {}) {
     return new Promise(resolve => {
         let completed = false
         const tour = driver({
@@ -278,10 +278,12 @@ function driveSegment(steps) {
             animate: true,
             smoothScroll: true,
             allowKeyboardControl: true,
+            allowClose: !locked,
             overlayClickBehavior: 'none',
             disableActiveInteraction: true,
             waitForElement: 4000,
             showProgress: true,
+            showButtons: locked ? ['previous', 'next', 'done'] : undefined,
             progressText: '{{current}} de {{total}}',
             nextBtnText: 'Próximo',
             prevBtnText: 'Anterior',
@@ -304,16 +306,25 @@ export function isTourRunning() {
     return running
 }
 
-export async function startAppTour() {
+export async function startAppTour({ locked = false } = {}) {
     if (running) return
     running = true
-    localStorage.setItem(ONBOARDING_STORAGE.WELCOME, '1')
+    if (!locked) {
+        localStorage.setItem(ONBOARDING_STORAGE.WELCOME, '1')
+    }
     try {
+        let allCompleted = true
         for (const segment of SEGMENTS) {
             await visitPath(segment.path)
             const steps = typeof segment.steps === 'function' ? segment.steps() : segment.steps
-            const completed = await driveSegment(steps)
-            if (!completed) break
+            const completed = await driveSegment(steps, { locked })
+            if (!completed) {
+                allCompleted = false
+                break
+            }
+        }
+        if (allCompleted) {
+            localStorage.setItem(ONBOARDING_STORAGE.WELCOME, '1')
         }
     } finally {
         running = false
