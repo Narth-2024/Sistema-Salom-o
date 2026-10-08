@@ -90,7 +90,7 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:income,expense',
-            'amount' => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric|min:0.01|max:99999999.99',
             'description' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
             'tag_ids' => 'nullable|array',
@@ -148,7 +148,7 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:income,expense',
-            'amount' => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric|min:0.01|max:99999999.99',
             'description' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
             'tag_ids' => 'nullable|array',
