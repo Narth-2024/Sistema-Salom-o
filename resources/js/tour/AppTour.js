@@ -169,6 +169,31 @@ const SEGMENTS = [
         ],
     },
     {
+        path: '/settings',
+        steps: [
+            {
+                element: '[data-tour="help-card"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Central de ajuda',
+                    description:
+                        'Aqui você refaz o tutorial e o checklist quando quiser — e também avalia o sistema.',
+                    side: 'top',
+                },
+            },
+            {
+                element: '[data-tour="help-survey"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Avalie o sistema',
+                    description:
+                        'Este é o formulário de avaliação do Salomão. Depois de usá-lo no seu dia a dia, volte aqui e responda: sua opinião mostra se o sistema cumpriu o que propôs — organizar, controlar e apoiar suas decisões.',
+                    side: 'top',
+                },
+            },
+        ],
+    },
+    {
         path: '/dashboard',
         steps: () => [
             {

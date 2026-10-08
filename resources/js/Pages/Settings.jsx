@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
 import { startAppTour } from '@/tour/AppTour'
 import useTheme from '@/hooks/useTheme'
-import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw } from 'lucide-react'
+import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function Settings() {
@@ -172,7 +172,7 @@ export default function Settings() {
                 </Card>
 
                 {/* Help / onboarding */}
-                <Card className="mt-6">
+                <Card className="mt-6" data-tour="help-card">
                     <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
                         <LifeBuoy className="w-4 h-4 text-accent-text" />
                         Ajuda
@@ -180,10 +180,25 @@ export default function Settings() {
                     <p className="text-sm text-gray-500 mb-5">
                         Refaça o tutorial de boas-vindas e o checklist da Dashboard quando quiser.
                     </p>
-                    <Button variant="outline" onClick={restartTutorial}>
-                        <RefreshCcw className="w-4 h-4" />
-                        Assistir tutorial novamente
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <Button variant="outline" onClick={restartTutorial}>
+                            <RefreshCcw className="w-4 h-4" />
+                            Assistir tutorial novamente
+                        </Button>
+                        <a
+                            href="https://forms.gle/KVW3gTD4VymBX8HK8"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-tour="help-survey"
+                            className="inline-flex items-center justify-center gap-2 bg-primary text-primary-fg hover:bg-primary-hover px-4 py-2 rounded-xl text-sm font-medium shadow-sm hover:shadow-md transition cursor-pointer"
+                        >
+                            <Star className="w-4 h-4" />
+                            Avaliar o sistema
+                        </a>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-3">
+                        O formulário de avaliação deve ser respondido após o uso do sistema — leva menos de 2 minutos.
+                    </p>
                 </Card>
             </main>
         </AppLayout>
