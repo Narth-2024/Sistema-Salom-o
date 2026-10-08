@@ -16,6 +16,7 @@ class User extends Authenticatable
         'clerk_id',
         'name',
         'email',
+        'password',
         'cpf',
         'avatar_url',
     ];
