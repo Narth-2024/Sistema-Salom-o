@@ -79,15 +79,22 @@ export default function OnboardingChecklist() {
                                     <span className="text-xs font-semibold">{idx + 1}</span>
                                 )}
                             </div>
-                            <p
-                                className={`text-sm flex-1 min-w-0 ${
-                                    step.complete
-                                        ? 'text-gray-500 line-through'
-                                        : 'text-gray-700 font-medium'
-                                }`}
-                            >
-                                {step.title}
-                            </p>
+                            <div className="flex-1 min-w-0">
+                                <p
+                                    className={`text-sm ${
+                                        step.complete
+                                            ? 'text-gray-500 line-through'
+                                            : 'text-gray-700 font-medium'
+                                    }`}
+                                >
+                                    {step.title}
+                                </p>
+                                {isNext && step.description && (
+                                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                                        {step.description}
+                                    </p>
+                                )}
+                            </div>
                             {!step.complete && (
                                 <Link
                                     href={step.link}

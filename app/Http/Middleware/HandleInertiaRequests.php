@@ -64,6 +64,7 @@ class HandleInertiaRequests extends Middleware
                 ->filter(fn ($step) => $step->notExcluded())
                 ->map(fn ($step) => [
                     'title' => $step->title,
+                    'description' => $step->description,
                     'link' => $step->link,
                     'cta' => $step->cta,
                     'complete' => $step->complete(),

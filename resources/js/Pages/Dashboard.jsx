@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Head, Link, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, OnboardingChecklist, OnboardingWelcome } from '@/Components'
+import { Card, Button, OnboardingChecklist } from '@/Components'
 import {
     TrendingUp, TrendingDown, Wallet, Plus, ArrowRight,
     ArrowUpRight, ArrowDownRight, CalendarDays, Sparkles,
@@ -134,7 +134,6 @@ export default function Dashboard({ income, expense, balance, recentTransactions
         <AppLayout>
             <Head title="Início" />
 
-            <OnboardingWelcome />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Welcome banner */}

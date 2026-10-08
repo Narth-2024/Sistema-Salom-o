@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
 import { useAuth } from '@clerk/react'
 import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins } from 'lucide-react'
-import { FlashMessage } from '@/Components'
+import { FlashMessage, OnboardingWelcome } from '@/Components'
 import Sidebar from '@/Components/Sidebar'
 import { useEffect, useState } from 'react'
 
@@ -150,6 +150,9 @@ export default function AppLayout({ children }) {
                     </Link>
                 </div>
             </nav>
+
+            {/* Tour + botão flutuante de ajuda (visível em todas as páginas) */}
+            <OnboardingWelcome />
         </div>
     )
 }
