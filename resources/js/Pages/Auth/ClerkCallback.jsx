@@ -23,14 +23,20 @@ export default function ClerkCallback() {
                     },
                     body: JSON.stringify({
                         clerk_id: user.id,
-                        email: user.primaryEmailAddress?.emailAddress,
-                        name: user.fullName,
+                        email: user.primaryEmailAddress?.emailAddress
+                            || user.emailAddresses?.[0]?.emailAddress
+                            || '',
+                        name: user.fullName || '',
                     }),
                 })
 
                 if (!res.ok) {
-                    const text = await res.text()
-                    setError(`Erro ao autenticar (${res.status})`)
+                    let msg = `Erro ao autenticar (${res.status})`
+                    try {
+                        const body = await res.json()
+                        if (body?.error && typeof body.error === 'string') msg = body.error
+                    } catch { /* keep default */ }
+                    setError(msg)
                     return
                 }
 
