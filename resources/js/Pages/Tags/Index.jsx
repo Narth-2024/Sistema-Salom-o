@@ -1,6 +1,6 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Badge } from '@/Components'
+import { Card, Button, Input, Badge, Pagination } from '@/Components'
 import { Plus, Trash2, Hash, ArrowLeft, Palette } from 'lucide-react'
 import { useState } from 'react'
 
@@ -11,6 +11,9 @@ const presetColors = [
 ]
 
 export default function TagsIndex({ tags }) {
+    const items = tags.data || tags
+    const meta = tags.meta || null
+
     const { data, setData, post, processing, reset } = useForm({
         name: '',
         color: '#6366f1',
@@ -94,7 +97,7 @@ export default function TagsIndex({ tags }) {
                 </div>
 
                 {/* Tags list */}
-                {tags.length === 0 ? (
+                {items.length === 0 ? (
                     <Card className="text-center py-16">
                         <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-white/5">
                             <Hash className="w-8 h-8 text-gray-500" />
@@ -104,7 +107,7 @@ export default function TagsIndex({ tags }) {
                     </Card>
                 ) : (
                     <div className="space-y-2">
-                        {tags.map(tag => (
+                        {items.map(tag => (
                             <Card key={tag.id} className="flex items-center justify-between gap-4" hover>
                                 {editingId === tag.id ? (
                                     <div className="flex-1 flex items-center gap-3">
@@ -161,6 +164,8 @@ export default function TagsIndex({ tags }) {
                         ))}
                     </div>
                 )}
+
+                <Pagination meta={meta} />
 
                 <div className="mt-8 flex justify-center">
                     <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium transition">
