@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react'
 import { SignIn } from '@clerk/react'
 import { ArrowLeft } from 'lucide-react'
+import { clerkAppearance } from '@/lib/clerkAppearance'
 
 export default function Login() {
     return (
@@ -28,24 +29,7 @@ export default function Login() {
                     <SignIn
                         fallbackRedirectUrl="/auth/clerk-callback"
                         signUpUrl="/register"
-                        appearance={{
-                            elements: {
-                                rootBox: 'w-full',
-                                card: 'shadow-none p-0',
-                                headerTitle: 'text-2xl font-bold text-gray-800',
-                                headerSubtitle: 'text-sm text-gray-500',
-                                formButtonPrimary: 'bg-primary hover:bg-primary-hover text-sm text-primary-fg font-semibold',
-                                formFieldLabel: 'text-sm text-gray-600',
-                                formFieldInput: 'w-full px-4 py-3 rounded-xl border border-border bg-surface-elevated text-gray-800 focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder-gray-400',
-                                footerActionLink: 'text-accent-text hover:text-accent-text-hover font-medium',
-                                dividerLine: 'bg-gray-200',
-                                dividerText: 'text-xs text-gray-500',
-                                socialButtonsBlockButton: 'border border-border bg-surface hover:bg-surface-accent text-sm text-gray-700 rounded-xl',
-                                socialButtonsBlockButtonText: 'text-gray-700 font-medium',
-                                formHeaderTitle: 'text-2xl font-bold text-gray-800',
-                                formHeaderSubtitle: 'text-sm text-gray-500',
-                            },
-                        }}
+                        appearance={clerkAppearance()}
                     />
                 </div>
             </div>
