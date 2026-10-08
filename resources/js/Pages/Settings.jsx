@@ -1,8 +1,8 @@
-import { Head, Link, usePage, useForm } from '@inertiajs/react'
+import { Head, Link, usePage, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input } from '@/Components'
+import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
 import useTheme from '@/hooks/useTheme'
-import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle } from 'lucide-react'
+import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function Settings() {
@@ -33,6 +33,12 @@ export default function Settings() {
         const reader = new FileReader()
         reader.onload = () => setPreview(reader.result)
         reader.readAsDataURL(file)
+    }
+
+    function restartTutorial() {
+        localStorage.removeItem(ONBOARDING_STORAGE.WELCOME)
+        localStorage.removeItem(ONBOARDING_STORAGE.DISMISSED)
+        router.visit('/dashboard')
     }
 
     const avatarSrc = preview || user.avatar_url || null
@@ -159,6 +165,21 @@ export default function Settings() {
                             />
                         </button>
                     </div>
+                </Card>
+
+                {/* Help / onboarding */}
+                <Card accent className="mt-6">
+                    <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        <LifeBuoy className="w-4 h-4 text-green-600" />
+                        Ajuda
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-5">
+                        Refaça o tutorial de boas-vindas e o checklist da Dashboard quando quiser.
+                    </p>
+                    <Button variant="outline" onClick={restartTutorial}>
+                        <RefreshCcw className="w-4 h-4" />
+                        Assistir tutorial novamente
+                    </Button>
                 </Card>
             </main>
         </AppLayout>

@@ -44,6 +44,32 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            'onboarding' => fn () => $this->onboardingPayload($request),
+        ];
+    }
+
+    protected function onboardingPayload(Request $request): ?array
+    {
+        if (! $request->user()) {
+            return null;
+        }
+
+        $onboarding = $request->user()->onboarding();
+
+        return [
+            'inProgress' => $onboarding->inProgress(),
+            'finished' => $onboarding->finished(),
+            'percentage' => (int) round($onboarding->percentageCompleted()),
+            'steps' => $onboarding->steps()
+                ->filter(fn ($step) => $step->notExcluded())
+                ->map(fn ($step) => [
+                    'title' => $step->title,
+                    'link' => $step->link,
+                    'cta' => $step->cta,
+                    'complete' => $step->complete(),
+                ])
+                ->values()
+                ->all(),
         ];
     }
 }

@@ -14,6 +14,10 @@ class AnalyticsController extends Controller
     {
         $user = auth()->user();
 
+        if (! $user->viewed_analytics_at) {
+            $user->forceFill(['viewed_analytics_at' => now()])->save();
+        }
+
         // Monthly income and expense for bar chart (last 12 months)
         $months = collect(range(11, 0))->map(function ($i) {
             return now()->subMonths($i)->format('Y-m');

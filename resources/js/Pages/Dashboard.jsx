@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Head, Link, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button } from '@/Components'
+import { Card, Button, OnboardingChecklist, OnboardingWelcome } from '@/Components'
 import {
     TrendingUp, TrendingDown, Wallet, Plus, ArrowRight,
     ArrowUpRight, ArrowDownRight, CalendarDays, Sparkles,
@@ -134,6 +134,8 @@ export default function Dashboard({ income, expense, balance, recentTransactions
         <AppLayout>
             <Head title="Início" />
 
+            <OnboardingWelcome />
+
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Welcome banner */}
                 <div className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-950/90 to-emerald-950/80 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-800/20 shadow-lg shadow-emerald-950/30">
@@ -194,6 +196,9 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                         </div>
                     ))}
                 </div>
+
+                {/* Onboarding checklist */}
+                <OnboardingChecklist />
 
                 {/* Chart + Recent transactions */}
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">

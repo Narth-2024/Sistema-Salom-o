@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Onboard\Concerns\GetsOnboarded;
+use Spatie\Onboard\Concerns\Onboardable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Onboardable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use GetsOnboarded, HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
         'clerk_id',
