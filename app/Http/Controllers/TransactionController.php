@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -100,7 +101,7 @@ class TransactionController extends Controller
         $user = auth()->user();
 
         $transaction = $user->transactions()->create(
-            $request->safe()->only(['category_id', 'type', 'amount', 'description', 'transaction_date'])
+            Arr::except($validated, ['tag_ids'])
         );
 
         if ($tagIds = $request->input('tag_ids')) {
@@ -155,7 +156,7 @@ class TransactionController extends Controller
         ]);
 
         $transaction->update(
-            $request->safe()->only(['category_id', 'type', 'amount', 'description', 'transaction_date'])
+            Arr::except($validated, ['tag_ids'])
         );
 
         $transaction->tags()->sync($request->input('tag_ids', []));

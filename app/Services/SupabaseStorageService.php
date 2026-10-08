@@ -36,7 +36,9 @@ class SupabaseStorageService
             'public' => true,
         ]);
 
-        if (! $response->successful() && $response->status() !== 409) {
+        if (! $response->successful()
+            && $response->status() !== 409
+            && ! str_contains($response->body(), 'BucketAlreadyExists')) {
             throw new \RuntimeException('Supabase Storage bucket: '.($response->body() ?: $response->status()));
         }
 
