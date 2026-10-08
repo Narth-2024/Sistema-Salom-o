@@ -45,7 +45,7 @@ export default function OnboardingWelcome() {
                 onClick={() => startAppTour()}
                 title="Assistir o tour novamente"
                 aria-label="Assistir o tour novamente"
-                className="fixed z-40 right-4 bottom-24 md:bottom-6 w-12 h-12 rounded-full bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-600/30 flex items-center justify-center transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer"
+                className="fixed z-40 right-4 bottom-24 md:bottom-6 w-12 h-12 rounded-full bg-primary hover:bg-primary-hover text-primary-fg shadow-lg shadow-primary/30 flex items-center justify-center transition duration-150 hover:scale-105 active:scale-95 cursor-pointer"
             >
                 <CircleHelp className="w-6 h-6" />
                 {onboarding.inProgress && (
@@ -55,7 +55,7 @@ export default function OnboardingWelcome() {
 
             <Modal open={open} onClose={close} title="Tour guiado pelo Salomão">
                 <div className="flex items-start gap-3.5 mb-4">
-                    <div className="w-11 h-11 rounded-xl bg-green-600/10 text-green-600 flex items-center justify-center shrink-0 ring-1 ring-green-600/20">
+                    <div className="w-11 h-11 rounded-xl bg-primary/10 text-accent-text flex items-center justify-center shrink-0 ring-1 ring-primary/20">
                         <Rocket className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">

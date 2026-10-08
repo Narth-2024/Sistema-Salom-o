@@ -1,9 +1,9 @@
 export default function Badge({ children, variant = 'default', className = '' }) {
     const variants = {
         default: 'bg-gray-100 text-gray-500 ring-1 ring-gray-200/60',
-        income: 'bg-green-600/10 text-green-600 ring-1 ring-green-600/20',
+        income: 'bg-primary/10 text-accent-text ring-1 ring-primary/20',
         expense: 'bg-red-500/10 text-red-400 ring-1 ring-red-500/20',
-        green: 'bg-green-600/10 text-green-600 ring-1 ring-green-600/20',
+        green: 'bg-primary/10 text-accent-text ring-1 ring-primary/20',
         warning: 'bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20',
     }
 

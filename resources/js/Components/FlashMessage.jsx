@@ -24,10 +24,10 @@ export default function FlashMessage() {
     const isSuccess = type === 'success'
 
     return (
-        <div className="fixed top-4 right-4 z-[100] animate-in">
+        <div className="fixed top-20 right-4 md:top-4 z-[100] animate-in">
             <div className={`flex items-center gap-3 px-5 py-3 rounded-xl border shadow-lg ${
                 isSuccess
-                    ? 'bg-green-600/10 border-green-600/20 text-green-600 shadow-green-600/10'
+                    ? 'bg-primary/10 border-primary/20 text-accent-text shadow-primary/10'
                     : 'bg-red-500/10 border-red-500/20 text-red-400 shadow-red-500/10'
             }`}>
                 {isSuccess ? (

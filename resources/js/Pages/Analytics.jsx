@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Head } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card } from '@/Components'
+import { chartColors, hexToRgba } from '@/lib/chartColors.js'
 import { TrendingUp, TrendingDown, Wallet, BarChart3, LineChart, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 
 function formatBR(value) {
@@ -28,6 +29,8 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                 Legend, Tooltip, Filler
             )
 
+            const c = chartColors()
+
             if (barRef.current) {
                 if (barInstance.current) barInstance.current.destroy()
                 barInstance.current = new Chart(barRef.current, {
@@ -38,14 +41,14 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                             {
                                 label: 'Receitas',
                                 data: barChart.map(d => d.income),
-                                backgroundColor: '#2dd46b',
+                                backgroundColor: c.income,
                                 borderRadius: 6,
                                 borderSkipped: false,
                             },
                             {
                                 label: 'Despesas',
                                 data: barChart.map(d => d.expense),
-                                backgroundColor: '#f87171',
+                                backgroundColor: c.expense,
                                 borderRadius: 6,
                                 borderSkipped: false,
                             }
@@ -57,14 +60,14 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                         plugins: {
                             legend: {
                                 position: 'top',
-                                labels: { usePointStyle: true, pointStyleWidth: 8, color: '#b4b4bd', font: { family: 'Inter', size: 11 } }
+                                labels: { usePointStyle: true, pointStyleWidth: 8, color: c.text, font: { family: 'Inter', size: 11 } }
                             }
                         },
                         scales: {
-                            x: { grid: { display: false }, ticks: { color: '#8b8b95' } },
+                            x: { grid: { display: false }, ticks: { color: c.muted } },
                             y: {
-                                grid: { color: '#27272a' },
-                                ticks: { color: '#8b8b95', callback: v => 'R$' + v.toLocaleString('pt-BR') }
+                                grid: { color: c.grid },
+                                ticks: { color: c.muted, callback: v => 'R$' + v.toLocaleString('pt-BR') }
                             }
                         }
                     }
@@ -80,18 +83,18 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                         datasets: [{
                             label: 'Saldo',
                             data: timeline.map(d => d.balance),
-                            borderColor: '#3ecf8e',
+                            borderColor: c.balance,
                             backgroundColor: ctx => {
                                 const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300)
-                                gradient.addColorStop(0, 'rgba(62, 207, 142, 0.2)')
-                                gradient.addColorStop(1, 'rgba(62, 207, 142, 0)')
+                                gradient.addColorStop(0, hexToRgba(c.balance, 0.2))
+                                gradient.addColorStop(1, hexToRgba(c.balance, 0))
                                 return gradient
                             },
                             fill: true,
                             tension: 0.4,
                             pointRadius: 4,
-                            pointBackgroundColor: '#3ecf8e',
-                            pointBorderColor: '#121214',
+                            pointBackgroundColor: c.balance,
+                            pointBorderColor: c.background,
                             pointBorderWidth: 2,
                             borderWidth: 2,
                         }]
@@ -108,10 +111,10 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                             }
                         },
                         scales: {
-                            x: { grid: { display: false }, ticks: { color: '#8b8b95' } },
+                            x: { grid: { display: false }, ticks: { color: c.muted } },
                             y: {
-                                grid: { color: '#27272a' },
-                                ticks: { color: '#8b8b95', callback: v => 'R$' + v.toLocaleString('pt-BR') }
+                                grid: { color: c.grid },
+                                ticks: { color: c.muted, callback: v => 'R$' + v.toLocaleString('pt-BR') }
                             }
                         }
                     }
@@ -129,7 +132,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
     const compItems = [
         {
             label: 'Receitas', key: 'income',
-            icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-600/10',
+            icon: TrendingUp, color: 'text-accent-text', bg: 'bg-primary/10',
         },
         {
             label: 'Despesas', key: 'expense',
@@ -137,46 +140,43 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
         },
         {
             label: 'Saldo', key: 'balance',
-            icon: Wallet, color: v => v.current >= 0 ? 'text-green-600' : 'text-red-400',
-            bg: v => v.current >= 0 ? 'bg-green-600/10' : 'bg-red-500/10',
+            icon: Wallet, color: v => v.current >= 0 ? 'text-accent-text' : 'text-red-400',
+            bg: v => v.current >= 0 ? 'bg-primary/10' : 'bg-red-500/10',
         },
     ]
 
     return (
         <AppLayout>
-            <Head title="Dashboard" />
+            <Head title="Análises" />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8" data-tour="an-header">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
-                        <BarChart3 className="w-7 h-7 text-green-600" />
-                        Dashboard
+                        <BarChart3 className="w-7 h-7 text-accent-text" />
+                        Analytics
                     </h1>
                     <p className="text-gray-500 mt-1">Análise detalhada das suas finanças.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" data-tour="an-totals">
-                    <div className="bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                    <div className="bg-primary/5 rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Receitas</p>
-                        <p className="text-2xl font-extrabold text-green-600 tabular-nums">{formatBR(incomeTotal)}</p>
+                        <p className="text-2xl font-extrabold text-accent-text tabular-nums">{formatBR(incomeTotal)}</p>
                     </div>
-                    <div className="bg-gradient-to-br from-red-500/5 to-red-500/[0.02] rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-400/30 to-transparent" />
+                    <div className="bg-red-500/5 rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Despesas</p>
                         <p className="text-2xl font-extrabold text-red-400 tabular-nums">{formatBR(expenseTotal)}</p>
                     </div>
-                    <div className={`rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden ${balanceTotal >= 0 ? 'bg-gradient-to-br from-green-600/5 to-green-600/[0.02]' : 'bg-gradient-to-br from-red-500/5 to-red-500/[0.02]'}`}>
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                    <div className={`rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden ${balanceTotal >= 0 ? 'bg-primary/5' : 'bg-red-500/5'}`}>
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Saldo</p>
-                        <p className={`text-2xl font-extrabold tabular-nums ${balanceTotal >= 0 ? 'text-green-600' : 'text-red-400'}`}>
+                        <p className={`text-2xl font-extrabold tabular-nums ${balanceTotal >= 0 ? 'text-accent-text' : 'text-red-400'}`}>
                             {formatBR(balanceTotal)}
                         </p>
                     </div>
                 </div>
 
                 <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <LineChart className="w-5 h-5 text-green-600" />
+                    <LineChart className="w-5 h-5 text-accent-text" />
                     Comparativo: mês atual vs anterior
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" data-tour="an-compare">
@@ -190,7 +190,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                             <Card key={item.key} hover>
                                 <div className="flex items-center justify-between mb-3">
                                     <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{item.label}</span>
-                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${typeof item.bg === 'function' ? item.bg(data) : item.bg} ring-1 ring-white/5`}>
+                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${typeof item.bg === 'function' ? item.bg(data) : item.bg} ring-1 ring-gray-200/60`}>
                                         <item.icon className={`w-[18px] h-[18px] ${typeof item.color === 'function' ? item.color(data) : item.color}`} />
                                     </div>
                                 </div>
@@ -199,7 +199,7 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                                 </p>
                                 <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-200/60">
                                     <span className="text-xs text-gray-500">Mês anterior: {formatBR(data.previous)}</span>
-                                    <span className={`text-xs font-semibold flex items-center gap-0.5 ${isGood ? 'text-green-600' : 'text-red-400'}`}>
+                                    <span className={`text-xs font-semibold flex items-center gap-0.5 ${isGood ? 'text-accent-text' : 'text-red-400'}`}>
                                         {isGood ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                                         {data.change > 0 ? '+' : ''}{data.change}%
                                     </span>
@@ -209,9 +209,9 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                     })}
                 </div>
 
-                <Card className="mb-8" accent data-tour="an-bars">
+                <Card className="mb-8" data-tour="an-bars">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <BarChart3 className="w-5 h-5 text-green-600" />
+                        <BarChart3 className="w-5 h-5 text-accent-text" />
                         Receitas vs Despesas por mês
                     </h2>
                     <div className="w-full" style={{ height: 300 }}>
@@ -219,9 +219,9 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                     </div>
                 </Card>
 
-                <Card accent data-tour="an-timeline">
+                <Card data-tour="an-timeline">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <LineChart className="w-5 h-5 text-green-600" />
+                        <LineChart className="w-5 h-5 text-accent-text" />
                         Evolução do saldo
                     </h2>
                     <div className="w-full" style={{ height: 300 }}>

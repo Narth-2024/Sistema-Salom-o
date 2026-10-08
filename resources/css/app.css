@@ -55,6 +55,18 @@
   --color-info: #60a5fa;
   --color-warning: #fbbf24;
 
+  /* Brand (theme-aware) */
+  --color-primary: #3ecf8e;
+  --color-primary-hover: #66e2a8;
+  --color-primary-fg: #052e16;
+  --color-accent-text: #3ecf8e;
+  --color-accent-text-hover: #66e2a8;
+
+  /* Chart palette (theme-aware) */
+  --color-chart-income: #2dd46b;
+  --color-chart-expense: #f87171;
+  --color-chart-balance: #3ecf8e;
+
   /* Surfaces */
   --color-surface: #1c1c20;
   --color-surface-elevated: #24242a;
@@ -78,6 +90,11 @@
   ::selection {
     background-color: rgba(62, 207, 142, 0.3);
     color: #fafafa;
+  }
+
+  :where(a, button, [role='button'], [role='switch'], [role='tab']):focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
@@ -158,9 +175,23 @@
   --color-amber-900: #78350f;
 
   --color-success: #22c55e;
-  --color-danger: #ef4444;
+  --color-danger: #dc2626;
   --color-info: #3b82f6;
   --color-warning: #f59e0b;
+
+  --color-primary: #047857;
+  --color-primary-hover: #065f46;
+  --color-primary-fg: #ffffff;
+  --color-accent-text: #047857;
+  --color-accent-text-hover: #065f46;
+
+  --color-red-400: #dc2626;
+  --color-amber-400: #b45309;
+  --color-indigo-400: #4f46e5;
+
+  --color-chart-income: #059669;
+  --color-chart-expense: #dc2626;
+  --color-chart-balance: #059669;
 
   --color-surface: #ffffff;
   --color-surface-elevated: #fafaf9;
@@ -177,6 +208,18 @@
 .light ::selection {
   background-color: rgba(62, 207, 142, 0.3);
   color: #171715;
+}
+
+/* ===== Movimento reduzido ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ===== Tour guiado (driver.js) ===== */

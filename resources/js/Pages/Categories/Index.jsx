@@ -1,7 +1,7 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, Select, Badge, Pagination } from '@/Components'
-import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, ArrowLeft, Tags, FolderOpen } from 'lucide-react'
+import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, Tags, FolderOpen } from 'lucide-react'
 import { useState } from 'react'
 
 const presetColors = [
@@ -36,7 +36,7 @@ export default function CategoriesIndex({ categories }) {
 
             <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6" data-tour="cat-header">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="cat-header">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Categorias</h1>
                         <p className="text-gray-500 mt-1">Organize suas receitas e despesas em categorias.</p>
@@ -44,10 +44,9 @@ export default function CategoriesIndex({ categories }) {
                 </div>
 
                 {/* Quick add card */}
-                <div className="mb-8 bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden" data-tour="cat-form">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                <div className="mb-8 bg-primary/5 rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden" data-tour="cat-form">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <Plus className="w-5 h-5 text-green-600" />
+                        <Plus className="w-5 h-5 text-accent-text" />
                         Nova categoria
                     </h2>
                     <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 flex-wrap">
@@ -90,10 +89,10 @@ export default function CategoriesIndex({ categories }) {
 
                 {items.length === 0 ? (
                     <Card className="text-center py-16" data-tour="cat-list">
-                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-white/5">
+                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-gray-200/60">
                             <FolderOpen className="w-8 h-8 text-gray-500" />
                         </div>
-                        <p className="text-gray-400 font-medium">Nenhuma categoria cadastrada</p>
+                        <p className="text-gray-500 font-medium">Nenhuma categoria cadastrada</p>
                         <p className="text-gray-500 text-sm mt-1">Crie categorias para organizar suas finanças.</p>
                     </Card>
                 ) : (
@@ -102,7 +101,7 @@ export default function CategoriesIndex({ categories }) {
                             <Card key={category.id} className="relative group" hover accent={category.type === 'income' ? true : 'danger'}>
                                 <div className="flex items-start justify-between mb-3">
                                     <div
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-white/5"
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-gray-200/60"
                                         style={{ backgroundColor: category.color ? `${category.color}20` : (category.type === 'income' ? 'rgba(62,207,142,0.1)' : 'rgba(248,113,113,0.1)') }}
                                     >
                                         {category.type === 'income' ? (
@@ -111,9 +110,9 @@ export default function CategoriesIndex({ categories }) {
                                             <TrendingDown className="w-5 h-5" style={{ color: category.color || '#f87171' }} />
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                                    <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition">
                                         <Link href={`/categories/${category.id}/edit`}
-                                            className="text-gray-500 hover:text-green-600 transition p-1.5 rounded-lg hover:bg-gray-100">
+                                            className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
                                             <Edit2 className="w-4 h-4" />
                                         </Link>
                                         <button onClick={() => handleDelete(category)}
@@ -123,7 +122,7 @@ export default function CategoriesIndex({ categories }) {
                                     </div>
                                 </div>
                                 <Link href={`/categories/${category.id}`} className="block group/link">
-                                    <h3 className="text-base font-semibold text-gray-800 group-hover/link:text-green-500 transition flex items-center gap-2">
+                                    <h3 className="text-base font-semibold text-gray-800 group-hover/link:text-accent-text-hover transition flex items-center gap-2">
                                         {category.color && (
                                             <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: category.color }} />
                                         )}
@@ -138,14 +137,7 @@ export default function CategoriesIndex({ categories }) {
                     </div>
                 )}
 
-                <Pagination meta={meta} />
-
-                <div className="mt-8 flex justify-center">
-                    <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium transition">
-                        <ArrowLeft className="w-4 h-4" />
-                        Voltar para Início
-                    </Link>
-                </div>
+                <Pagination meta={meta} standalone />
             </main>
         </AppLayout>
     )

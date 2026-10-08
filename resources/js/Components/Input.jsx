@@ -17,11 +17,11 @@ const Input = forwardRef(({ label, error, icon: Icon, className = '', ...props }
                 <input
                     ref={ref}
                     className={`w-full px-4 py-2.5 rounded-xl border bg-surface-elevated text-sm text-gray-800 placeholder-gray-500
-                        transition-all duration-150 focus:outline-none focus:ring-2
+                        transition duration-150 focus:outline-none focus:ring-2
                         ${Icon ? 'pl-10' : ''}
                         ${error
                             ? 'border-red-500/30 focus:ring-red-500/20 focus:border-red-500/50'
-                            : 'border-gray-200/60 focus:ring-green-600/20 focus:border-green-600/50'
+                            : 'border-gray-200/60 focus:ring-primary/20 focus:border-primary/50'
                         }
                         ${className}`}
                     {...props}

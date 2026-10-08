@@ -24,12 +24,12 @@ export default function CategoriesCreate() {
                         <ArrowLeft className="w-4 h-4" />
                         Voltar para Categorias
                     </Link>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Nova Categoria</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Nova Categoria</h1>
                     <p className="text-gray-500 mt-1">Cadastre uma nova categoria de receita ou despesa.</p>
                 </div>
 
                 {Object.keys(errors).length > 0 && (
-                    <div className="bg-danger-light border border-danger/20 rounded-xl p-4 mb-6 flex items-start gap-3">
+                    <div className="bg-red-500/10 border border-danger/20 rounded-xl p-4 mb-6 flex items-start gap-3">
                         <AlertTriangle className="w-5 h-5 text-danger shrink-0 mt-0.5" />
                         <ul className="list-disc list-inside text-sm text-danger space-y-0.5">
                             {Object.values(errors).map((error, i) => <li key={i}>{error}</li>)}

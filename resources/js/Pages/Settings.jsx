@@ -48,29 +48,29 @@ export default function Settings() {
             <Head title="Configurações" />
 
             <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-                <div className="mb-6">
-                    <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium mb-4 transition">
+                <div className="mb-6 sm:mb-8">
+                    <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
                         <ArrowLeft className="w-4 h-4" />
                         Voltar
                     </Link>
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
-                        <User className="w-7 h-7 text-green-600" />
+                        <User className="w-7 h-7 text-accent-text" />
                         Configurações
                     </h1>
                     <p className="text-gray-500 mt-1">Personalize sua experiência no Salomão.</p>
                 </div>
 
                 {/* Profile */}
-                <Card accent className="mb-6">
+                <Card className="mb-6">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <User className="w-4 h-4 text-green-600" />
+                        <User className="w-4 h-4 text-accent-text" />
                         Perfil
                     </h2>
 
                     <form onSubmit={handleSubmit}>
                         <div className="flex items-center gap-5 mb-6">
                             <div className="relative shrink-0">
-                                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 ring-1 ring-white/5 flex items-center justify-center">
+                                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 ring-1 ring-gray-200/60 flex items-center justify-center">
                                     {avatarSrc ? (
                                         <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
                                     ) : (
@@ -82,9 +82,9 @@ export default function Settings() {
                                 <button
                                     type="button"
                                     onClick={() => fileRef.current?.click()}
-                                    className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-600 rounded-full flex items-center justify-center shadow-md hover:bg-green-500 transition cursor-pointer"
+                                    className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-md hover:bg-primary-hover transition cursor-pointer"
                                 >
-                                    <Camera className="w-3 h-3 text-white" />
+                                    <Camera className="w-3 h-3 text-primary-fg" />
                                 </button>
                                 <input
                                     ref={fileRef}
@@ -125,23 +125,23 @@ export default function Settings() {
                                 {processing ? 'Salvando...' : 'Salvar'}
                             </Button>
                             {recentlySuccessful && (
-                                <span className="text-xs text-green-600 font-medium">Salvo!</span>
+                                <span className="text-xs text-accent-text font-medium">Salvo!</span>
                             )}
                         </div>
                     </form>
                 </Card>
 
                 {/* Theme */}
-                <Card accent>
+                <Card>
                     <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                        <Palette className="w-4 h-4 text-green-600" />
+                        <Palette className="w-4 h-4 text-accent-text" />
                         Aparência
                     </h2>
                     <p className="text-sm text-gray-500 mb-5">Escolha entre tema escuro ou claro.</p>
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-white/5 ${theme === 'dark' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-amber-500/10 text-amber-500'}`}>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-gray-200/60 ${theme === 'dark' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-amber-500/10 text-amber-500'}`}>
                                 {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                             </div>
                             <div>
@@ -153,9 +153,13 @@ export default function Settings() {
                         </div>
 
                         <button
+                            type="button"
+                            role="switch"
+                            aria-checked={theme === 'dark'}
+                            aria-label="Alternar entre tema escuro e claro"
                             onClick={toggle}
                             className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-200 cursor-pointer shrink-0 ${
-                                theme === 'dark' ? 'bg-green-600' : 'bg-gray-200'
+                                theme === 'dark' ? 'bg-primary' : 'bg-gray-200'
                             }`}
                         >
                             <span
@@ -168,9 +172,9 @@ export default function Settings() {
                 </Card>
 
                 {/* Help / onboarding */}
-                <Card accent className="mt-6">
+                <Card className="mt-6">
                     <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                        <LifeBuoy className="w-4 h-4 text-green-600" />
+                        <LifeBuoy className="w-4 h-4 text-accent-text" />
                         Ajuda
                     </h2>
                     <p className="text-sm text-gray-500 mb-5">

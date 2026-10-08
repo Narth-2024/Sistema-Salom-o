@@ -7,7 +7,7 @@ import {
 
 const navLinks = [
     { href: '/dashboard', label: 'Início', icon: LayoutDashboard },
-    { href: '/analytics', label: 'Dashboard', icon: BarChart3 },
+    { href: '/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/transactions', label: 'Transações', icon: ArrowLeftRight },
     { href: '/categories', label: 'Categorias', icon: Tags },
     { href: '/tags', label: 'Tags', icon: Hash },
@@ -39,11 +39,11 @@ export default function Sidebar({ collapsed, onToggle }) {
             {/* Logo */}
             <div className={`flex items-center h-16 border-b border-gray-200/60 shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4'}`}>
                 <Link href="/dashboard" className="flex items-center gap-2.5 group">
-                    <div className="w-9 h-9 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-600/20 shrink-0">
-                        <Coins className="w-[18px] h-[18px] text-white" />
+                    <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+                        <Coins className="w-[18px] h-[18px] text-primary-fg" />
                     </div>
                     {!collapsed && (
-                        <span className="text-green-600 font-bold text-lg tracking-tight">Salomão</span>
+                        <span className="text-accent-text font-bold text-lg tracking-tight">Salomão</span>
                     )}
                 </Link>
             </div>
@@ -56,19 +56,19 @@ export default function Sidebar({ collapsed, onToggle }) {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-150 ${
                                 collapsed ? 'justify-center px-0' : ''
                             } ${
                                 active
-                                    ? 'text-green-600 bg-green-600/10'
-                                    : 'text-gray-500 hover:text-gray-400 hover:bg-gray-100'
+                                    ? 'text-accent-text bg-primary/10'
+                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                             }`}
                             title={collapsed ? link.label : undefined}
                         >
-                            <link.icon className={`w-5 h-5 shrink-0 ${active ? 'text-green-600' : ''}`} />
+                            <link.icon className={`w-5 h-5 shrink-0 ${active ? 'text-accent-text' : ''}`} />
                             {!collapsed && <span>{link.label}</span>}
                             {active && !collapsed && (
-                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-green-600" />
+                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
                             )}
                         </Link>
                     )
@@ -79,12 +79,12 @@ export default function Sidebar({ collapsed, onToggle }) {
             <div className="border-t border-gray-200/60 p-2 flex flex-col gap-0.5">
                 <Link
                     href="/settings"
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-150 ${
                         collapsed ? 'justify-center px-0' : ''
                     } ${
                         isActive('/settings')
-                            ? 'text-green-600 bg-green-600/10'
-                            : 'text-gray-500 hover:text-gray-400 hover:bg-gray-100'
+                            ? 'text-accent-text bg-primary/10'
+                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                     }`}
                     title={collapsed ? 'Ajustes' : undefined}
                 >
@@ -93,7 +93,7 @@ export default function Sidebar({ collapsed, onToggle }) {
                 </Link>
                 <button
                     onClick={handleLogout}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-gray-400 hover:bg-gray-100 transition-all duration-150 cursor-pointer ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition duration-150 cursor-pointer ${
                         collapsed ? 'justify-center px-0' : ''
                     }`}
                     title={collapsed ? 'Sair' : undefined}
@@ -104,7 +104,7 @@ export default function Sidebar({ collapsed, onToggle }) {
 
                 <button
                     onClick={onToggle}
-                    className="flex items-center justify-center w-full py-2 rounded-xl text-gray-400 hover:text-gray-300 hover:bg-gray-100 transition-all duration-150 cursor-pointer mt-1"
+                    className="flex items-center justify-center w-full py-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition duration-150 cursor-pointer mt-1"
                     title={collapsed ? 'Expandir' : 'Recolher'}
                 >
                     {collapsed ? (

@@ -57,11 +57,11 @@ export default function ClerkCallback() {
                             </div>
                             <h2 className="text-xl font-bold text-gray-800 mb-2">Erro na autenticação</h2>
                             <p className="text-sm text-gray-500 mb-4">{error}</p>
-                            <a href="/login" className="text-green-600 hover:underline font-medium">Voltar ao login</a>
+                            <a href="/login" className="text-accent-text hover:underline font-medium">Voltar ao login</a>
                         </>
                     ) : (
                         <>
-                            <div className="w-12 h-12 mx-auto border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4" />
+                            <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
                             <h2 className="text-xl font-bold text-gray-800 mb-2">Autenticando...</h2>
                             <p className="text-sm text-gray-500">Aguarde enquanto verificamos sua conta.</p>
                         </>

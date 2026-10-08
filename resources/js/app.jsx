@@ -20,6 +20,7 @@ createInertiaApp({
         );
     },
     progress: {
-        color: '#36802d',
+        color: 'var(--color-primary)',
+        delay: 150,
     },
 });

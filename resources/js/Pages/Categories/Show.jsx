@@ -37,14 +37,19 @@ export default function CategoriesShow({ category, transactions }) {
             <Head title={category.name} />
 
             <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+                <Link href="/categories" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
+                    <ArrowLeft className="w-4 h-4" />
+                    Voltar para Categorias
+                </Link>
+
                 {/* Category header card */}
                 <Card className="mb-6 relative overflow-hidden" accent={category.type === 'income' ? true : 'danger'}>
-                    <div className={`absolute top-0 left-0 w-1.5 h-full ${category.type === 'income' ? 'bg-green-600' : 'bg-red-400'}`} />
+                    <div className={`absolute top-0 left-0 w-1.5 h-full ${category.type === 'income' ? 'bg-primary' : 'bg-red-400'}`} />
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-2">
                         <div className="flex items-center gap-4">
-                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ring-1 ring-white/5 ${category.type === 'income' ? 'bg-green-600/10' : 'bg-red-500/10'}`}>
+                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ring-1 ring-gray-200/60 ${category.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'}`}>
                                 {category.type === 'income' ? (
-                                    <TrendingUp className="w-7 h-7 text-green-600" />
+                                    <TrendingUp className="w-7 h-7 text-accent-text" />
                                 ) : (
                                     <TrendingDown className="w-7 h-7 text-red-400" />
                                 )}
@@ -77,10 +82,9 @@ export default function CategoriesShow({ category, transactions }) {
 
                 {/* Stats mini-card */}
                 {data.length > 0 && (
-                    <div className="bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-5 border border-gray-200/60 mb-6 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                    <div className="bg-primary/5 rounded-2xl p-5 border border-gray-200/60 mb-6 relative overflow-hidden">
                         <div className="flex items-center gap-4">
-                            <div className={`text-2xl font-extrabold ${category.type === 'income' ? 'text-green-600' : 'text-red-400'}`}>
+                            <div className={`text-2xl font-extrabold ${category.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
                                 {formatBR(totalSpent)}
                             </div>
                             <span className="text-sm text-gray-500">
@@ -93,7 +97,7 @@ export default function CategoriesShow({ category, transactions }) {
                 {/* Transactions list */}
                 {data.length > 0 ? (
                     <>
-                        <Card padding={false} accent>
+                        <Card padding={false}>
                             <div className="px-6 py-4 border-b border-gray-200/60">
                                 <h2 className="text-base font-semibold text-gray-800">Transações</h2>
                             </div>
@@ -101,9 +105,9 @@ export default function CategoriesShow({ category, transactions }) {
                                 {data.map(t => (
                                     <div key={t.id} className="px-6 py-3.5 flex items-center justify-between hover:bg-gray-100/40 transition group">
                                         <div className="flex items-center gap-3 min-w-0">
-                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ring-1 ring-white/5 ${t.type === 'income' ? 'bg-green-600/10' : 'bg-red-500/10'}`}>
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ring-1 ring-gray-200/60 ${t.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'}`}>
                                                 {t.type === 'income' ? (
-                                                    <TrendingUp className="w-4 h-4 text-green-600" />
+                                                    <TrendingUp className="w-4 h-4 text-accent-text" />
                                                 ) : (
                                                     <TrendingDown className="w-4 h-4 text-red-400" />
                                                 )}
@@ -114,11 +118,11 @@ export default function CategoriesShow({ category, transactions }) {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-green-600' : 'text-red-400'}`}>
+                                            <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
                                                 {t.type === 'income' ? '+' : '-'}{formatBR(t.amount)}
                                             </span>
                                             <button onClick={() => handleDeleteTransaction(t)}
-                                                className="text-gray-500 hover:text-red-400 transition p-1 opacity-0 group-hover:opacity-100 cursor-pointer">
+                                                className="text-gray-500 hover:text-red-400 transition p-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 cursor-pointer">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
@@ -127,14 +131,14 @@ export default function CategoriesShow({ category, transactions }) {
                             </div>
                         </Card>
 
-                        <Pagination meta={meta} />
+                        <Pagination meta={meta} standalone />
                     </>
                 ) : (
                     <Card className="text-center py-12">
-                        <div className="w-12 h-12 mx-auto bg-gray-100 rounded-xl flex items-center justify-center mb-3 ring-1 ring-white/5">
+                        <div className="w-12 h-12 mx-auto bg-gray-100 rounded-xl flex items-center justify-center mb-3 ring-1 ring-gray-200/60">
                             <CalendarDays className="w-6 h-6 text-gray-500" />
                         </div>
-                        <p className="text-gray-400 font-medium">Nenhuma transação nesta categoria</p>
+                        <p className="text-gray-500 font-medium">Nenhuma transação nesta categoria</p>
                         <p className="text-gray-500 text-sm mt-1">As transações aparecerão aqui conforme você for registrando.</p>
                     </Card>
                 )}
@@ -149,13 +153,6 @@ export default function CategoriesShow({ category, transactions }) {
                         <Clock className="w-3 h-3" />
                         Atualizada {formatDateTime(category.updated_at)}
                     </span>
-                </div>
-
-                <div className="mt-6 flex justify-center">
-                    <Link href="/categories" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium transition">
-                        <ArrowLeft className="w-4 h-4" />
-                        Voltar para Categorias
-                    </Link>
                 </div>
             </main>
         </AppLayout>

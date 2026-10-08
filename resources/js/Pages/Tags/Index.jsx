@@ -1,7 +1,7 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, Badge, Pagination } from '@/Components'
-import { Plus, Trash2, Hash, ArrowLeft, Palette } from 'lucide-react'
+import { Plus, Trash2, Hash, Palette } from 'lucide-react'
 import { useState } from 'react'
 
 const presetColors = [
@@ -53,7 +53,7 @@ export default function TagsIndex({ tags }) {
             <Head title="Tags" />
 
             <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-                <div className="flex items-center justify-between gap-4 mb-6" data-tour="tags-header">
+                <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="tags-header">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Tags</h1>
                         <p className="text-gray-500 mt-1">Adicione rótulos às suas transações para organizar melhor.</p>
@@ -61,8 +61,7 @@ export default function TagsIndex({ tags }) {
                 </div>
 
                 {/* Quick add */}
-                <div className="mb-8 bg-gradient-to-br from-indigo-600/5 to-indigo-600/[0.02] rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden" data-tour="tags-form">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent" />
+                <div className="mb-8 bg-indigo-600/5 rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden" data-tour="tags-form">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <Plus className="w-5 h-5 text-indigo-400" />
                         Nova tag
@@ -99,10 +98,10 @@ export default function TagsIndex({ tags }) {
                 {/* Tags list */}
                 {items.length === 0 ? (
                     <Card className="text-center py-16" data-tour="tags-list">
-                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-white/5">
+                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-gray-200/60">
                             <Hash className="w-8 h-8 text-gray-500" />
                         </div>
-                        <p className="text-gray-400 font-medium">Nenhuma tag cadastrada</p>
+                        <p className="text-gray-500 font-medium">Nenhuma tag cadastrada</p>
                         <p className="text-gray-500 text-sm mt-1">Crie tags para categorizar suas transações de forma flexível.</p>
                     </Card>
                 ) : (
@@ -128,7 +127,7 @@ export default function TagsIndex({ tags }) {
                                             type="text"
                                             value={editForm.name}
                                             onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                                            className="flex-1 px-3 py-1.5 rounded-lg border border-gray-200/60 bg-surface-elevated text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-600/20"
+                                            className="flex-1 px-3 py-1.5 rounded-lg border border-gray-200/60 bg-surface-elevated text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/20"
                                             autoFocus
                                         />
                                         <Button size="sm" variant="primary" onClick={() => saveEdit(tag)}>Salvar</Button>
@@ -147,7 +146,7 @@ export default function TagsIndex({ tags }) {
                                         <div className="flex items-center gap-1">
                                             <button
                                                 onClick={() => startEdit(tag)}
-                                                className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+                                                className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-lg hover:bg-gray-100 transition cursor-pointer"
                                             >
                                                 Editar
                                             </button>
@@ -165,14 +164,7 @@ export default function TagsIndex({ tags }) {
                     </div>
                 )}
 
-                <Pagination meta={meta} />
-
-                <div className="mt-8 flex justify-center">
-                    <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium transition">
-                        <ArrowLeft className="w-4 h-4" />
-                        Voltar para Início
-                    </Link>
-                </div>
+                <Pagination meta={meta} standalone />
             </main>
         </AppLayout>
     )

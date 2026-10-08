@@ -28,7 +28,7 @@ export default function CategoriesEdit({ category }) {
 
             <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8">
-                    <Link href="/categories" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium mb-4 transition">
+                    <Link href="/categories" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
                         <ArrowLeft className="w-4 h-4" />
                         Voltar para Categorias
                     </Link>
@@ -45,7 +45,7 @@ export default function CategoriesEdit({ category }) {
                     </div>
                 )}
 
-                <Card accent>
+                <Card>
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <Input
                             label="Nome"
@@ -74,7 +74,7 @@ export default function CategoriesEdit({ category }) {
                                     type="button"
                                     onClick={() => setData('color', '')}
                                     className={`w-8 h-8 rounded-full border-2 transition cursor-pointer flex items-center justify-center text-[10px] font-medium ${
-                                        !data.color ? 'border-gray-200 scale-110 ring-2 ring-green-600/30' : 'border-transparent text-gray-500 hover:border-gray-200'
+                                        !data.color ? 'border-gray-200 scale-110 ring-2 ring-primary/30' : 'border-transparent text-gray-500 hover:border-gray-200'
                                     } bg-gray-100`}
                                 >
                                     —
@@ -85,7 +85,7 @@ export default function CategoriesEdit({ category }) {
                                         type="button"
                                         onClick={() => setData('color', c)}
                                         className={`w-8 h-8 rounded-full border-2 transition cursor-pointer ${
-                                            data.color === c ? 'border-gray-200 scale-110 ring-2 ring-green-600/30' : 'border-transparent'
+                                            data.color === c ? 'border-gray-200 scale-110 ring-2 ring-primary/30' : 'border-transparent'
                                         }`}
                                         style={{ backgroundColor: c }}
                                     />
@@ -98,7 +98,7 @@ export default function CategoriesEdit({ category }) {
                                 <Save className="w-4 h-4" />
                                 Salvar alterações
                             </Button>
-                            <Link href="/categories" className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm text-gray-500 hover:text-gray-300 font-medium rounded-xl hover:bg-gray-100 transition">
+                            <Link href="/categories" className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm text-gray-500 hover:text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition">
                                 <ArrowLeft className="w-4 h-4" />
                                 Cancelar
                             </Link>

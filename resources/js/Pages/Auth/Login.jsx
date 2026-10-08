@@ -10,8 +10,8 @@ export default function Login() {
                 <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-gray-200">
                     <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-8 h-16">
                         <Link href="/" className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-green-500 rounded-lg flex items-center justify-center shadow-sm">
-                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+                                <svg className="w-4 h-4 text-primary-fg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
                                 </svg>
                             </div>
@@ -34,12 +34,12 @@ export default function Login() {
                                 card: 'shadow-none p-0',
                                 headerTitle: 'text-2xl font-bold text-gray-800',
                                 headerSubtitle: 'text-sm text-gray-500',
-                                formButtonPrimary: 'bg-green-600 hover:bg-green-700 text-sm text-white font-semibold',
+                                formButtonPrimary: 'bg-primary hover:bg-primary-hover text-sm text-primary-fg font-semibold',
                                 formFieldLabel: 'text-sm text-gray-600',
-                                formFieldInput: 'w-full px-4 py-3 rounded-xl border border-gray-200 bg-surface-elevated text-gray-800 focus:ring-2 focus:ring-green-600/30 focus:border-green-600 placeholder-gray-400',
-                                footerActionLink: 'text-green-600 hover:text-green-700 font-medium',
+                                formFieldInput: 'w-full px-4 py-3 rounded-xl border border-gray-200 bg-surface-elevated text-gray-800 focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder-gray-400',
+                                footerActionLink: 'text-accent-text hover:text-accent-text-hover font-medium',
                                 dividerLine: 'bg-gray-200',
-                                dividerText: 'text-xs text-gray-400',
+                                dividerText: 'text-xs text-gray-500',
                                 socialButtonsBlockButton: 'border border-gray-200 bg-surface hover:bg-surface-accent text-sm text-gray-700 rounded-xl',
                                 socialButtonsBlockButtonText: 'text-gray-700 font-medium',
                                 formHeaderTitle: 'text-2xl font-bold text-gray-800',

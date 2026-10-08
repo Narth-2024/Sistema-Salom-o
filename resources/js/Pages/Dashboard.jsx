@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react'
 import { Head, Link, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, OnboardingChecklist } from '@/Components'
+import { chartColors } from '@/lib/chartColors.js'
 import {
     TrendingUp, TrendingDown, Wallet, Plus, ArrowRight,
-    ArrowUpRight, ArrowDownRight, CalendarDays, Sparkles,
+    ArrowUpRight, ArrowDownRight, CalendarDays,
     ArrowLeftRight, Tags as TagsIcon
 } from 'lucide-react'
 
@@ -71,7 +72,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                 padding: 16,
                                 usePointStyle: true,
                                 pointStyleWidth: 8,
-                                color: '#b4b4bd',
+                                color: chartColors().text,
                                 font: { family: 'Inter, system-ui, sans-serif', size: 11 }
                             }
                         }
@@ -94,40 +95,38 @@ export default function Dashboard({ income, expense, balance, recentTransactions
         return {
             display: `${isUp ? '+' : ''}${value}%`,
             icon: isUp ? ArrowUpRight : ArrowDownRight,
-            color: isGood ? 'text-green-600' : 'text-red-400',
-            bg: isGood ? 'bg-green-600/10' : 'bg-red-500/10',
+            color: isGood ? 'text-accent-text' : 'text-red-400',
+            bg: isGood ? 'bg-primary/10' : 'bg-red-500/10',
         }
     }
 
     const summaryCards = [
         {
             label: 'Receitas', value: income,
-            color: 'text-green-600', bg: 'bg-gradient-to-br from-green-600/5 to-green-600/[0.02]',
-            icon: TrendingUp, iconBg: 'bg-green-600/10 text-green-600',
-            accent: 'bg-green-600',
+            color: 'text-accent-text', bg: 'bg-primary/5',
+            icon: TrendingUp, iconBg: 'bg-primary/10 text-accent-text',
             trend: trendInfo('Receitas', incomeTrend),
         },
         {
             label: 'Despesas', value: expense,
-            color: 'text-red-400', bg: 'bg-gradient-to-br from-red-500/5 to-red-500/[0.02]',
+            color: 'text-red-400', bg: 'bg-red-500/5',
             icon: TrendingDown, iconBg: 'bg-red-500/10 text-red-400',
-            accent: 'bg-red-400',
             trend: trendInfo('Despesas', expenseTrend),
         },
         {
             label: 'Saldo', value: balance,
-            color: balance >= 0 ? 'text-green-600' : 'text-red-400',
-            bg: balance >= 0 ? 'bg-gradient-to-br from-green-600/5 to-green-600/[0.02]' : 'bg-gradient-to-br from-red-500/5 to-red-500/[0.02]',
-            icon: Wallet, iconBg: balance >= 0 ? 'bg-green-600/10 text-green-600' : 'bg-red-500/10 text-red-400',
-            accent: balance >= 0 ? 'bg-green-600' : 'bg-red-400',
+            color: balance >= 0 ? 'text-accent-text' : 'text-red-400',
+            bg: balance >= 0 ? 'bg-primary/5' : 'bg-red-500/5',
+            icon: Wallet, iconBg: balance >= 0 ? 'bg-primary/10 text-accent-text' : 'bg-red-500/10 text-red-400',
+            
             trend: null,
         },
     ]
 
     const quickActions = [
-        { href: '/transactions/create', label: 'Nova transação', desc: 'Registre entrada ou saída', icon: Plus, color: 'text-green-600', bg: 'bg-green-600/10', gradient: 'from-green-600/5 to-transparent' },
-        { href: '/categories', label: 'Categorias', desc: 'Gerencie categorias', icon: TagsIcon, color: 'text-indigo-400', bg: 'bg-indigo-500/10', gradient: 'from-indigo-500/5 to-transparent' },
-        { href: '/transactions', label: 'Transações', desc: 'Veja todas', icon: ArrowLeftRight, color: 'text-amber-400', bg: 'bg-amber-500/10', gradient: 'from-amber-500/5 to-transparent' },
+        { href: '/transactions/create', label: 'Nova transação', desc: 'Registre entrada ou saída', icon: Plus, color: 'text-accent-text', bg: 'bg-primary/10' },
+        { href: '/categories', label: 'Categorias', desc: 'Gerencie categorias', icon: TagsIcon, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+        { href: '/transactions', label: 'Transações', desc: 'Veja todas', icon: ArrowLeftRight, color: 'text-amber-400', bg: 'bg-amber-500/10' },
     ]
 
     return (
@@ -137,12 +136,10 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Welcome banner */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-950/90 to-emerald-950/80 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-800/20 shadow-lg shadow-emerald-950/30" data-tour="dash-banner">
-                    <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-600/5 rounded-full blur-3xl" />
-                    <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl" />
+                <div className="relative bg-emerald-950 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-800/20" data-tour="dash-banner">
                     <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg shadow-green-600/20 ring-1 ring-green-400/20 shrink-0">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-primary flex items-center justify-center text-primary-fg text-xl sm:text-2xl font-bold shadow-lg shadow-primary/20 ring-1 ring-primary/30 shrink-0">
                                 {auth.user.avatar_url ? (
                                     <img src={auth.user.avatar_url} alt="" className="w-full h-full object-cover" />
                                 ) : (
@@ -152,7 +149,6 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                                     {getGreeting()}, {auth.user.name?.split(' ')[0]}
-                                    <Sparkles className="w-5 h-5 text-amber-400" />
                                 </h1>
                                 <p className="text-emerald-200/70 text-sm flex items-center gap-1.5 mt-0.5">
                                     <CalendarDays className="w-3.5 h-3.5" />
@@ -161,7 +157,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                             </div>
                         </div>
                         <Link href="/transactions/create">
-                            <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-lg shadow-green-600/15">
+                            <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-lg shadow-primary/15">
                                 <Plus className="w-4 h-4" />
                                 Nova transação
                             </Button>
@@ -173,10 +169,9 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                     {summaryCards.map((card, idx) => (
                         <div key={card.label} className={`${card.bg} rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden animate-fade-in`} style={{ animationDelay: `${idx * 80}ms` }}>
-                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
                             <div className="flex items-start justify-between mb-3">
                                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{card.label}</span>
-                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.iconBg} ring-1 ring-white/5`}>
+                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.iconBg} ring-1 ring-gray-200/60`}>
                                     <card.icon className="w-[18px] h-[18px]" />
                                 </div>
                             </div>
@@ -184,7 +179,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                 {formatBR(card.value)}
                             </p>
                             {card.trend && (
-                                <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${card.trend.bg} ${card.trend.color} mt-1 ring-1 ring-white/5`}>
+                                <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${card.trend.bg} ${card.trend.color} mt-1 ring-1 ring-gray-200/60`}>
                                     <card.trend.icon className="w-3 h-3" />
                                     {card.trend.display} vs mês passado
                                 </div>
@@ -201,9 +196,9 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
                 {/* Chart + Recent transactions */}
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
-                    <Card className="lg:col-span-2" accent>
+                    <Card className="lg:col-span-2">
                         <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                            <Wallet className="w-4 h-4 text-green-600" />
+                            <Wallet className="w-4 h-4 text-accent-text" />
                             Despesas por categoria
                             {expensesByCategory.length > 0 && (
                                 <span className="text-xs text-gray-500 font-normal">({expensesByCategory.length})</span>
@@ -221,13 +216,13 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                         )}
                     </Card>
 
-                    <Card className="lg:col-span-3" padding={false} accent>
+                    <Card className="lg:col-span-3" padding={false}>
                         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/60">
                             <h2 className="text-base font-semibold text-gray-800 flex items-center gap-2">
-                                <ArrowLeftRight className="w-4 h-4 text-green-600" />
+                                <ArrowLeftRight className="w-4 h-4 text-accent-text" />
                                 Últimas transações
                             </h2>
-                            <Link href="/transactions" className="text-sm text-green-600 hover:text-green-500 font-medium inline-flex items-center gap-1 transition-colors">
+                            <Link href="/transactions" className="text-sm text-accent-text hover:text-accent-text-hover font-medium inline-flex items-center gap-1 transition-colors">
                                 Ver todas
                                 <ArrowRight className="w-3.5 h-3.5" />
                             </Link>
@@ -237,7 +232,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                             <div className="text-center py-12">
                                 <Wallet className="w-10 h-10 mx-auto text-gray-500 mb-3" />
                                 <p className="text-gray-500 text-sm">Nenhuma transação registrada.</p>
-                                <Link href="/transactions/create" className="text-green-600 text-sm font-medium hover:underline mt-1 inline-block">
+                                <Link href="/transactions/create" className="text-accent-text text-sm font-medium hover:underline mt-1 inline-block">
                                     Nova transação
                                 </Link>
                             </div>
@@ -246,7 +241,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                 {recentTransactions.map(t => (
                                     <div key={t.id} className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-100/40 transition-colors">
                                         <div className="flex items-center gap-3 min-w-0">
-                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-green-600/10 text-green-600' : 'bg-red-500/10 text-red-400'} ring-1 ring-white/5`}>
+                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-primary/10 text-accent-text' : 'bg-red-500/10 text-red-400'} ring-1 ring-gray-200/60`}>
                                                 {t.type === 'income' ? (
                                                     <TrendingUp className="w-4 h-4" />
                                                 ) : (
@@ -259,7 +254,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                             </div>
                                         </div>
                                         <div className="text-right shrink-0 ml-3">
-                                            <p className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-green-600' : 'text-red-400'}`}>
+                                            <p className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
                                                 {t.type === 'income' ? '+' : '-'}{formatBR(t.amount)}
                                             </p>
                                             {t.description && (
@@ -277,17 +272,17 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {quickActions.map((action, idx) => (
                         <Link key={action.href} href={action.href}
-                            className={`group flex items-center gap-3 bg-gradient-to-r ${action.gradient} bg-surface border border-gray-200/60 rounded-2xl p-4 hover:border-gray-300/60 hover:-translate-y-0.5 transition-all duration-200 animate-fade-in relative overflow-hidden`}
+                            className={`group flex items-center gap-3 bg-surface border border-gray-200/60 rounded-2xl p-4 hover:border-gray-300/60 hover:-translate-y-0.5 transition duration-200 animate-fade-in relative overflow-hidden`}
                             style={{ animationDelay: `${idx * 100}ms` }}
                         >
-                            <div className={`w-10 h-10 rounded-xl ${action.bg} flex items-center justify-center group-hover:scale-110 transition-transform duration-200 ring-1 ring-white/5`}>
+                            <div className={`w-10 h-10 rounded-xl ${action.bg} flex items-center justify-center group-hover:scale-110 transition-transform duration-200 ring-1 ring-gray-200/60`}>
                                 <action.icon className={`w-5 h-5 ${action.color}`} />
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-gray-700">{action.label}</p>
                                 <p className="text-xs text-gray-500">{action.desc}</p>
                             </div>
-                            <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-green-600 transition-colors shrink-0" />
+                            <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-accent-text-hover transition-colors shrink-0" />
                         </Link>
                     ))}
                 </div>

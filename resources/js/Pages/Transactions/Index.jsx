@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Badge, Button, Pagination } from '@/Components'
 import {
     Plus, Eye, Edit2, Trash2, TrendingUp, TrendingDown,
-    ArrowLeft, Search, X, Download
+    Search, X, Download
 } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 
@@ -86,7 +86,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
 
             <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6" data-tour="tx-header">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="tx-header">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Transações</h1>
                         <p className="text-gray-500 mt-1">Registre e acompanhe suas movimentações financeiras.</p>
@@ -103,20 +103,17 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
 
                 {/* Stats bar */}
                 <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6" data-tour="tx-stats">
-                    <div className="bg-gradient-to-br from-green-600/5 to-green-600/[0.02] rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                    <div className="bg-primary/5 rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Receitas</p>
-                        <p className="text-base sm:text-lg font-extrabold text-green-600 tabular-nums">{formatBR(totalIncome)}</p>
+                        <p className="text-lg sm:text-2xl font-extrabold text-accent-text tabular-nums">{formatBR(totalIncome)}</p>
                     </div>
-                    <div className="bg-gradient-to-br from-red-500/5 to-red-500/[0.02] rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-400/30 to-transparent" />
+                    <div className="bg-red-500/5 rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Despesas</p>
-                        <p className="text-base sm:text-lg font-extrabold text-red-400 tabular-nums">{formatBR(totalExpense)}</p>
+                        <p className="text-lg sm:text-2xl font-extrabold text-red-400 tabular-nums">{formatBR(totalExpense)}</p>
                     </div>
-                    <div className={`rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden ${totalBalance >= 0 ? 'bg-gradient-to-br from-green-600/5 to-green-600/[0.02]' : 'bg-gradient-to-br from-red-500/5 to-red-500/[0.02]'}`}>
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                    <div className={`rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden ${totalBalance >= 0 ? 'bg-primary/5' : 'bg-red-500/5'}`}>
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Saldo</p>
-                        <p className={`text-base sm:text-lg font-extrabold tabular-nums ${totalBalance >= 0 ? 'text-green-600' : 'text-red-400'}`}>
+                        <p className={`text-lg sm:text-2xl font-extrabold tabular-nums ${totalBalance >= 0 ? 'text-accent-text' : 'text-red-400'}`}>
                             {formatBR(Math.abs(totalBalance))}
                         </p>
                     </div>
@@ -131,57 +128,72 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             placeholder="Buscar por descrição..."
-                            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600/50 transition"
+                            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                         />
                         {search && (
                             <button
                                 onClick={() => { setSearch(''); applyFilters({ search: '' }) }}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-400 cursor-pointer"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                             >
                                 <X className="w-4 h-4" />
                             </button>
                         )}
                     </div>
-                    <select
-                        value={typeFilter}
-                        onChange={e => { setTypeFilter(e.target.value); applyFilters({ type: e.target.value }) }}
-                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600/50 transition"
-                    >
-                        <option value="">Todos os tipos</option>
-                        <option value="income">Receitas</option>
-                        <option value="expense">Despesas</option>
-                    </select>
-                    <select
-                        value={categoryFilter}
-                        onChange={e => { setCategoryFilter(e.target.value); applyFilters({ category_id: e.target.value }) }}
-                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600/50 transition"
-                    >
-                        <option value="">Todas as categorias</option>
-                        {categories.map(cat => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
-                    </select>
-                    <select
-                        value={tagFilter}
-                        onChange={e => { setTagFilter(e.target.value); applyFilters({ tag_id: e.target.value }) }}
-                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600/50 transition"
-                    >
-                        <option value="">Todas as tags</option>
-                        {tags.map(tag => (
-                            <option key={tag.id} value={tag.id}>{tag.name}</option>
-                        ))}
-                    </select>
+                    <div className="relative">
+                        <select
+                            value={typeFilter}
+                            onChange={e => { setTypeFilter(e.target.value); applyFilters({ type: e.target.value }) }}
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                        >
+                            <option value="">Todos os tipos</option>
+                            <option value="income">Receitas</option>
+                            <option value="expense">Despesas</option>
+                        </select>
+                        <svg className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div className="relative">
+                        <select
+                            value={categoryFilter}
+                            onChange={e => { setCategoryFilter(e.target.value); applyFilters({ category_id: e.target.value }) }}
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                        >
+                            <option value="">Todas as categorias</option>
+                            {categories.map(cat => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                        </select>
+                        <svg className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div className="relative">
+                        <select
+                            value={tagFilter}
+                            onChange={e => { setTagFilter(e.target.value); applyFilters({ tag_id: e.target.value }) }}
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                        >
+                            <option value="">Todas as tags</option>
+                            {tags.map(tag => (
+                                <option key={tag.id} value={tag.id}>{tag.name}</option>
+                            ))}
+                        </select>
+                        <svg className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
                     <input
                         type="date"
                         value={dateFrom}
                         onChange={e => { setDateFrom(e.target.value); applyFilters({ date_from: e.target.value }) }}
-                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600/50 transition"
+                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                     />
                     <input
                         type="date"
                         value={dateTo}
                         onChange={e => { setDateTo(e.target.value); applyFilters({ date_to: e.target.value }) }}
-                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600/50 transition"
+                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                     />
                     {hasActiveFilters && (
                         <button
@@ -195,7 +207,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                 </div>
 
                 {/* Transactions table */}
-                <Card padding={false} accent data-tour="tx-table">
+                <Card padding={false} data-tour="tx-table">
                     <div className="px-6 py-4 border-b border-gray-200/60 flex items-center justify-between">
                         <h2 className="text-base font-semibold text-gray-800">Histórico</h2>
                         <Badge variant="default">{meta?.total || data.length} registro(s)</Badge>
@@ -203,10 +215,10 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
 
                     {data.length === 0 ? (
                         <div className="px-6 py-16 text-center">
-                            <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-white/5">
+                            <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-gray-200/60">
                                 <TrendingDown className="w-8 h-8 text-gray-500" />
                             </div>
-                            <p className="text-gray-400 font-medium">
+                            <p className="text-gray-500 font-medium">
                                 {hasActiveFilters ? 'Nenhuma transação encontrada' : 'Nenhuma transação registrada'}
                             </p>
                             <p className="text-gray-500 text-sm mt-1 mb-4">
@@ -272,16 +284,16 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                 </Badge>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-green-600' : 'text-red-400'}`}>
+                                                <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
                                                     {t.type === 'income' ? '+' : '-'} {formatBR(t.amount)}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                <div className="flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition">
-                                                    <Link href={`/transactions/${t.id}`} className="text-gray-500 hover:text-gray-300 transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                <div className="flex items-center justify-end gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition">
+                                                    <Link href={`/transactions/${t.id}`} className="text-gray-500 hover:text-gray-700 transition p-1.5 rounded-lg hover:bg-gray-100">
                                                         <Eye className="w-4 h-4" />
                                                     </Link>
-                                                    <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-green-600 transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                    <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
                                                         <Edit2 className="w-4 h-4" />
                                                     </Link>
                                                     <button onClick={() => handleDelete(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
@@ -299,12 +311,6 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                     <Pagination meta={meta} />
                 </Card>
 
-                <div className="mt-6 flex justify-center">
-                    <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium transition">
-                        <ArrowLeft className="w-4 h-4" />
-                        Voltar para Início
-                    </Link>
-                </div>
             </main>
         </AppLayout>
     )

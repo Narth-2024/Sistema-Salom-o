@@ -22,7 +22,7 @@ export default function TagPicker({ tags, selectedIds, onChange }) {
                             key={tag.id}
                             type="button"
                             onClick={() => toggle(tag.id)}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all duration-150 cursor-pointer ${
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition duration-150 cursor-pointer ${
                                 selected
                                     ? 'text-white ring-1 ring-white/10'
                                     : 'text-gray-500 bg-gray-100 hover:bg-gray-200'

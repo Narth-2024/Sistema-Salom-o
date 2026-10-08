@@ -1,11 +1,12 @@
 import { Link } from '@inertiajs/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Card from './Card'
 
-export default function Pagination({ meta }) {
+export default function Pagination({ meta, standalone = false }) {
     if (!meta || meta.last_page <= 1) return null
 
-    return (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+    const content = (
+        <div className={`flex items-center justify-between px-4 sm:px-6 py-4 ${standalone ? '' : 'border-t border-gray-200'}`}>
             <p className="text-sm text-gray-500">
                 Mostrando {meta.from} a {meta.to} de {meta.total} registro(s)
             </p>
@@ -21,7 +22,7 @@ export default function Pagination({ meta }) {
                                 preserveScroll
                                 className={`p-2 rounded-lg text-sm transition ${
                                     link.url
-                                        ? 'text-gray-500 hover:text-gray-400 hover:bg-gray-100'
+                                        ? 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                                         : 'text-gray-400 cursor-default pointer-events-none'
                                 }`}
                             >
@@ -39,7 +40,7 @@ export default function Pagination({ meta }) {
                                 preserveScroll
                                 className={`p-2 rounded-lg text-sm transition ${
                                     link.url
-                                        ? 'text-gray-500 hover:text-gray-400 hover:bg-gray-100'
+                                        ? 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                                         : 'text-gray-400 cursor-default pointer-events-none'
                                 }`}
                             >
@@ -56,9 +57,9 @@ export default function Pagination({ meta }) {
                             preserveScroll
                             className={`min-w-[32px] h-8 flex items-center justify-center rounded-lg text-sm font-medium transition ${
                                 link.active
-                                    ? 'bg-green-600 text-white'
+                                    ? 'bg-primary text-primary-fg'
                                     : link.url
-                                        ? 'text-gray-500 hover:text-gray-400 hover:bg-gray-100'
+                                        ? 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                                         : 'text-gray-400 cursor-default pointer-events-none'
                             }`}
                         >
@@ -69,4 +70,10 @@ export default function Pagination({ meta }) {
             </div>
         </div>
     )
+
+    if (standalone) {
+        return <Card padding={false} className="mt-6 overflow-hidden">{content}</Card>
+    }
+
+    return content
 }

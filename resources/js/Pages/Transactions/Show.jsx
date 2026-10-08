@@ -29,20 +29,20 @@ export default function TransactionsShow({ transaction }) {
 
             <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Back link */}
-                <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium mb-6 transition">
+                <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-6 transition">
                     <ArrowLeft className="w-4 h-4" />
                     Voltar para transações
                 </Link>
 
                 {/* Main detail card */}
                 <Card className="relative overflow-hidden" accent={transaction.type === 'income' ? true : 'danger'}>
-                    <div className={`absolute top-0 left-0 w-1.5 h-full ${transaction.type === 'income' ? 'bg-green-600' : 'bg-red-400'}`} />
+                    <div className={`absolute top-0 left-0 w-1.5 h-full ${transaction.type === 'income' ? 'bg-primary' : 'bg-red-400'}`} />
 
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pl-2">
                         <div className="flex items-center gap-4">
-                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${transaction.type === 'income' ? 'bg-green-600/10' : 'bg-red-500/10'} ring-1 ring-white/5`}>
+                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${transaction.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'} ring-1 ring-gray-200/60`}>
                                 {transaction.type === 'income' ? (
-                                    <TrendingUp className="w-7 h-7 text-green-600" />
+                                    <TrendingUp className="w-7 h-7 text-accent-text" />
                                 ) : (
                                     <TrendingDown className="w-7 h-7 text-red-400" />
                                 )}
@@ -69,10 +69,9 @@ export default function TransactionsShow({ transaction }) {
                     </div>
 
                     {/* Amount display */}
-                    <div className={`${transaction.type === 'income' ? 'bg-gradient-to-br from-green-600/5 to-green-600/[0.02]' : 'bg-gradient-to-br from-red-500/5 to-red-500/[0.02]'} rounded-xl p-5 mb-6 border border-gray-200/40 relative overflow-hidden`}>
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-600/30 to-transparent" />
+                    <div className={`${transaction.type === 'income' ? 'bg-primary/5' : 'bg-red-500/5'} rounded-xl p-5 mb-6 border border-gray-200/40 relative overflow-hidden`}>
                         <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Valor</p>
-                        <p className={`text-3xl sm:text-4xl font-extrabold tabular-nums ${transaction.type === 'income' ? 'text-green-600' : 'text-red-400'}`}>
+                        <p className={`text-3xl sm:text-4xl font-extrabold tabular-nums ${transaction.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
                             {transaction.type === 'income' ? '+' : '-'} {formatBR(transaction.amount)}
                         </p>
                     </div>

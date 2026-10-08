@@ -26,7 +26,7 @@ export default function TransactionsCreate({ categories, tags }) {
 
             <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8">
-                    <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 font-medium mb-4 transition">
+                    <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
                         <ArrowLeft className="w-4 h-4" />
                         Voltar para transações
                     </Link>
@@ -46,7 +46,7 @@ export default function TransactionsCreate({ categories, tags }) {
                     </div>
                 )}
 
-                <Card accent>
+                <Card>
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
                             <Select
@@ -114,7 +114,7 @@ export default function TransactionsCreate({ categories, tags }) {
                                 <Plus className="w-4 h-4" />
                                 Registrar transação
                             </Button>
-                            <Link href="/transactions" className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm text-gray-500 hover:text-gray-300 font-medium rounded-xl hover:bg-gray-100 transition">
+                            <Link href="/transactions" className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm text-gray-500 hover:text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition">
                                 <ArrowLeft className="w-4 h-4" />
                                 Cancelar
                             </Link>
