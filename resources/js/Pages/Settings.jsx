@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
 import { startAppTour } from '@/tour/AppTour'
 import useTheme from '@/hooks/useTheme'
-import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star } from 'lucide-react'
+import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function Settings() {
@@ -195,9 +195,20 @@ export default function Settings() {
                             <Star className="w-4 h-4" />
                             Avaliar o sistema
                         </a>
+                        <a
+                            href="https://github.com/Narth-2024/Sistema-Salom-o/issues/new?template=bug_report.md"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-tour="help-bug"
+                            className="inline-flex items-center justify-center gap-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 px-4 py-2 rounded-xl text-sm font-medium transition cursor-pointer"
+                        >
+                            <Bug className="w-4 h-4" />
+                            Reportar bug
+                        </a>
                     </div>
                     <p className="text-xs text-gray-500 mt-3">
                         O formulário de avaliação deve ser respondido após o uso do sistema — leva menos de 2 minutos.
+                        Encontrou um erro? Clique em "Reportar bug" para abrir um issue no GitHub.
                     </p>
                 </Card>
             </main>

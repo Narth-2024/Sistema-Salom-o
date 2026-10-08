@@ -191,6 +191,16 @@ const SEGMENTS = [
                     side: 'top',
                 },
             },
+            {
+                element: '[data-tour="help-bug"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Reportar bug',
+                    description:
+                        'Encontrou um erro? Clique aqui para abrir um issue no GitHub e descrever o problema — assim conseguimos corrigir mais rápido.',
+                    side: 'top',
+                },
+            },
         ],
     },
     {
