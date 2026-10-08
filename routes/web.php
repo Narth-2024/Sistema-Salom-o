@@ -9,6 +9,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TransactionController;
+use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -28,6 +30,19 @@ Route::get('/auth/clerk-callback', [ClerkCallbackController::class, 'show'])
 
 Route::post('/auth/clerk-exchange', [ClerkCallbackController::class, 'exchange'])
     ->middleware('guest');
+
+// Cron do Vercel: cria transações recorrentes do mês
+Route::get('/cron/recurring', function () {
+    $secret = config('services.cron.secret');
+
+    if (! $secret || request()->query('secret') !== $secret) {
+        abort(403);
+    }
+
+    Artisan::call('transactions:spawn-recurring');
+
+    return response()->json(['success' => true, 'output' => Artisan::output()]);
+});
 
 // Rotas de autenticação (renderizam Inertia com Clerk)
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

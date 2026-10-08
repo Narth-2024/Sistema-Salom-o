@@ -93,6 +93,7 @@ class TransactionController extends Controller
             'amount' => 'required|numeric|min:0.01|max:99999999.99',
             'description' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
+            'is_recurring' => 'nullable|boolean',
             'tag_ids' => 'nullable|array',
             'tag_ids.*' => 'exists:tags,id',
         ]);
@@ -151,6 +152,7 @@ class TransactionController extends Controller
             'amount' => 'required|numeric|min:0.01|max:99999999.99',
             'description' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
+            'is_recurring' => 'nullable|boolean',
             'tag_ids' => 'nullable|array',
             'tag_ids.*' => 'exists:tags,id',
         ]);

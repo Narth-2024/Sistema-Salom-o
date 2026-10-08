@@ -18,6 +18,11 @@ class Transaction extends Model
         'amount',
         'description',
         'transaction_date',
+        'is_recurring',
+    ];
+
+    protected $casts = [
+        'is_recurring' => 'boolean',
     ];
 
     public function user(): BelongsTo

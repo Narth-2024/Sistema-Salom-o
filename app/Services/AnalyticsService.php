@@ -3,12 +3,17 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class AnalyticsService
 {
-    public function getTotals(User $user): array
+    public function getTotals(User $user, string $period = 'all'): array
     {
-        $totals = $user->transactions()
+        $query = $user->transactions();
+
+        $this->applyPeriod($query, $period);
+
+        $totals = $query
             ->selectRaw('type, SUM(amount) as total')
             ->groupBy('type')
             ->pluck('total', 'type');
@@ -23,10 +28,10 @@ class AnalyticsService
         ];
     }
 
-    public function getMonthlyComparison(User $user): array
+    public function getMonthlyComparison(User $user, string $period = 'month'): array
     {
-        $currentMonth = now()->startOfMonth();
-        $previousMonth = now()->subMonth()->startOfMonth();
+        $currentMonth = Carbon::now()->startOfMonth();
+        $previousMonth = Carbon::now()->subMonth()->startOfMonth();
 
         $current = $user->transactions()
             ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income")
@@ -64,5 +69,27 @@ class AnalyticsService
                 ? round((($currentExpense - $previousExpense) / $previousExpense) * 100, 1)
                 : ($currentExpense > 0 ? 100 : 0),
         ];
+    }
+
+    private function applyPeriod($query, string $period): void
+    {
+        switch ($period) {
+            case 'month':
+                $query->where('transaction_date', '>=', Carbon::now()->startOfMonth());
+                break;
+            case 'last_month':
+                $query->where('transaction_date', '>=', Carbon::now()->subMonth()->startOfMonth())
+                    ->where('transaction_date', '<', Carbon::now()->startOfMonth());
+                break;
+            case '3_months':
+                $query->where('transaction_date', '>=', Carbon::now()->subMonths(3)->startOfMonth());
+                break;
+            case 'year':
+                $query->where('transaction_date', '>=', Carbon::now()->startOfYear());
+                break;
+            case 'all':
+            default:
+                break;
+        }
     }
 }

@@ -1,7 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, Select, TagPicker } from '@/Components'
-import { ArrowLeft, Plus, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, Plus, AlertTriangle, RefreshCcw } from 'lucide-react'
 
 export default function TransactionsCreate({ categories, tags }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -10,6 +10,7 @@ export default function TransactionsCreate({ categories, tags }) {
         amount: '',
         transaction_date: new Date().toISOString().slice(0, 10),
         description: '',
+        is_recurring: false,
         tag_ids: [],
     })
 
@@ -109,6 +110,22 @@ export default function TransactionsCreate({ categories, tags }) {
                                 onChange={ids => setData('tag_ids', ids)}
                             />
                         </div>
+
+                        <label className="flex items-center gap-3 p-4 rounded-xl border border-border bg-surface-elevated mb-6 cursor-pointer hover:border-border-strong transition">
+                            <input
+                                type="checkbox"
+                                checked={data.is_recurring}
+                                onChange={e => setData('is_recurring', e.target.checked)}
+                                className="w-4 h-4 rounded accent-[var(--color-primary)] cursor-pointer"
+                            />
+                            <div className="flex items-center gap-2">
+                                <RefreshCcw className="w-4 h-4 text-accent-text" />
+                                <div>
+                                    <p className="text-sm font-medium text-gray-800">Transação recorrente</p>
+                                    <p className="text-xs text-gray-500">Será replicada automaticamente todo mês</p>
+                                </div>
+                            </div>
+                        </label>
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-border">
                             <Button type="submit" variant="primary" disabled={processing} className="flex-1 sm:flex-none">

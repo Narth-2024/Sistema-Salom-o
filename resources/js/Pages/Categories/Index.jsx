@@ -1,6 +1,6 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Select, Badge, Pagination } from '@/Components'
+import { Card, Button, Input, Select, Badge, Pagination, ConfirmDialog } from '@/Components'
 import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, Tags, FolderOpen } from 'lucide-react'
 import { useState } from 'react'
 
@@ -13,6 +13,7 @@ const presetColors = [
 export default function CategoriesIndex({ categories }) {
     const items = categories.data || categories
     const meta = categories.meta || null
+    const [deleteTarget, setDeleteTarget] = useState(null)
 
     const { data, setData, post, processing, reset } = useForm({
         name: '',
@@ -26,7 +27,6 @@ export default function CategoriesIndex({ categories }) {
     }
 
     function handleDelete(category) {
-        if (!confirm('Tem certeza que deseja excluir esta categoria?')) return
         router.delete(`/categories/${category.id}`)
     }
 
@@ -115,7 +115,7 @@ export default function CategoriesIndex({ categories }) {
                                             className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
                                             <Edit2 className="w-4 h-4" />
                                         </Link>
-                                        <button onClick={() => handleDelete(category)}
+                                        <button onClick={() => setDeleteTarget(category)}
                                             className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
                                             <Trash2 className="w-4 h-4" />
                                         </button>
@@ -138,6 +138,15 @@ export default function CategoriesIndex({ categories }) {
                 )}
 
                 <Pagination meta={meta} standalone />
+
+                <ConfirmDialog
+                    open={!!deleteTarget}
+                    onClose={() => setDeleteTarget(null)}
+                    onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+                    title="Excluir categoria"
+                    message="Tem certeza que deseja excluir esta categoria? As transações vinculadas serão mantidas, mas ficarão sem categoria."
+                    itemLabel={deleteTarget?.name}
+                />
             </main>
         </AppLayout>
     )

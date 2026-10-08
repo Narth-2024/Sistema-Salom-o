@@ -1,6 +1,6 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Badge, Pagination } from '@/Components'
+import { Card, Button, Input, Badge, Pagination, ConfirmDialog } from '@/Components'
 import { Plus, Trash2, Hash, Palette } from 'lucide-react'
 import { useState } from 'react'
 
@@ -21,6 +21,7 @@ export default function TagsIndex({ tags }) {
 
     const [editingId, setEditingId] = useState(null)
     const [editForm, setEditForm] = useState({ name: '', color: '' })
+    const [deleteTarget, setDeleteTarget] = useState(null)
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -28,7 +29,6 @@ export default function TagsIndex({ tags }) {
     }
 
     function handleDelete(tag) {
-        if (!confirm(`Excluir a tag "${tag.name}"?`)) return
         router.delete(`/tags/${tag.id}`)
     }
 
@@ -151,7 +151,7 @@ export default function TagsIndex({ tags }) {
                                                 Editar
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(tag)}
+                                                onClick={() => setDeleteTarget(tag)}
                                                 className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -165,6 +165,15 @@ export default function TagsIndex({ tags }) {
                 )}
 
                 <Pagination meta={meta} standalone />
+
+                <ConfirmDialog
+                    open={!!deleteTarget}
+                    onClose={() => setDeleteTarget(null)}
+                    onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+                    title="Excluir tag"
+                    message="Tem certeza que deseja excluir esta tag? Ela será removida de todas as transações vinculadas."
+                    itemLabel={deleteTarget?.name}
+                />
             </main>
         </AppLayout>
     )

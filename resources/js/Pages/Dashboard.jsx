@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
-import { Head, Link, usePage } from '@inertiajs/react'
+import { Head, Link, router, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, OnboardingChecklist } from '@/Components'
 import { chartColors } from '@/lib/chartColors.js'
 import {
     TrendingUp, TrendingDown, Wallet, Plus, ArrowRight,
     ArrowUpRight, ArrowDownRight, CalendarDays,
-    ArrowLeftRight, Tags as TagsIcon
+    ArrowLeftRight, Tags as TagsIcon, Filter
 } from 'lucide-react'
 
 function formatBR(value) {
@@ -35,8 +35,23 @@ function formatDate() {
     return `${getWeekday()}, ${hoje.toLocaleDateString('pt-BR')}`
 }
 
-export default function Dashboard({ income, expense, balance, recentTransactions, expensesByCategory, incomeTrend, expenseTrend }) {
+export default function Dashboard({ income, expense, balance, recentTransactions, expensesByCategory, incomeTrend, expenseTrend, period = 'all' }) {
     const { auth } = usePage().props
+
+    const periodOptions = [
+        { value: 'month', label: 'Este mês' },
+        { value: 'last_month', label: 'Mês passado' },
+        { value: '3_months', label: 'Últimos 3 meses' },
+        { value: 'year', label: 'Este ano' },
+        { value: 'all', label: 'Tudo' },
+    ]
+
+    function handlePeriodChange(value) {
+        router.get('/dashboard', { period: value }, {
+            preserveState: true,
+            preserveScroll: true,
+        })
+    }
     const chartRef = useRef(null)
     const chartInstance = useRef(null)
 
@@ -163,6 +178,24 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                             </Button>
                         </Link>
                     </div>
+                </div>
+
+                {/* Period filter */}
+                <div className="flex items-center gap-2 mb-6 flex-wrap">
+                    <Filter className="w-4 h-4 text-gray-500" />
+                    {periodOptions.map(opt => (
+                        <button
+                            key={opt.value}
+                            onClick={() => handlePeriodChange(opt.value)}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer ${
+                                period === opt.value
+                                    ? 'bg-primary text-primary-fg shadow-sm'
+                                    : 'bg-surface border border-border text-gray-600 hover:border-border-strong hover:bg-gray-100'
+                            }`}
+                        >
+                            {opt.label}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Summary cards */}

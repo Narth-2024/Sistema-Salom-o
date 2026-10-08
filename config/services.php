@@ -43,4 +43,8 @@ return [
         'webhook_secret' => env('CLERK_WEBHOOK_SECRET'),
     ],
 
+    'cron' => [
+        'secret' => env('CRON_SECRET'),
+    ],
+
 ];

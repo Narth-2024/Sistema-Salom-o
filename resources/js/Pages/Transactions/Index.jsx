@@ -1,9 +1,9 @@
-import { Head, Link, router } from '@inertiajs/react'
+import { Head, Link, router, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Badge, Button, Pagination } from '@/Components'
+import { Card, Badge, Button, Pagination, ConfirmDialog, Skeleton } from '@/Components'
 import {
     Plus, Eye, Edit2, Trash2, TrendingUp, TrendingDown,
-    Search, X, Download
+    Search, X, Download, RefreshCcw
 } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 
@@ -23,6 +23,8 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
     const [tagFilter, setTagFilter] = useState(filters?.tag_id || '')
     const [dateFrom, setDateFrom] = useState(filters?.date_from || '')
     const [dateTo, setDateTo] = useState(filters?.date_to || '')
+    const [deleteTarget, setDeleteTarget] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     function applyFilters(overrides = {}) {
         const params = {}
@@ -36,6 +38,8 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
         router.get('/transactions', params, {
             preserveState: true,
             preserveScroll: true,
+            onStart: () => setLoading(true),
+            onFinish: () => setLoading(false),
         })
     }
 
@@ -61,11 +65,14 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
         setTagFilter('')
         setDateFrom('')
         setDateTo('')
-        router.get('/transactions', {}, { preserveState: true })
+        router.get('/transactions', {}, {
+            preserveState: true,
+            onStart: () => setLoading(true),
+            onFinish: () => setLoading(false),
+        })
     }
 
     function handleDelete(t) {
-        if (!confirm('Tem certeza que deseja excluir esta transação?')) return
         router.delete(`/transactions/${t.id}`, {
             preserveState: true,
             preserveScroll: true,
@@ -213,7 +220,9 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         <Badge variant="default">{meta?.total || data.length} registro(s)</Badge>
                     </div>
 
-                    {data.length === 0 ? (
+                    {loading ? (
+                        <Skeleton rows={5} className="p-4" />
+                    ) : data.length === 0 ? (
                         <div className="px-6 py-16 text-center">
                             <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-border-strong">
                                 <TrendingDown className="w-8 h-8 text-gray-500" />
@@ -282,6 +291,12 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                     {t.type === 'income' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                                                     {t.type === 'income' ? 'Receita' : 'Despesa'}
                                                 </Badge>
+                                                {t.is_recurring && (
+                                                    <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-medium text-accent-text bg-primary/10 px-2 py-0.5 rounded-full">
+                                                        <RefreshCcw className="w-3 h-3" />
+                                                        Recorrente
+                                                    </span>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
@@ -296,7 +311,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                     <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
                                                         <Edit2 className="w-4 h-4" />
                                                     </Link>
-                                                    <button onClick={() => handleDelete(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
+                                                    <button onClick={() => setDeleteTarget(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 </div>
@@ -310,6 +325,15 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
 
                     <Pagination meta={meta} />
                 </Card>
+
+                <ConfirmDialog
+                    open={!!deleteTarget}
+                    onClose={() => setDeleteTarget(null)}
+                    onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+                    title="Excluir transação"
+                    message="Tem certeza que deseja excluir esta transação? Esta ação não pode ser desfeita."
+                    itemLabel={deleteTarget ? `${deleteTarget.description || 'Sem descrição'} — ${formatBR(parseFloat(deleteTarget.amount))}` : ''}
+                />
 
             </main>
         </AppLayout>

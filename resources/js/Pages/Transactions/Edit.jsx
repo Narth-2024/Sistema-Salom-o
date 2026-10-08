@@ -1,15 +1,16 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, Select, TagPicker } from '@/Components'
-import { ArrowLeft, Save, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, Save, AlertTriangle, RefreshCcw } from 'lucide-react'
 
 export default function TransactionsEdit({ transaction, categories, tags }) {
     const { data, setData, put, processing, errors } = useForm({
         type: transaction.type,
         category_id: transaction.category_id,
         amount: transaction.amount,
-        transaction_date: transaction.transaction_date.slice(0, 10),
+        transaction_date: transaction.transaction_date,
         description: transaction.description || '',
+        is_recurring: transaction.is_recurring || false,
         tag_ids: (transaction.tags || []).map(t => t.id),
     })
 
@@ -109,6 +110,22 @@ export default function TransactionsEdit({ transaction, categories, tags }) {
                                 onChange={ids => setData('tag_ids', ids)}
                             />
                         </div>
+
+                        <label className="flex items-center gap-3 p-4 rounded-xl border border-border bg-surface-elevated mb-6 cursor-pointer hover:border-border-strong transition">
+                            <input
+                                type="checkbox"
+                                checked={data.is_recurring}
+                                onChange={e => setData('is_recurring', e.target.checked)}
+                                className="w-4 h-4 rounded accent-[var(--color-primary)] cursor-pointer"
+                            />
+                            <div className="flex items-center gap-2">
+                                <RefreshCcw className="w-4 h-4 text-accent-text" />
+                                <div>
+                                    <p className="text-sm font-medium text-gray-800">Transação recorrente</p>
+                                    <p className="text-xs text-gray-500">Será replicada automaticamente todo mês</p>
+                                </div>
+                            </div>
+                        </label>
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-border">
                             <Button type="submit" variant="primary" disabled={processing} className="flex-1 sm:flex-none">
