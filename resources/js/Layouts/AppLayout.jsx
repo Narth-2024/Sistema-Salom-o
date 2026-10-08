@@ -64,7 +64,7 @@ export default function AppLayout({ children }) {
             </div>
 
             {/* Mobile top bar */}
-            <nav className="md:hidden sticky top-0 z-30 bg-surface/80 backdrop-blur-xl border-b border-gray-200/60">
+            <nav className="md:hidden sticky top-0 z-30 bg-surface/80 backdrop-blur-xl border-b border-border">
                 <div className="flex items-center justify-between h-16 px-4">
                     <Link href="/dashboard" className="flex items-center gap-2.5 group">
                         <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
@@ -83,7 +83,7 @@ export default function AppLayout({ children }) {
             </nav>
 
             {/* Bottom navigation — mobile only */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-t border-gray-200/60" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-t border-border" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
                 <div className="flex items-center justify-around h-16 px-1">
                     {navLinks.map(link => {
                         const active = isActive(link.href)

@@ -136,7 +136,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Welcome banner */}
-                <div className="relative bg-emerald-950 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-800/20" data-tour="dash-banner">
+                <div className="relative bg-panel-bg rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-panel-border" data-tour="dash-banner">
                     <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-primary flex items-center justify-center text-primary-fg text-xl sm:text-2xl font-bold shadow-lg shadow-primary/20 ring-1 ring-primary/30 shrink-0">
@@ -147,10 +147,10 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                 )}
                             </div>
                             <div>
-                                <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                <h1 className="text-xl sm:text-2xl font-bold text-panel-fg flex items-center gap-2">
                                     {getGreeting()}, {auth.user.name?.split(' ')[0]}
                                 </h1>
-                                <p className="text-emerald-200/70 text-sm flex items-center gap-1.5 mt-0.5">
+                                <p className="text-panel-muted text-sm flex items-center gap-1.5 mt-0.5">
                                     <CalendarDays className="w-3.5 h-3.5" />
                                     {formatDate()}
                                 </p>
@@ -168,10 +168,10 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                 {/* Summary cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                     {summaryCards.map((card, idx) => (
-                        <div key={card.label} className={`${card.bg} rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden animate-fade-in`} style={{ animationDelay: `${idx * 80}ms` }}>
+                        <div key={card.label} className={`${card.bg} rounded-2xl p-5 border border-border relative overflow-hidden animate-fade-in`} style={{ animationDelay: `${idx * 80}ms` }}>
                             <div className="flex items-start justify-between mb-3">
                                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{card.label}</span>
-                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.iconBg} ring-1 ring-gray-200/60`}>
+                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.iconBg} ring-1 ring-border-strong`}>
                                     <card.icon className="w-[18px] h-[18px]" />
                                 </div>
                             </div>
@@ -179,7 +179,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                 {formatBR(card.value)}
                             </p>
                             {card.trend && (
-                                <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${card.trend.bg} ${card.trend.color} mt-1 ring-1 ring-gray-200/60`}>
+                                <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${card.trend.bg} ${card.trend.color} mt-1 ring-1 ring-border-strong`}>
                                     <card.trend.icon className="w-3 h-3" />
                                     {card.trend.display} vs mês passado
                                 </div>
@@ -217,7 +217,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                     </Card>
 
                     <Card className="lg:col-span-3" padding={false}>
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/60">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
                             <h2 className="text-base font-semibold text-gray-800 flex items-center gap-2">
                                 <ArrowLeftRight className="w-4 h-4 text-accent-text" />
                                 Últimas transações
@@ -241,7 +241,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                                 {recentTransactions.map(t => (
                                     <div key={t.id} className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-100/40 transition-colors">
                                         <div className="flex items-center gap-3 min-w-0">
-                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-primary/10 text-accent-text' : 'bg-red-500/10 text-red-400'} ring-1 ring-gray-200/60`}>
+                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-primary/10 text-accent-text' : 'bg-red-500/10 text-red-400'} ring-1 ring-border-strong`}>
                                                 {t.type === 'income' ? (
                                                     <TrendingUp className="w-4 h-4" />
                                                 ) : (
@@ -272,10 +272,10 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {quickActions.map((action, idx) => (
                         <Link key={action.href} href={action.href}
-                            className={`group flex items-center gap-3 bg-surface border border-gray-200/60 rounded-2xl p-4 hover:border-gray-300/60 hover:-translate-y-0.5 transition duration-200 animate-fade-in relative overflow-hidden`}
+                            className={`group flex items-center gap-3 bg-surface border border-border rounded-2xl p-4 hover:border-border-strong hover:-translate-y-0.5 transition duration-200 animate-fade-in relative overflow-hidden`}
                             style={{ animationDelay: `${idx * 100}ms` }}
                         >
-                            <div className={`w-10 h-10 rounded-xl ${action.bg} flex items-center justify-center group-hover:scale-110 transition-transform duration-200 ring-1 ring-gray-200/60`}>
+                            <div className={`w-10 h-10 rounded-xl ${action.bg} flex items-center justify-center group-hover:scale-110 transition-transform duration-200 ring-1 ring-border-strong`}>
                                 <action.icon className={`w-5 h-5 ${action.color}`} />
                             </div>
                             <div className="flex-1 min-w-0">

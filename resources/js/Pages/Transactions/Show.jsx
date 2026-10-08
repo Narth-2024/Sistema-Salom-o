@@ -40,7 +40,7 @@ export default function TransactionsShow({ transaction }) {
 
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pl-2">
                         <div className="flex items-center gap-4">
-                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${transaction.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'} ring-1 ring-gray-200/60`}>
+                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${transaction.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'} ring-1 ring-border-strong`}>
                                 {transaction.type === 'income' ? (
                                     <TrendingUp className="w-7 h-7 text-accent-text" />
                                 ) : (
@@ -69,7 +69,7 @@ export default function TransactionsShow({ transaction }) {
                     </div>
 
                     {/* Amount display */}
-                    <div className={`${transaction.type === 'income' ? 'bg-primary/5' : 'bg-red-500/5'} rounded-xl p-5 mb-6 border border-gray-200/40 relative overflow-hidden`}>
+                    <div className={`${transaction.type === 'income' ? 'bg-primary/5' : 'bg-red-500/5'} rounded-xl p-5 mb-6 border border-border relative overflow-hidden`}>
                         <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Valor</p>
                         <p className={`text-3xl sm:text-4xl font-extrabold tabular-nums ${transaction.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
                             {transaction.type === 'income' ? '+' : '-'} {formatBR(transaction.amount)}
@@ -117,7 +117,7 @@ export default function TransactionsShow({ transaction }) {
                     </div>
 
                     {transaction.tags?.length > 0 && (
-                        <div className="mt-6 pt-6 border-t border-gray-200/60">
+                        <div className="mt-6 pt-6 border-t border-border">
                             <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">Tags</p>
                             <div className="flex flex-wrap gap-2">
                                 {transaction.tags.map(tag => (

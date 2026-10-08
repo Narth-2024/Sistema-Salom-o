@@ -47,7 +47,7 @@ export default function CategoriesShow({ category, transactions }) {
                     <div className={`absolute top-0 left-0 w-1.5 h-full ${category.type === 'income' ? 'bg-primary' : 'bg-red-400'}`} />
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-2">
                         <div className="flex items-center gap-4">
-                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ring-1 ring-gray-200/60 ${category.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'}`}>
+                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ring-1 ring-border-strong ${category.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'}`}>
                                 {category.type === 'income' ? (
                                     <TrendingUp className="w-7 h-7 text-accent-text" />
                                 ) : (
@@ -82,7 +82,7 @@ export default function CategoriesShow({ category, transactions }) {
 
                 {/* Stats mini-card */}
                 {data.length > 0 && (
-                    <div className="bg-primary/5 rounded-2xl p-5 border border-gray-200/60 mb-6 relative overflow-hidden">
+                    <div className="bg-primary/5 rounded-2xl p-5 border border-border mb-6 relative overflow-hidden">
                         <div className="flex items-center gap-4">
                             <div className={`text-2xl font-extrabold ${category.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
                                 {formatBR(totalSpent)}
@@ -98,14 +98,14 @@ export default function CategoriesShow({ category, transactions }) {
                 {data.length > 0 ? (
                     <>
                         <Card padding={false}>
-                            <div className="px-6 py-4 border-b border-gray-200/60">
+                            <div className="px-6 py-4 border-b border-border">
                                 <h2 className="text-base font-semibold text-gray-800">Transações</h2>
                             </div>
                             <div className="divide-y divide-gray-200/40">
                                 {data.map(t => (
                                     <div key={t.id} className="px-6 py-3.5 flex items-center justify-between hover:bg-gray-100/40 transition group">
                                         <div className="flex items-center gap-3 min-w-0">
-                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ring-1 ring-gray-200/60 ${t.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'}`}>
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ring-1 ring-border-strong ${t.type === 'income' ? 'bg-primary/10' : 'bg-red-500/10'}`}>
                                                 {t.type === 'income' ? (
                                                     <TrendingUp className="w-4 h-4 text-accent-text" />
                                                 ) : (
@@ -135,7 +135,7 @@ export default function CategoriesShow({ category, transactions }) {
                     </>
                 ) : (
                     <Card className="text-center py-12">
-                        <div className="w-12 h-12 mx-auto bg-gray-100 rounded-xl flex items-center justify-center mb-3 ring-1 ring-gray-200/60">
+                        <div className="w-12 h-12 mx-auto bg-gray-100 rounded-xl flex items-center justify-center mb-3 ring-1 ring-border-strong">
                             <CalendarDays className="w-6 h-6 text-gray-500" />
                         </div>
                         <p className="text-gray-500 font-medium">Nenhuma transação nesta categoria</p>

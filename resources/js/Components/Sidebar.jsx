@@ -35,9 +35,9 @@ export default function Sidebar({ collapsed, onToggle }) {
     }
 
     return (
-        <aside className={`hidden md:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface border-r border-gray-200/60 transition-all duration-200 ease-in-out ${collapsed ? 'w-16' : 'w-56'}`}>
+        <aside className={`hidden md:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface border-r border-border transition-all duration-200 ease-in-out ${collapsed ? 'w-16' : 'w-56'}`}>
             {/* Logo */}
-            <div className={`flex items-center h-16 border-b border-gray-200/60 shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4'}`}>
+            <div className={`flex items-center h-16 border-b border-border shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4'}`}>
                 <Link href="/dashboard" className="flex items-center gap-2.5 group">
                     <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
                         <Coins className="w-[18px] h-[18px] text-primary-fg" />
@@ -76,7 +76,7 @@ export default function Sidebar({ collapsed, onToggle }) {
             </nav>
 
             {/* Bottom: Settings + Logout + Toggle */}
-            <div className="border-t border-gray-200/60 p-2 flex flex-col gap-0.5">
+            <div className="border-t border-border p-2 flex flex-col gap-0.5">
                 <Link
                     href="/settings"
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-150 ${

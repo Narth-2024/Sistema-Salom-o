@@ -67,6 +67,16 @@
   --color-chart-expense: #f87171;
   --color-chart-balance: #3ecf8e;
 
+  /* Borders (theme-aware) */
+  --color-border: #323238;
+  --color-border-strong: #3f3f46;
+
+  /* Panels (theme-aware dark blocks) */
+  --color-panel-bg: #022c22;
+  --color-panel-fg: #ffffff;
+  --color-panel-muted: #d1fae5;
+  --color-panel-border: #065f46;
+
   /* Surfaces */
   --color-surface: #1c1c20;
   --color-surface-elevated: #24242a;
@@ -84,7 +94,7 @@
   }
 
   select, input, textarea {
-    @apply bg-surface-elevated border-gray-200 text-gray-800;
+    @apply bg-surface-elevated border-border text-gray-800;
   }
 
   ::selection {
@@ -131,8 +141,8 @@
 /* ===== LIGHT THEME ===== */
 .light {
   --color-gray-50: #fafaf9;
-  --color-gray-100: #f5f3ee;
-  --color-gray-200: #e6e3db;
+  --color-gray-100: #efebe2;
+  --color-gray-200: #e4dfd5;
   --color-gray-300: #d6d3cc;
   --color-gray-400: #a8a59e;
   --color-gray-500: #73716b;
@@ -193,16 +203,24 @@
   --color-chart-expense: #dc2626;
   --color-chart-balance: #059669;
 
+  --color-border: #c9c3b4;
+  --color-border-strong: #b0aa98;
+
+  --color-panel-bg: #ecfdf5;
+  --color-panel-fg: #065f46;
+  --color-panel-muted: #047857;
+  --color-panel-border: #a7f3d0;
+
   --color-surface: #ffffff;
-  --color-surface-elevated: #fafaf9;
-  --color-surface-accent: #f5f3ee;
-  --color-background: #f8f6f3;
+  --color-surface-elevated: #f5f2ec;
+  --color-surface-accent: #efebe2;
+  --color-background: #f3f0ea;
 }
 
 .light select,
 .light input,
 .light textarea {
-  @apply bg-surface-elevated border-gray-200 text-gray-800;
+  @apply bg-surface-elevated border-border text-gray-800;
 }
 
 .light ::selection {
@@ -247,20 +265,20 @@
 }
 
 .driver-popover.salomao-tour .driver-popover-footer {
-  border-top: 1px solid var(--color-gray-200);
+  border-top: 1px solid var(--color-border);
   margin-top: 0.9rem;
   padding-top: 0.75rem;
 }
 
 .driver-popover.salomao-tour .driver-popover-progress-text {
-  color: var(--color-green-600);
+  color: var(--color-accent-text);
   font-size: 0.75rem;
   font-weight: 600;
 }
 
 .driver-popover.salomao-tour .driver-popover-footer-btn {
   background-color: transparent;
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   color: var(--color-gray-600);
   font-size: 0.8rem;
@@ -275,14 +293,14 @@
 
 .driver-popover.salomao-tour .driver-popover-next-btn,
 .driver-popover.salomao-tour .driver-popover-next-btn:hover {
-  background-color: var(--color-green-600);
-  border-color: var(--color-green-600);
-  color: #ffffff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-primary-fg);
 }
 
 .driver-popover.salomao-tour .driver-popover-next-btn:hover {
-  background-color: var(--color-green-500);
-  border-color: var(--color-green-500);
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .driver-popover.salomao-tour .driver-popover-close-btn {

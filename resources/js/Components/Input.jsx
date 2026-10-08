@@ -21,7 +21,7 @@ const Input = forwardRef(({ label, error, icon: Icon, className = '', ...props }
                         ${Icon ? 'pl-10' : ''}
                         ${error
                             ? 'border-red-500/30 focus:ring-red-500/20 focus:border-red-500/50'
-                            : 'border-gray-200/60 focus:ring-primary/20 focus:border-primary/50'
+                            : 'border-border-strong focus:ring-primary/20 focus:border-primary/50'
                         }
                         ${className}`}
                     {...props}

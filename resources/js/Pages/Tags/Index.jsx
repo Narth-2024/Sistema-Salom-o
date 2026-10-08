@@ -61,7 +61,7 @@ export default function TagsIndex({ tags }) {
                 </div>
 
                 {/* Quick add */}
-                <div className="mb-8 bg-indigo-600/5 rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden" data-tour="tags-form">
+                <div className="mb-8 bg-indigo-600/5 rounded-2xl p-6 border border-border relative overflow-hidden" data-tour="tags-form">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <Plus className="w-5 h-5 text-indigo-400" />
                         Nova tag
@@ -82,7 +82,7 @@ export default function TagsIndex({ tags }) {
                                     type="button"
                                     onClick={() => setData('color', c)}
                                     className={`w-7 h-7 rounded-full border-2 transition cursor-pointer ${
-                                        data.color === c ? 'border-gray-200 scale-110' : 'border-transparent'
+                                        data.color === c ? 'border-border scale-110' : 'border-transparent'
                                     }`}
                                     style={{ backgroundColor: c }}
                                 />
@@ -98,7 +98,7 @@ export default function TagsIndex({ tags }) {
                 {/* Tags list */}
                 {items.length === 0 ? (
                     <Card className="text-center py-16" data-tour="tags-list">
-                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-gray-200/60">
+                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-border-strong">
                             <Hash className="w-8 h-8 text-gray-500" />
                         </div>
                         <p className="text-gray-500 font-medium">Nenhuma tag cadastrada</p>
@@ -117,7 +117,7 @@ export default function TagsIndex({ tags }) {
                                                     type="button"
                                                     onClick={() => setEditForm(f => ({ ...f, color: c }))}
                                                     className={`w-6 h-6 rounded-full border-2 transition cursor-pointer ${
-                                                        editForm.color === c ? 'border-gray-200 scale-110' : 'border-transparent'
+                                                        editForm.color === c ? 'border-border scale-110' : 'border-transparent'
                                                     }`}
                                                     style={{ backgroundColor: c }}
                                                 />
@@ -127,7 +127,7 @@ export default function TagsIndex({ tags }) {
                                             type="text"
                                             value={editForm.name}
                                             onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                                            className="flex-1 px-3 py-1.5 rounded-lg border border-gray-200/60 bg-surface-elevated text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                            className="flex-1 px-3 py-1.5 rounded-lg border border-border bg-surface-elevated text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/20"
                                             autoFocus
                                         />
                                         <Button size="sm" variant="primary" onClick={() => saveEdit(tag)}>Salvar</Button>

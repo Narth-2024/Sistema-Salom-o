@@ -59,7 +59,7 @@ export default function CategoriesCreate() {
                             <option value="income">Receita</option>
                         </Select>
 
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-gray-100">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-border">
                             <Button type="submit" variant="primary" disabled={processing} className="flex-1 sm:flex-none">
                                 <Plus className="w-4 h-4" />
                                 Nova Categoria

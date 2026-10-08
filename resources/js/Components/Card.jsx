@@ -1,7 +1,7 @@
 export default function Card({ children, className = '', padding = true, hover = false, accent = false, ...props }) {
     return (
         <div
-            className={`bg-surface border border-gray-200/60 rounded-2xl ${hover ? 'hover:border-gray-300/60 hover:-translate-y-0.5 transition duration-200' : ''} ${padding ? 'p-6' : ''} relative ${className}`}
+            className={`bg-surface border border-border rounded-2xl shadow-sm ${hover ? 'hover:border-border-strong hover:-translate-y-0.5 transition duration-200' : ''} ${padding ? 'p-6' : ''} relative ${className}`}
             {...props}
         >
             {accent && (

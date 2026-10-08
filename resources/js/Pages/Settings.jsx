@@ -70,7 +70,7 @@ export default function Settings() {
                     <form onSubmit={handleSubmit}>
                         <div className="flex items-center gap-5 mb-6">
                             <div className="relative shrink-0">
-                                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 ring-1 ring-gray-200/60 flex items-center justify-center">
+                                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 ring-1 ring-border-strong flex items-center justify-center">
                                     {avatarSrc ? (
                                         <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
                                     ) : (
@@ -119,7 +119,7 @@ export default function Settings() {
                             <p className="text-xs text-red-400 mb-4">{errors.avatar}</p>
                         )}
 
-                        <div className="flex items-center gap-3 pt-2 border-t border-gray-200/60">
+                        <div className="flex items-center gap-3 pt-2 border-t border-border">
                             <Button type="submit" variant="primary" disabled={processing}>
                                 {recentlySuccessful ? <CheckCircle className="w-4 h-4" /> : null}
                                 {processing ? 'Salvando...' : 'Salvar'}
@@ -141,7 +141,7 @@ export default function Settings() {
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-gray-200/60 ${theme === 'dark' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-amber-500/10 text-amber-500'}`}>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-border-strong ${theme === 'dark' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-amber-500/10 text-amber-500'}`}>
                                 {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                             </div>
                             <div>

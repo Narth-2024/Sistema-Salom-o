@@ -3,10 +3,10 @@ export default function Button({ children, variant = 'primary', size = 'md', cla
 
     const variants = {
         primary: 'bg-primary text-primary-fg hover:bg-primary-hover shadow-lg shadow-primary/15',
-        secondary: 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-500 ring-1 ring-gray-200',
+        secondary: 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-500 ring-1 ring-border-strong',
         danger: 'bg-red-500/10 text-red-400 hover:bg-red-500/20 ring-1 ring-red-500/15',
         ghost: 'text-gray-500 hover:text-gray-700 hover:bg-gray-100',
-        outline: 'border border-gray-200 text-gray-600 hover:border-gray-300 hover:text-gray-500',
+        outline: 'border border-border text-gray-600 hover:border-border-strong hover:text-gray-500',
     }
 
     const sizes = {

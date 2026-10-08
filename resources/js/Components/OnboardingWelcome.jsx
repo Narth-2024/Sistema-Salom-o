@@ -87,7 +87,7 @@ export default function OnboardingWelcome() {
                     Menos de 2 minutos — você pode pular ou reassistir quando quiser pelo botão ? da tela.
                 </p>
 
-                <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-200/60">
+                <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
                     <Button variant="ghost" size="sm" onClick={close}>
                         Agora não
                     </Button>

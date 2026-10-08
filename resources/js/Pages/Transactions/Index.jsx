@@ -103,15 +103,15 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
 
                 {/* Stats bar */}
                 <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6" data-tour="tx-stats">
-                    <div className="bg-primary/5 rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden">
+                    <div className="bg-primary/5 rounded-2xl p-4 border border-border relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Receitas</p>
                         <p className="text-lg sm:text-2xl font-extrabold text-accent-text tabular-nums">{formatBR(totalIncome)}</p>
                     </div>
-                    <div className="bg-red-500/5 rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden">
+                    <div className="bg-red-500/5 rounded-2xl p-4 border border-border relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Despesas</p>
                         <p className="text-lg sm:text-2xl font-extrabold text-red-400 tabular-nums">{formatBR(totalExpense)}</p>
                     </div>
-                    <div className={`rounded-2xl p-4 border border-gray-200/60 relative overflow-hidden ${totalBalance >= 0 ? 'bg-primary/5' : 'bg-red-500/5'}`}>
+                    <div className={`rounded-2xl p-4 border border-border relative overflow-hidden ${totalBalance >= 0 ? 'bg-primary/5' : 'bg-red-500/5'}`}>
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Saldo</p>
                         <p className={`text-lg sm:text-2xl font-extrabold tabular-nums ${totalBalance >= 0 ? 'text-accent-text' : 'text-red-400'}`}>
                             {formatBR(Math.abs(totalBalance))}
@@ -128,7 +128,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             placeholder="Buscar por descrição..."
-                            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-border bg-surface-elevated text-sm text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                         />
                         {search && (
                             <button
@@ -143,7 +143,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         <select
                             value={typeFilter}
                             onChange={e => { setTypeFilter(e.target.value); applyFilters({ type: e.target.value }) }}
-                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                            className="w-full px-4 py-2.5 rounded-xl border border-border bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                         >
                             <option value="">Todos os tipos</option>
                             <option value="income">Receitas</option>
@@ -157,7 +157,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         <select
                             value={categoryFilter}
                             onChange={e => { setCategoryFilter(e.target.value); applyFilters({ category_id: e.target.value }) }}
-                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                            className="w-full px-4 py-2.5 rounded-xl border border-border bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                         >
                             <option value="">Todas as categorias</option>
                             {categories.map(cat => (
@@ -172,7 +172,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         <select
                             value={tagFilter}
                             onChange={e => { setTagFilter(e.target.value); applyFilters({ tag_id: e.target.value }) }}
-                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                            className="w-full px-4 py-2.5 rounded-xl border border-border bg-surface-elevated text-sm text-gray-600 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                         >
                             <option value="">Todas as tags</option>
                             {tags.map(tag => (
@@ -187,18 +187,18 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         type="date"
                         value={dateFrom}
                         onChange={e => { setDateFrom(e.target.value); applyFilters({ date_from: e.target.value }) }}
-                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                        className="px-4 py-2.5 rounded-xl border border-border bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                     />
                     <input
                         type="date"
                         value={dateTo}
                         onChange={e => { setDateTo(e.target.value); applyFilters({ date_to: e.target.value }) }}
-                        className="px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
+                        className="px-4 py-2.5 rounded-xl border border-border bg-surface-elevated text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition"
                     />
                     {hasActiveFilters && (
                         <button
                             onClick={clearFilters}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200/60 bg-surface-elevated text-sm text-gray-600 hover:bg-gray-100 transition cursor-pointer"
+                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-surface-elevated text-sm text-gray-600 hover:bg-gray-100 transition cursor-pointer"
                         >
                             <X className="w-4 h-4" />
                             Limpar
@@ -208,14 +208,14 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
 
                 {/* Transactions table */}
                 <Card padding={false} data-tour="tx-table">
-                    <div className="px-6 py-4 border-b border-gray-200/60 flex items-center justify-between">
+                    <div className="px-6 py-4 border-b border-border flex items-center justify-between">
                         <h2 className="text-base font-semibold text-gray-800">Histórico</h2>
                         <Badge variant="default">{meta?.total || data.length} registro(s)</Badge>
                     </div>
 
                     {data.length === 0 ? (
                         <div className="px-6 py-16 text-center">
-                            <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-gray-200/60">
+                            <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-border-strong">
                                 <TrendingDown className="w-8 h-8 text-gray-500" />
                             </div>
                             <p className="text-gray-500 font-medium">
@@ -239,7 +239,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr className="border-b border-gray-200/60">
+                                    <tr className="border-b border-border">
                                         <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Data</th>
                                         <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Descrição</th>
                                         <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Categoria</th>

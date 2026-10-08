@@ -20,7 +20,7 @@ export default function Home() {
             `}</style>
 
             {/* NAVBAR */}
-            <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-gray-200/50">
+            <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-border">
                 <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                     <Link href="/" className="flex items-center gap-2.5 group">
                         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
@@ -84,14 +84,14 @@ export default function Home() {
 
                     {/* Dashboard mockup */}
                     <div className="relative animate-up delay-4">
-                        <div className="relative bg-surface rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
-                            <div className="bg-emerald-800 px-6 py-4 flex items-center gap-3">
+                        <div className="relative bg-surface rounded-2xl shadow-xl border border-border overflow-hidden">
+                            <div className="bg-panel-bg px-6 py-4 flex items-center gap-3">
                                 <div className="flex gap-1.5">
                                     <div className="w-3 h-3 rounded-full bg-red-400/80"></div>
                                     <div className="w-3 h-3 rounded-full bg-yellow-400/80"></div>
                                     <div className="w-3 h-3 rounded-full bg-green-400/80"></div>
                                 </div>
-                                <span className="text-white/70 text-xs font-medium">Salomão — Dashboard</span>
+                                <span className="text-panel-muted text-xs font-medium">Salomão — Dashboard</span>
                             </div>
                             <div className="p-6 space-y-5">
                                 <div className="flex items-center justify-between">
@@ -127,7 +127,7 @@ export default function Home() {
             </section>
 
             {/* MÉTRICAS */}
-            <section className="relative py-16 lg:py-20 bg-surface border-y border-gray-200/30">
+            <section className="relative py-16 lg:py-20 bg-surface border-y border-border">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
                         <div className="text-center">
@@ -192,7 +192,7 @@ export default function Home() {
                                 desc: 'Interface limpa e fácil de usar. Você não precisa ser expert em finanças.',
                             },
                         ].map((item, i) => (
-                            <div key={i} className="group bg-surface rounded-2xl p-8 shadow-sm border border-gray-200/30 hover:shadow-lg hover:border-primary/50 transition duration-300">
+                            <div key={i} className="group bg-surface rounded-2xl p-8 shadow-sm border border-border hover:shadow-lg hover:border-primary/50 transition duration-300">
                                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-5 group-hover:bg-primary transition-colors duration-300">
                                     <svg className="w-6 h-6 text-accent-text group-hover:text-primary-fg transition-colors duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         {item.icon}
@@ -238,11 +238,11 @@ export default function Home() {
 
             {/* CTA */}
             <section className="relative py-20 lg:py-28 overflow-hidden">
-                <div className="absolute inset-0 bg-emerald-950"></div>
+                <div className="absolute inset-0 bg-panel-bg"></div>
                 <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Pronto para ter controle<br/>das suas finanças?</h2>
-                    <p className="text-white/60 text-lg mb-10 max-w-lg mx-auto">Crie sua conta grátis e comece a organizar seu dinheiro em menos de 1 minuto.</p>
-                    <Link href="/register" className="inline-flex items-center gap-2 bg-white text-emerald-800 font-semibold px-10 py-4 rounded-xl hover:bg-gray-100 hover:shadow-2xl transition shadow-lg text-base">
+                    <h2 className="text-3xl lg:text-4xl font-bold text-panel-fg mb-4">Pronto para ter controle<br/>das suas finanças?</h2>
+                    <p className="text-panel-muted text-lg mb-10 max-w-lg mx-auto">Crie sua conta grátis e comece a organizar seu dinheiro em menos de 1 minuto.</p>
+                    <Link href="/register" className="inline-flex items-center gap-2 bg-primary text-primary-fg font-semibold px-10 py-4 rounded-xl hover:bg-primary-hover hover:shadow-2xl transition shadow-lg text-base">
                         Criar conta gratuita
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                     </Link>
@@ -250,38 +250,38 @@ export default function Home() {
             </section>
 
             {/* FOOTER */}
-            <footer className="bg-emerald-950 border-t border-white/10">
+            <footer className="bg-panel-bg border-t border-panel-border">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="grid md:grid-cols-4 gap-8 mb-10">
                         <div className="md:col-span-2">
                             <div className="flex items-center gap-2.5 mb-4">
                                 <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 text-panel-fg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
                                     </svg>
                                 </div>
-                                <span className="text-lg font-bold text-white">Salomão</span>
+                                <span className="text-lg font-bold text-panel-fg">Salomão</span>
                             </div>
-                            <p className="text-white/40 text-sm max-w-sm">Sistema de controle financeiro pessoal. Organize suas receitas e despesas de forma simples e intuitiva.</p>
+                            <p className="text-panel-muted text-sm max-w-sm">Sistema de controle financeiro pessoal. Organize suas receitas e despesas de forma simples e intuitiva.</p>
                         </div>
                         <div>
-                            <h4 className="text-sm font-semibold text-white/80 mb-4">Produto</h4>
+                            <h4 className="text-sm font-semibold text-panel-fg mb-4">Produto</h4>
                             <ul className="space-y-2.5">
-                                <li><a href="#recursos" className="text-sm text-white/40 hover:text-white/70 transition">Recursos</a></li>
-                                <li><Link href="/register" className="text-sm text-white/40 hover:text-white/70 transition">Cadastro</Link></li>
-                                <li><Link href="/login" className="text-sm text-white/40 hover:text-white/70 transition">Login</Link></li>
+                                <li><a href="#recursos" className="text-sm text-panel-muted hover:text-panel-fg transition">Recursos</a></li>
+                                <li><Link href="/register" className="text-sm text-panel-muted hover:text-panel-fg transition">Cadastro</Link></li>
+                                <li><Link href="/login" className="text-sm text-panel-muted hover:text-panel-fg transition">Login</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-sm font-semibold text-white/80 mb-4">Contato</h4>
+                            <h4 className="text-sm font-semibold text-panel-fg mb-4">Contato</h4>
                             <ul className="space-y-2.5">
-                                <li><a href="mailto:nathanbs.trabalho@gmail.com" className="text-sm text-white/40 hover:text-white/70 transition">Email</a></li>
-                                <li><a href="https://github.com/Narth-2024" target="_blank" className="text-sm text-white/40 hover:text-white/70 transition">GitHub</a></li>
-                                <li><a href="https://www.linkedin.com/feed/" target="_blank" className="text-sm text-white/40 hover:text-white/70 transition">LinkedIn</a></li>
+                                <li><a href="mailto:nathanbs.trabalho@gmail.com" className="text-sm text-panel-muted hover:text-panel-fg transition">Email</a></li>
+                                <li><a href="https://github.com/Narth-2024" target="_blank" className="text-sm text-panel-muted hover:text-panel-fg transition">GitHub</a></li>
+                                <li><a href="https://www.linkedin.com/feed/" target="_blank" className="text-sm text-panel-muted hover:text-panel-fg transition">LinkedIn</a></li>
                             </ul>
                         </div>
                     </div>
-                    <div className="border-t border-white/10 pt-8 text-center text-sm text-white/30">
+                    <div className="border-t border-panel-border pt-8 text-center text-sm text-panel-muted">
                         2026 Sistema Salomão — Trabalho de Conclusão de Curso
                     </div>
                 </div>

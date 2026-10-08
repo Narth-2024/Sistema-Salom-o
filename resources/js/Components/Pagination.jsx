@@ -6,7 +6,7 @@ export default function Pagination({ meta, standalone = false }) {
     if (!meta || meta.last_page <= 1) return null
 
     const content = (
-        <div className={`flex items-center justify-between px-4 sm:px-6 py-4 ${standalone ? '' : 'border-t border-gray-200'}`}>
+        <div className={`flex items-center justify-between px-4 sm:px-6 py-4 ${standalone ? '' : 'border-t border-border'}`}>
             <p className="text-sm text-gray-500">
                 Mostrando {meta.from} a {meta.to} de {meta.total} registro(s)
             </p>

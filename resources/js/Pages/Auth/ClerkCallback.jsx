@@ -47,7 +47,7 @@ export default function ClerkCallback() {
         <>
             <Head title="Autenticando..." />
             <div className="min-h-screen bg-background flex items-center justify-center p-4">
-                <div className="bg-surface rounded-2xl shadow-xl w-full max-w-sm p-8 text-center border border-gray-200/50">
+                <div className="bg-surface rounded-2xl shadow-xl w-full max-w-sm p-8 text-center border border-border">
                     {error ? (
                         <>
                             <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">

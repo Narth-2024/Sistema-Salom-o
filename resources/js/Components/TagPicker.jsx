@@ -11,7 +11,7 @@ export default function TagPicker({ tags, selectedIds, onChange }) {
     return (
         <div className="w-full">
             <label className="block text-sm font-medium text-gray-600 mb-1.5">Tags</label>
-            <div className="flex flex-wrap gap-2 p-3 rounded-xl border border-gray-200/60 bg-surface-elevated min-h-[44px]">
+            <div className="flex flex-wrap gap-2 p-3 rounded-xl border border-border bg-surface-elevated min-h-[44px]">
                 {tags.length === 0 && (
                     <span className="text-sm text-gray-500">Nenhuma tag disponível. Crie uma em Tags.</span>
                 )}

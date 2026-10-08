@@ -19,7 +19,7 @@ export function chartColors() {
         balance: cssVar('--color-chart-balance'),
         text: cssVar('--color-gray-600'),
         muted: cssVar('--color-gray-500'),
-        grid: cssVar('--color-gray-200'),
+        grid: cssVar('--color-border'),
         background: cssVar('--color-background'),
     }
 }

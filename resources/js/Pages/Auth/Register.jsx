@@ -7,7 +7,7 @@ export default function Register() {
         <>
             <Head title="Criar conta" />
             <div className="min-h-screen bg-background flex items-center justify-center p-4">
-                <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-gray-200">
+                <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-border">
                     <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-8 h-16">
                         <Link href="/" className="flex items-center gap-2.5">
                             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
@@ -24,7 +24,7 @@ export default function Register() {
                     </div>
                 </nav>
 
-                <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-200/50">
+                <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md p-8 border border-border">
                     <SignUp
                         fallbackRedirectUrl="/auth/clerk-callback"
                         signInUrl="/login"
@@ -36,11 +36,11 @@ export default function Register() {
                                 headerSubtitle: 'text-sm text-gray-500',
                                 formButtonPrimary: 'bg-primary hover:bg-primary-hover text-sm text-primary-fg font-semibold',
                                 formFieldLabel: 'text-sm text-gray-600',
-                                formFieldInput: 'w-full px-4 py-3 rounded-xl border border-gray-200 bg-surface-elevated text-gray-800 focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder-gray-400',
+                                formFieldInput: 'w-full px-4 py-3 rounded-xl border border-border bg-surface-elevated text-gray-800 focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder-gray-400',
                                 footerActionLink: 'text-accent-text hover:text-accent-text-hover font-medium',
                                 dividerLine: 'bg-gray-200',
                                 dividerText: 'text-xs text-gray-500',
-                                socialButtonsBlockButton: 'border border-gray-200 bg-surface hover:bg-surface-accent text-sm text-gray-700 rounded-xl',
+                                socialButtonsBlockButton: 'border border-border bg-surface hover:bg-surface-accent text-sm text-gray-700 rounded-xl',
                                 socialButtonsBlockButtonText: 'text-gray-700 font-medium',
                                 formHeaderTitle: 'text-2xl font-bold text-gray-800',
                                 formHeaderSubtitle: 'text-sm text-gray-500',

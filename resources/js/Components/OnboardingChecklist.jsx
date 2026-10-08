@@ -61,7 +61,7 @@ export default function OnboardingChecklist() {
                             className={`flex items-center gap-3 rounded-xl px-3 py-2.5 border ${
                                 isNext
                                     ? 'border-primary/40 bg-primary/[0.06]'
-                                    : 'border-gray-200/60'
+                                    : 'border-border'
                             }`}
                         >
                             <div

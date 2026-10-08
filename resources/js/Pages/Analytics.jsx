@@ -159,15 +159,15 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" data-tour="an-totals">
-                    <div className="bg-primary/5 rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden">
+                    <div className="bg-primary/5 rounded-2xl p-5 border border-border relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Receitas</p>
                         <p className="text-2xl font-extrabold text-accent-text tabular-nums">{formatBR(incomeTotal)}</p>
                     </div>
-                    <div className="bg-red-500/5 rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden">
+                    <div className="bg-red-500/5 rounded-2xl p-5 border border-border relative overflow-hidden">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Despesas</p>
                         <p className="text-2xl font-extrabold text-red-400 tabular-nums">{formatBR(expenseTotal)}</p>
                     </div>
-                    <div className={`rounded-2xl p-5 border border-gray-200/60 relative overflow-hidden ${balanceTotal >= 0 ? 'bg-primary/5' : 'bg-red-500/5'}`}>
+                    <div className={`rounded-2xl p-5 border border-border relative overflow-hidden ${balanceTotal >= 0 ? 'bg-primary/5' : 'bg-red-500/5'}`}>
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Saldo</p>
                         <p className={`text-2xl font-extrabold tabular-nums ${balanceTotal >= 0 ? 'text-accent-text' : 'text-red-400'}`}>
                             {formatBR(balanceTotal)}
@@ -190,14 +190,14 @@ export default function Analytics({ barChart, timeline, comparative, incomeTotal
                             <Card key={item.key} hover>
                                 <div className="flex items-center justify-between mb-3">
                                     <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{item.label}</span>
-                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${typeof item.bg === 'function' ? item.bg(data) : item.bg} ring-1 ring-gray-200/60`}>
+                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${typeof item.bg === 'function' ? item.bg(data) : item.bg} ring-1 ring-border-strong`}>
                                         <item.icon className={`w-[18px] h-[18px] ${typeof item.color === 'function' ? item.color(data) : item.color}`} />
                                     </div>
                                 </div>
                                 <p className={`text-xl font-extrabold ${typeof item.color === 'function' ? item.color(data) : item.color}`}>
                                     {formatBR(data.current)}
                                 </p>
-                                <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-200/60">
+                                <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
                                     <span className="text-xs text-gray-500">Mês anterior: {formatBR(data.previous)}</span>
                                     <span className={`text-xs font-semibold flex items-center gap-0.5 ${isGood ? 'text-accent-text' : 'text-red-400'}`}>
                                         {isGood ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}

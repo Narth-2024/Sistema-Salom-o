@@ -74,7 +74,7 @@ export default function CategoriesEdit({ category }) {
                                     type="button"
                                     onClick={() => setData('color', '')}
                                     className={`w-8 h-8 rounded-full border-2 transition cursor-pointer flex items-center justify-center text-[10px] font-medium ${
-                                        !data.color ? 'border-gray-200 scale-110 ring-2 ring-primary/30' : 'border-transparent text-gray-500 hover:border-gray-200'
+                                        !data.color ? 'border-border scale-110 ring-2 ring-primary/30' : 'border-transparent text-gray-500 hover:border-border-strong'
                                     } bg-gray-100`}
                                 >
                                     —
@@ -85,7 +85,7 @@ export default function CategoriesEdit({ category }) {
                                         type="button"
                                         onClick={() => setData('color', c)}
                                         className={`w-8 h-8 rounded-full border-2 transition cursor-pointer ${
-                                            data.color === c ? 'border-gray-200 scale-110 ring-2 ring-primary/30' : 'border-transparent'
+                                            data.color === c ? 'border-border scale-110 ring-2 ring-primary/30' : 'border-transparent'
                                         }`}
                                         style={{ backgroundColor: c }}
                                     />
@@ -93,7 +93,7 @@ export default function CategoriesEdit({ category }) {
                             </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-gray-200/60">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-border">
                             <Button type="submit" variant="primary" disabled={processing} className="flex-1 sm:flex-none">
                                 <Save className="w-4 h-4" />
                                 Salvar alterações

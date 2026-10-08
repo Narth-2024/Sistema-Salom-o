@@ -44,7 +44,7 @@ export default function CategoriesIndex({ categories }) {
                 </div>
 
                 {/* Quick add card */}
-                <div className="mb-8 bg-primary/5 rounded-2xl p-6 border border-gray-200/60 relative overflow-hidden" data-tour="cat-form">
+                <div className="mb-8 bg-primary/5 rounded-2xl p-6 border border-border relative overflow-hidden" data-tour="cat-form">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <Plus className="w-5 h-5 text-accent-text" />
                         Nova categoria
@@ -74,7 +74,7 @@ export default function CategoriesIndex({ categories }) {
                                     type="button"
                                     onClick={() => setData('color', c)}
                                     className={`w-6 h-6 rounded-full border-2 transition cursor-pointer ${
-                                        data.color === c ? 'border-gray-200 scale-110' : 'border-transparent'
+                                        data.color === c ? 'border-border scale-110' : 'border-transparent'
                                     }`}
                                     style={{ backgroundColor: c }}
                                 />
@@ -89,7 +89,7 @@ export default function CategoriesIndex({ categories }) {
 
                 {items.length === 0 ? (
                     <Card className="text-center py-16" data-tour="cat-list">
-                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-gray-200/60">
+                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-border-strong">
                             <FolderOpen className="w-8 h-8 text-gray-500" />
                         </div>
                         <p className="text-gray-500 font-medium">Nenhuma categoria cadastrada</p>
@@ -101,7 +101,7 @@ export default function CategoriesIndex({ categories }) {
                             <Card key={category.id} className="relative group" hover accent={category.type === 'income' ? true : 'danger'}>
                                 <div className="flex items-start justify-between mb-3">
                                     <div
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-gray-200/60"
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center ring-1 ring-border-strong"
                                         style={{ backgroundColor: category.color ? `${category.color}20` : (category.type === 'income' ? 'rgba(62,207,142,0.1)' : 'rgba(248,113,113,0.1)') }}
                                     >
                                         {category.type === 'income' ? (
