@@ -23,10 +23,15 @@ No dashboard do Supabase:
 
 1. Vá em **Settings** (ícone de engrenagem)
 2. Clique em **API**
-3. Copie as seguintes informações:
-   - **Project URL**: `https://xxxxx.supabase.co`
-   - **anon/public key**: (para uso no frontend)
-   - **service_role key**: (para o backend - **MANTENHA SECRETA!**)
+3. Revele as **legacy keys** (formato JWT `eyJ...`) — as chaves novas
+   `sb_secret_`/`sb_publishable_` **não** são aceitas pelo Storage/PostgREST:
+   - **`anon`** → `SUPABASE_PUBLISHABLE_KEY`
+   - **`service_role`** → `SUPABASE_SERVICE_KEY` (**MANTENHA SECRETA!**)
+4. Anote também a **Project URL**: `https://xxxxx.supabase.co`
+
+> Atenção ao host do banco: o endereço direto `db.<ref>.supabase.co` é
+> **IPv6-only**. Em ambientes sem IPv6 (Vercel), use o session pooler:
+> `aws-1-<região>.pooler.supabase.com` com usuário `postgres.<ref>`.
 
 ## Passo 4: Configurar variáveis de ambiente
 
@@ -34,8 +39,8 @@ Edite o arquivo `.env` do seu projeto:
 
 ```env
 SUPABASE_URL=https://seu-projeto.supabase.co
-SUPABASE_ANON_KEY=sua-chave-anon-aqui
-SUPABASE_SERVICE_KEY=sua-chave-service-role-aqui
+SUPABASE_PUBLISHABLE_KEY=eyJ...   # anon (legacy JWT)
+SUPABASE_SERVICE_KEY=eyJ...       # service_role (legacy JWT)
 ```
 
 ## Passo 5: Configurar banco de dados no Supabase

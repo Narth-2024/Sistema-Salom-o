@@ -122,6 +122,9 @@ Configure your `.env` file with the following required variables:
 
 ```env
 # Database (Supabase PostgreSQL)
+# Local: host direto db.xxxxx.supabase.co (IPv6)
+# Produção (Vercel): session pooler IPv4 -> aws-1-sa-east-1.pooler.supabase.com
+#                    DB_USERNAME=postgres.xxxxx (ref anexada)
 DB_CONNECTION=supabase
 DB_HOST=db.xxxxx.supabase.co
 DB_PORT=5432
@@ -129,9 +132,10 @@ DB_DATABASE=postgres
 DB_USERNAME=postgres
 DB_PASSWORD=your-password
 
-# Supabase
+# Supabase (chaves LEGACY em formato JWT, Dashboard -> Settings -> API)
 SUPABASE_URL=https://xxxxx.supabase.co
-SUPABASE_SERVICE_KEY=sb_secret_your-service-key
+SUPABASE_SERVICE_KEY=eyJ...   # legacy service_role
+SUPABASE_PUBLISHABLE_KEY=eyJ... # legacy anon
 
 # Clerk Authentication
 CLERK_PUBLISHABLE_KEY=pk_test_your-publishable-key
