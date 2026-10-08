@@ -46,4 +46,9 @@ class User extends Authenticatable implements Onboardable
     {
         return $this->hasMany(Tag::class);
     }
+
+    public function investmentSimulations(): HasMany
+    {
+        return $this->hasMany(InvestmentSimulation::class);
+    }
 }

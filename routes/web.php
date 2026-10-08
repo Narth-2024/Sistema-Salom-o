@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ClerkCallbackController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvestmentForecastController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TagController;
@@ -53,6 +54,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics');
+    Route::get('/investments', [InvestmentForecastController::class, 'index'])->name('investments');
+    Route::post('/investments', [InvestmentForecastController::class, 'store'])->name('investments.store');
+    Route::delete('/investments/simulations/{simulation}', [InvestmentForecastController::class, 'destroy'])->name('investments.simulations.destroy');
     Route::resource('categories', CategoryController::class);
     Route::resource('tags', TagController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('transactions', TransactionController::class);

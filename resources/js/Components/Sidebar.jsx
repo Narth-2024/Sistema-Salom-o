@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react'
 import { useAuth } from '@clerk/react'
 import {
     LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash,
-    Settings, LogOut, ChevronLeft, ChevronRight, Coins,
+    Settings, LogOut, ChevronLeft, ChevronRight, Coins, PiggyBank,
 } from 'lucide-react'
 
 const navLinks = [
@@ -11,6 +11,7 @@ const navLinks = [
     { href: '/transactions', label: 'Transações', icon: ArrowLeftRight },
     { href: '/categories', label: 'Categorias', icon: Tags },
     { href: '/tags', label: 'Tags', icon: Hash },
+    { href: '/investments', label: 'Investimentos', icon: PiggyBank },
 ]
 
 export default function Sidebar({ collapsed, onToggle }) {

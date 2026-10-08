@@ -183,6 +183,47 @@ const SEGMENTS = [
         ],
     },
     {
+        path: '/investments',
+        steps: [
+            {
+                element: '[data-tour="inv-header"]',
+                popover: {
+                    title: 'Investimentos',
+                    description:
+                        'Simule quanto seu dinheiro pode render em instrumentos de renda fixa seguros: Poupança, CDB, Tesouro e mais.',
+                    side: 'bottom',
+                },
+            },
+            {
+                element: '[data-tour="inv-form"]',
+                popover: {
+                    title: 'Configure a simulação',
+                    description:
+                        'Informe o valor inicial, aporte mensal, prazo e IPCA estimado. O sistema compara todos os instrumentos na hora.',
+                    side: 'bottom',
+                },
+            },
+            {
+                element: '[data-tour="inv-results"]',
+                popover: {
+                    title: 'Comparativo',
+                    description:
+                        'Cada cartão mostra o valor líquido (já com IR, quando aplicável). O melhor resultado aparece em destaque — e você pode salvar qualquer simulação no histórico.',
+                    side: 'top',
+                },
+            },
+            {
+                element: '[data-tour="inv-chart"]',
+                popover: {
+                    title: 'Evolução projetada',
+                    description:
+                        'A curva mostra como o valor líquido cresce mês a mês em cada instrumento. Taxas de referência do Banco Central no topo da página.',
+                    side: 'top',
+                },
+            },
+        ],
+    },
+    {
         path: '/settings',
         steps: [
             {

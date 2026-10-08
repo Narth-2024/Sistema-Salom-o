@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react'
 import { useAuth } from '@clerk/react'
-import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins } from 'lucide-react'
+import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins, PiggyBank } from 'lucide-react'
 import { FlashMessage, OnboardingWelcome } from '@/Components'
 import Sidebar from '@/Components/Sidebar'
 import { useEffect, useState } from 'react'
@@ -13,6 +13,7 @@ const navLinks = [
     { href: '/transactions', label: 'Transações', icon: ArrowLeftRight },
     { href: '/categories', label: 'Categorias', icon: Tags },
     { href: '/tags', label: 'Tags', icon: Hash },
+    { href: '/investments', label: 'Inv.', icon: PiggyBank },
 ]
 
 export default function AppLayout({ children }) {
