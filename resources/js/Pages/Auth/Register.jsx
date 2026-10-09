@@ -21,18 +21,55 @@ export default function Register() {
         e.preventDefault()
         setError(null)
         if (!isLoaded || loading) return
+
+        const fullName = name.trim()
+        const parts = fullName.split(/\s+/)
+        const firstName = parts[0] || ''
+        const lastName = parts.slice(1).join(' ')
+
+        if (!firstName) {
+            setError('Informe seu nome.')
+            return
+        }
+        if (!email.includes('@')) {
+            setError('Informe um email válido.')
+            return
+        }
+        if (password.length < 8) {
+            setError('A senha precisa ter no mínimo 8 caracteres.')
+            return
+        }
+
         setLoading(true)
         try {
-            const parts = name.trim().split(' ')
-            await signUp.create({
-                firstName: parts[0] || '',
-                lastName: parts.slice(1).join(' ') || '',
-                emailAddress: email,
+            const payload = {
+                firstName,
+                emailAddress: email.trim(),
                 password,
-            })
+            }
+            if (lastName) payload.lastName = lastName
+
+            try {
+                await signUp.create(payload)
+            } catch (err) {
+                const code = err?.errors?.[0]?.code
+                // Signup pendente (email já iniciado e não verificado): retoma o fluxo
+                if (code === 'form_identifier_exists' || code === 'identifier_already_exists') {
+                    if (signUp.status && signUp.status !== 'complete') {
+                        await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+                        setPendingVerification(true)
+                        setNotice(`Enviamos um código de verificação para ${email.trim()}.`)
+                        return
+                    }
+                    setError('Este email já está em uso. Faça login ou use outro email.')
+                    return
+                }
+                throw err
+            }
+
             await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
             setPendingVerification(true)
-            setNotice(`Enviamos um código de verificação para ${email}.`)
+            setNotice(`Enviamos um código de verificação para ${email.trim()}.`)
         } catch (err) {
             setError(clerkErrorMessage(err))
         } finally {

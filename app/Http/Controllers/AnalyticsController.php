@@ -47,7 +47,7 @@ class AnalyticsController extends Controller
             ->selectRaw("TO_CHAR(transaction_date, 'YYYY-MM') as month")
             ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income")
             ->selectRaw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense")
-            ->where('transaction_date', '>=', $months->first())
+            ->where('transaction_date', '>=', Carbon::createFromFormat('Y-m', $months->first())->startOfMonth())
             ->groupBy(DB::raw("TO_CHAR(transaction_date, 'YYYY-MM')"))
             ->orderBy('month')
             ->get()
