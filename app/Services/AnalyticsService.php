@@ -18,14 +18,45 @@ class AnalyticsService
             ->groupBy('type')
             ->pluck('total', 'type');
 
-        $income = $totals['income'] ?? 0;
-        $expense = $totals['expense'] ?? 0;
+        $income = (float) ($totals['income'] ?? 0);
+        $expense = (float) ($totals['expense'] ?? 0);
 
         return [
             'income' => $income,
             'expense' => $expense,
             'balance' => $income - $expense,
         ];
+    }
+
+    public function getExpensesByCategory(User $user, string $period = 'all', int $limit = 5): array
+    {
+        $categories = $user->transactions()
+            ->selectRaw('categories.name, categories.color, SUM(transactions.amount) as total')
+            ->join('categories', 'categories.id', '=', 'transactions.category_id')
+            ->where('transactions.type', 'expense')
+            ->tap(function ($query) use ($period) {
+                $this->applyPeriod($query, $period, 'transactions.transaction_date');
+            })
+            ->groupBy('categories.id', 'categories.name', 'categories.color')
+            ->orderByDesc('total')
+            ->get();
+
+        $top = $categories->take($limit)->values();
+        $others = (float) $categories->skip($limit)->sum('total');
+
+        if ($others > 0) {
+            $top->push((object) ['name' => 'Outros', 'color' => null, 'total' => $others]);
+        }
+
+        return $top->all();
+    }
+
+    public function countExpenses(User $user, string $period = 'all'): int
+    {
+        $query = $user->transactions()->where('type', 'expense');
+        $this->applyPeriod($query, $period);
+
+        return $query->count();
     }
 
     public function getMonthlyComparison(User $user, string $period = 'month'): array
@@ -71,21 +102,27 @@ class AnalyticsService
         ];
     }
 
-    private function applyPeriod($query, string $period): void
+    public function applyPeriod($query, string $period, string $column = 'transaction_date'): void
     {
         switch ($period) {
             case 'month':
-                $query->where('transaction_date', '>=', Carbon::now()->startOfMonth());
+                $query->where($column, '>=', Carbon::now()->startOfMonth());
                 break;
             case 'last_month':
-                $query->where('transaction_date', '>=', Carbon::now()->subMonth()->startOfMonth())
-                    ->where('transaction_date', '<', Carbon::now()->startOfMonth());
+                $query->where($column, '>=', Carbon::now()->subMonth()->startOfMonth())
+                    ->where($column, '<', Carbon::now()->startOfMonth());
                 break;
             case '3_months':
-                $query->where('transaction_date', '>=', Carbon::now()->subMonths(3)->startOfMonth());
+                $query->where($column, '>=', Carbon::now()->subMonths(3)->startOfMonth());
+                break;
+            case '6_months':
+                $query->where($column, '>=', Carbon::now()->subMonths(6)->startOfMonth());
+                break;
+            case '12_months':
+                $query->where($column, '>=', Carbon::now()->subMonths(12)->startOfMonth());
                 break;
             case 'year':
-                $query->where('transaction_date', '>=', Carbon::now()->startOfYear());
+                $query->where($column, '>=', Carbon::now()->startOfYear());
                 break;
             case 'all':
             default:
