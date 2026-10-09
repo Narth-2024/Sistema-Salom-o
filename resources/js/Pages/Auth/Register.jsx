@@ -76,11 +76,11 @@ export default function Register() {
     }
 
     return (
-        <AuthShell title="Criar conta">
+        <AuthShell title="Criar conta" cardClassName="p-6">
             <h1 className="text-2xl font-bold text-gray-800">
                 {pendingVerification ? 'Verifique seu email' : 'Crie sua conta'}
             </h1>
-            <p className="text-sm text-gray-500 mt-1 mb-6">
+            <p className="text-sm text-gray-500 mt-1 mb-5">
                 {pendingVerification
                     ? 'Digite o código que enviamos para o seu email.'
                     : 'Comece a organizar suas finanças em menos de 1 minuto.'}
@@ -98,7 +98,7 @@ export default function Register() {
             )}
 
             {!pendingVerification ? (
-                <form onSubmit={handleRegister} className="space-y-4">
+                <form onSubmit={handleRegister} className="space-y-3">
                     <Input
                         label="Nome"
                         icon={User}
@@ -129,14 +129,14 @@ export default function Register() {
                         minLength={8}
                         required
                     />
-                    <p className="text-xs text-gray-500">Mínimo de 8 caracteres.</p>
+                    <p className="text-xs text-gray-500 -mt-1">Mínimo de 8 caracteres.</p>
 
                     <Button type="submit" variant="primary" className="w-full" disabled={loading}>
                         {loading ? 'Criando conta…' : 'Criar conta'}
                         {!loading && <ArrowRight className="w-4 h-4" />}
                     </Button>
 
-                    <p className="text-sm text-gray-500 text-center pt-2 border-t border-border">
+                    <p className="text-sm text-gray-500 text-center pt-1 border-t border-border">
                         Já tem uma conta?{' '}
                         <Link href="/login" className="text-accent-text hover:opacity-80 font-medium">
                             Entrar
@@ -144,7 +144,7 @@ export default function Register() {
                     </p>
                 </form>
             ) : (
-                <form onSubmit={handleVerify} className="space-y-4">
+                <form onSubmit={handleVerify} className="space-y-3">
                     <Input
                         label="Código de verificação"
                         icon={ShieldCheck}
@@ -158,7 +158,7 @@ export default function Register() {
                     <Button type="submit" variant="primary" className="w-full" disabled={loading || code.length !== 6}>
                         {loading ? 'Verificando…' : 'Verificar e entrar'}
                     </Button>
-                    <p className="text-sm text-gray-500 text-center pt-2 border-t border-border">
+                    <p className="text-sm text-gray-500 text-center pt-1 border-t border-border">
                         Não recebeu?{' '}
                         <button
                             type="button"

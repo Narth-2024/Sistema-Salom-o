@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react'
 import { ArrowLeft } from 'lucide-react'
 
-export default function AuthShell({ title, children }) {
+export default function AuthShell({ title, children, cardClassName = 'p-8' }) {
     return (
         <>
             <Head title={title} />
@@ -23,7 +23,7 @@ export default function AuthShell({ title, children }) {
                     </div>
                 </nav>
 
-                <div className="bg-surface rounded-2xl shadow-xl w-full max-w-md p-8 border border-border">
+                <div className={`bg-surface rounded-2xl shadow-xl w-full max-w-md border border-border ${cardClassName}`}>
                     {children}
                 </div>
             </div>
