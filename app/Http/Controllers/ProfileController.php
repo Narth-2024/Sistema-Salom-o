@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Services\SupabaseStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
@@ -45,6 +47,28 @@ class ProfileController extends Controller
         $user->update($data);
 
         return back()->with('success', 'Perfil atualizado com sucesso.');
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = $request->user();
+
+        if (! Hash::check($request->current_password, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => 'A senha atual está incorreta.',
+            ]);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return back()->with('success', 'Senha alterada com sucesso.');
     }
 
     private function extractPath(string $url): ?string

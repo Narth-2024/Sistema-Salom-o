@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
 import { startAppTour } from '@/tour/AppTour'
 import useTheme from '@/hooks/useTheme'
-import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug } from 'lucide-react'
+import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug, Lock } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function Settings() {
@@ -19,11 +19,25 @@ export default function Settings() {
     const [preview, setPreview] = useState(null)
     const fileRef = useRef(null)
 
+    const pwdForm = useForm({
+        current_password: '',
+        password: '',
+        password_confirmation: '',
+    })
+
     function handleSubmit(e) {
         e.preventDefault()
         post('/settings/profile', {
             forceFormData: true,
             preserveScroll: true,
+        })
+    }
+
+    function handlePasswordSubmit(e) {
+        e.preventDefault()
+        pwdForm.post('/settings/password', {
+            preserveScroll: true,
+            onSuccess: () => pwdForm.reset(),
         })
     }
 
@@ -126,6 +140,58 @@ export default function Settings() {
                             </Button>
                             {recentlySuccessful && (
                                 <span className="text-xs text-accent-text font-medium">Salvo!</span>
+                            )}
+                        </div>
+                    </form>
+                </Card>
+
+                {/* Password */}
+                <Card className="mt-6">
+                    <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        <Lock className="w-4 h-4 text-accent-text" />
+                        Alterar senha
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-5">Atualize sua senha de acesso.</p>
+
+                    <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                        <Input
+                            label="Senha atual"
+                            type="password"
+                            value={pwdForm.data.current_password}
+                            onChange={e => pwdForm.setData('current_password', e.target.value)}
+                            autoComplete="current-password"
+                            required
+                            error={pwdForm.errors.current_password}
+                        />
+                        <Input
+                            label="Nova senha"
+                            type="password"
+                            value={pwdForm.data.password}
+                            onChange={e => pwdForm.setData('password', e.target.value)}
+                            autoComplete="new-password"
+                            minLength={8}
+                            required
+                            error={pwdForm.errors.password}
+                        />
+                        <Input
+                            label="Confirmar nova senha"
+                            type="password"
+                            value={pwdForm.data.password_confirmation}
+                            onChange={e => pwdForm.setData('password_confirmation', e.target.value)}
+                            autoComplete="new-password"
+                            minLength={8}
+                            required
+                            error={pwdForm.errors.password_confirmation}
+                        />
+                        <p className="text-xs text-gray-500">Mínimo de 8 caracteres.</p>
+
+                        <div className="flex items-center gap-3 pt-2 border-t border-border">
+                            <Button type="submit" variant="primary" disabled={pwdForm.processing}>
+                                {pwdForm.recentlySuccessful ? <CheckCircle className="w-4 h-4" /> : null}
+                                {pwdForm.processing ? 'Salvando...' : 'Alterar senha'}
+                            </Button>
+                            {pwdForm.recentlySuccessful && (
+                                <span className="text-xs text-accent-text font-medium">Senha alterada!</span>
                             )}
                         </div>
                     </form>
