@@ -36,13 +36,6 @@ return [
         'key' => env('SUPABASE_SERVICE_KEY'),
     ],
 
-    'clerk' => [
-        'secret_key' => env('CLERK_SECRET_KEY'),
-        'publishable_key' => env('CLERK_PUBLISHABLE_KEY'),
-        'frontend_api_url' => env('CLERK_FRONTEND_API_URL'),
-        'webhook_secret' => env('CLERK_WEBHOOK_SECRET'),
-    ],
-
     'cron' => [
         'secret' => env('CRON_SECRET'),
     ],

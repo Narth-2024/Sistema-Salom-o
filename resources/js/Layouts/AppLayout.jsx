@@ -1,5 +1,4 @@
-import { Link, usePage } from '@inertiajs/react'
-import { useAuth } from '@clerk/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins, PiggyBank } from 'lucide-react'
 import { FlashMessage, OnboardingWelcome } from '@/Components'
 import Sidebar from '@/Components/Sidebar'
@@ -17,7 +16,6 @@ const navLinks = [
 ]
 
 export default function AppLayout({ children }) {
-    const { signOut } = useAuth()
     const { url } = usePage()
     const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -32,16 +30,12 @@ export default function AppLayout({ children }) {
 
     const sidebarMargin = sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
 
-    async function handleLogout() {
-        await fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+    function handleLogout() {
+        router.post('/logout', {}, {
+            onFinish: () => {
+                window.location.href = '/'
             },
         })
-        await signOut()
-        window.location.href = '/'
     }
 
     function isActive(href) {

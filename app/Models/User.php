@@ -15,7 +15,6 @@ class User extends Authenticatable implements Onboardable
     use GetsOnboarded, HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'clerk_id',
         'name',
         'email',
         'password',

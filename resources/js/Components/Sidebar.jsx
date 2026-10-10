@@ -1,5 +1,4 @@
-import { Link, usePage } from '@inertiajs/react'
-import { useAuth } from '@clerk/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import {
     LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash,
     Settings, LogOut, ChevronLeft, ChevronRight, Coins, PiggyBank,
@@ -15,7 +14,6 @@ const navLinks = [
 ]
 
 export default function Sidebar({ collapsed, onToggle }) {
-    const { signOut } = useAuth()
     const { url } = usePage()
 
     function isActive(href) {
@@ -23,16 +21,12 @@ export default function Sidebar({ collapsed, onToggle }) {
         return url.startsWith(href)
     }
 
-    async function handleLogout() {
-        await fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+    function handleLogout() {
+        router.post('/logout', {}, {
+            onFinish: () => {
+                window.location.href = '/'
             },
         })
-        await signOut()
-        window.location.href = '/'
     }
 
     return (

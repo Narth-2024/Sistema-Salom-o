@@ -1,216 +1,111 @@
 import { useState } from 'react'
-import { Link } from '@inertiajs/react'
-import { useSignUp } from '@clerk/react'
+import { Link, router } from '@inertiajs/react'
 import { AuthShell, Button, Input } from '@/Components'
-import { clerkErrorMessage } from '@/lib/clerkErrors'
-import { ArrowRight, Mail, Lock, User, ShieldCheck } from 'lucide-react'
+import { Mail, Lock, User, ArrowRight } from 'lucide-react'
 
 export default function Register() {
-    const { isLoaded, signUp, setActive } = useSignUp()
-
-    const [pendingVerification, setPendingVerification] = useState(false)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [code, setCode] = useState('')
+    const [passwordConfirmation, setPasswordConfirmation] = useState('')
     const [error, setError] = useState(null)
-    const [notice, setNotice] = useState(null)
     const [loading, setLoading] = useState(false)
 
-    async function handleRegister(e) {
+    function handleSubmit(e) {
         e.preventDefault()
         setError(null)
-        if (!isLoaded || loading) return
+        if (loading) return
 
-        const fullName = name.trim()
-        const parts = fullName.split(/\s+/)
-        const firstName = parts[0] || ''
-        const lastName = parts.slice(1).join(' ')
-
-        if (!firstName) {
-            setError('Informe seu nome.')
-            return
-        }
-        if (!email.includes('@')) {
-            setError('Informe um email válido.')
-            return
-        }
         if (password.length < 8) {
             setError('A senha precisa ter no mínimo 8 caracteres.')
             return
         }
+        if (password !== passwordConfirmation) {
+            setError('As senhas não coincidem.')
+            return
+        }
 
         setLoading(true)
-        try {
-            const payload = {
-                firstName,
-                emailAddress: email.trim(),
-                password,
-            }
-            if (lastName) payload.lastName = lastName
-
-            try {
-                await signUp.create(payload)
-            } catch (err) {
-                const code = err?.errors?.[0]?.code
-                // Signup pendente (email já iniciado e não verificado): retoma o fluxo
-                if (code === 'form_identifier_exists' || code === 'identifier_already_exists') {
-                    if (signUp.status && signUp.status !== 'complete') {
-                        await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-                        setPendingVerification(true)
-                        setNotice(`Enviamos um código de verificação para ${email.trim()}.`)
-                        return
-                    }
-                    setError('Este email já está em uso. Faça login ou use outro email.')
-                    return
-                }
-                throw err
-            }
-
-            await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-            setPendingVerification(true)
-            setNotice(`Enviamos um código de verificação para ${email.trim()}.`)
-        } catch (err) {
-            setError(clerkErrorMessage(err))
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    async function handleVerify(e) {
-        e.preventDefault()
-        setError(null)
-        if (!isLoaded || loading) return
-        setLoading(true)
-        try {
-            const result = await signUp.attemptEmailAddressVerification({ code })
-            if (result.status === 'complete') {
-                await setActive({ session: result.createdSessionId })
-                window.location.href = '/auth/clerk-callback'
-                return
-            }
-            setError('Verificação incompleta. Tente novamente.')
-        } catch (err) {
-            setError(clerkErrorMessage(err))
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    async function handleResend() {
-        setError(null)
-        setNotice(null)
-        if (!isLoaded || loading) return
-        setLoading(true)
-        try {
-            await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-            setNotice('Novo código enviado.')
-        } catch (err) {
-            setError(clerkErrorMessage(err))
-        } finally {
-            setLoading(false)
-        }
+        router.post('/register', {
+            name,
+            email,
+            password,
+            password_confirmation: passwordConfirmation,
+        }, {
+            onFinish: () => setLoading(false),
+            onError: (errors) => {
+                setError(errors.email || errors.name || errors.password || 'Não foi possível criar a conta.')
+            },
+        })
     }
 
     return (
         <AuthShell title="Criar conta" cardClassName="p-6">
-            <h1 className="text-2xl font-bold text-gray-800">
-                {pendingVerification ? 'Verifique seu email' : 'Crie sua conta'}
-            </h1>
-            <p className="text-sm text-gray-500 mt-1 mb-5">
-                {pendingVerification
-                    ? 'Digite o código que enviamos para o seu email.'
-                    : 'Comece a organizar suas finanças em menos de 1 minuto.'}
-            </p>
+            <h1 className="text-2xl font-bold text-gray-800">Crie sua conta</h1>
+            <p className="text-sm text-gray-500 mt-1 mb-5">Comece a organizar suas finanças em menos de 1 minuto.</p>
 
             {error && (
                 <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-400" role="alert">
                     {error}
                 </div>
             )}
-            {notice && (
-                <div className="mb-4 p-3 rounded-xl bg-primary/10 border border-primary/20 text-sm text-accent-text" role="status">
-                    {notice}
-                </div>
-            )}
 
-            {!pendingVerification ? (
-                <form onSubmit={handleRegister} className="space-y-3">
-                    <Input
-                        label="Nome"
-                        icon={User}
-                        placeholder="Seu nome completo"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        autoComplete="name"
-                        required
-                    />
-                    <Input
-                        label="Email"
-                        type="email"
-                        icon={Mail}
-                        placeholder="seu@email.com"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        autoComplete="email"
-                        required
-                    />
-                    <Input
-                        label="Senha"
-                        type="password"
-                        icon={Lock}
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        autoComplete="new-password"
-                        minLength={8}
-                        required
-                    />
-                    <p className="text-xs text-gray-500 -mt-1">Mínimo de 8 caracteres.</p>
+            <form onSubmit={handleSubmit} className="space-y-3">
+                <Input
+                    label="Nome"
+                    icon={User}
+                    placeholder="Seu nome completo"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    autoComplete="name"
+                    required
+                />
+                <Input
+                    label="Email"
+                    type="email"
+                    icon={Mail}
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    autoComplete="email"
+                    required
+                />
+                <Input
+                    label="Senha"
+                    type="password"
+                    icon={Lock}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    autoComplete="new-password"
+                    minLength={8}
+                    required
+                />
+                <Input
+                    label="Confirmar senha"
+                    type="password"
+                    icon={Lock}
+                    placeholder="••••••••"
+                    value={passwordConfirmation}
+                    onChange={e => setPasswordConfirmation(e.target.value)}
+                    autoComplete="new-password"
+                    minLength={8}
+                    required
+                />
+                <p className="text-xs text-gray-500 -mt-1">Mínimo de 8 caracteres.</p>
 
-                    <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-                        {loading ? 'Criando conta…' : 'Criar conta'}
-                        {!loading && <ArrowRight className="w-4 h-4" />}
-                    </Button>
+                <Button type="submit" variant="primary" className="w-full" disabled={loading}>
+                    {loading ? 'Criando conta…' : 'Criar conta'}
+                    {!loading && <ArrowRight className="w-4 h-4" />}
+                </Button>
 
-                    <p className="text-sm text-gray-500 text-center pt-1 border-t border-border">
-                        Já tem uma conta?{' '}
-                        <Link href="/login" className="text-accent-text hover:opacity-80 font-medium">
-                            Entrar
-                        </Link>
-                    </p>
-                </form>
-            ) : (
-                <form onSubmit={handleVerify} className="space-y-3">
-                    <Input
-                        label="Código de verificação"
-                        icon={ShieldCheck}
-                        placeholder="000000"
-                        inputMode="numeric"
-                        maxLength={6}
-                        value={code}
-                        onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
-                        required
-                    />
-                    <Button type="submit" variant="primary" className="w-full" disabled={loading || code.length !== 6}>
-                        {loading ? 'Verificando…' : 'Verificar e entrar'}
-                    </Button>
-                    <p className="text-sm text-gray-500 text-center pt-1 border-t border-border">
-                        Não recebeu?{' '}
-                        <button
-                            type="button"
-                            onClick={handleResend}
-                            className="text-accent-text hover:opacity-80 font-medium cursor-pointer"
-                        >
-                            Reenviar código
-                        </button>
-                        {' · '}
-                        <Link href="/login" className="text-accent-text hover:opacity-80 font-medium">
-                            Voltar ao login
-                        </Link>
-                    </p>
-                </form>
-            )}
+                <p className="text-sm text-gray-500 text-center pt-1 border-t border-border">
+                    Já tem uma conta?{' '}
+                    <Link href="/login" className="text-accent-text hover:opacity-80 font-medium">
+                        Entrar
+                    </Link>
+                </p>
+            </form>
         </AuthShell>
     )
 }
