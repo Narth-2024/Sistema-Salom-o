@@ -80,6 +80,16 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                     responsive: true,
                     maintainAspectRatio: false,
                     cutout: '72%',
+                    onHover: (evt, elements) => {
+                        evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'
+                    },
+                    onClick: (evt, elements) => {
+                        if (!elements.length) return
+                        const cat = expensesByCategory[elements[0].index]
+                        if (cat?.id) {
+                            router.visit('/transactions', { type: 'expense', category_id: cat.id })
+                        }
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -272,7 +282,11 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                         ) : (
                             <div className="divide-y divide-gray-200/60">
                                 {recentTransactions.map(t => (
-                                    <div key={t.id} className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-100/40 transition-colors">
+                                    <div
+                                        key={t.id}
+                                        className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-100/40 transition-colors cursor-pointer"
+                                        onClick={() => router.visit(`/transactions/${t.id}`)}
+                                    >
                                         <div className="flex items-center gap-3 min-w-0">
                                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-primary/10 text-accent-text' : 'bg-red-500/10 text-red-400'} ring-1 ring-border-strong`}>
                                                 {t.type === 'income' ? (

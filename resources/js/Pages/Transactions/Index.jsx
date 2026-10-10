@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Badge, Button, Pagination, ConfirmDialog, Skeleton } from '@/Components'
 import {
     Plus, Eye, Edit2, Trash2, TrendingUp, TrendingDown,
-    Search, X, Download, RefreshCcw
+    Search, X, Download, RefreshCcw, ChevronUp, ChevronDown
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 
@@ -26,6 +26,9 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
     const [deleteTarget, setDeleteTarget] = useState(null)
     const [loading, setLoading] = useState(false)
     const searchTimer = useRef(null)
+    const mountedRef = useRef(false)
+    const sortField = filters?.sort || 'transaction_date'
+    const sortDir = filters?.direction || 'desc'
 
     function applyFilters(overrides = {}) {
         const params = {}
@@ -35,6 +38,8 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
         if (overrides.tag_id ?? tagFilter) params.tag_id = overrides.tag_id ?? tagFilter
         if (overrides.date_from ?? dateFrom) params.date_from = overrides.date_from ?? dateFrom
         if (overrides.date_to ?? dateTo) params.date_to = overrides.date_to ?? dateTo
+        params.sort = overrides.sort ?? sortField
+        params.direction = overrides.direction ?? sortDir
 
         router.get('/transactions', params, {
             preserveState: true,
@@ -44,7 +49,32 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
         })
     }
 
+    function toggleSort(field) {
+        const dir = sortField === field && sortDir === 'desc' ? 'asc' : 'desc'
+        applyFilters({ sort: field, direction: dir })
+    }
+
+    function exportCsv() {
+        const params = new URLSearchParams()
+        if (search) params.set('search', search)
+        if (typeFilter) params.set('type', typeFilter)
+        if (categoryFilter) params.set('category_id', categoryFilter)
+        if (tagFilter) params.set('tag_id', tagFilter)
+        if (dateFrom) params.set('date_from', dateFrom)
+        if (dateTo) params.set('date_to', dateTo)
+        window.location.href = `/transactions/export?${params.toString()}`
+    }
+
+    function SortIcon({ field }) {
+        if (sortField !== field) return <ChevronDown className="w-3 h-3 opacity-30" />
+        return sortDir === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />
+    }
+
     useEffect(() => {
+        if (!mountedRef.current) {
+            mountedRef.current = true
+            return
+        }
         clearTimeout(searchTimer.current)
         searchTimer.current = setTimeout(() => applyFilters({ search }), 400)
         return () => clearTimeout(searchTimer.current)
@@ -91,6 +121,10 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         <p className="text-gray-500 mt-1">Registre e acompanhe suas movimentações financeiras.</p>
                     </div>
                     <div className="flex items-center gap-3">
+                        <Button variant="outline" onClick={exportCsv}>
+                            <Download className="w-4 h-4" />
+                            CSV
+                        </Button>
                         <Link href="/transactions/create" data-tour="tx-create">
                             <Button variant="primary">
                                 <Plus className="w-4 h-4" />
@@ -241,18 +275,24 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                             <table className="w-full">
                                 <thead>
                                     <tr className="border-b border-border">
-                                        <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Data</th>
-                                        <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Descrição</th>
+                                        <th onClick={() => toggleSort('transaction_date')} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
+                                            <span className="inline-flex items-center gap-1">Data <SortIcon field="transaction_date" /></span>
+                                        </th>
+                                        <th onClick={() => toggleSort('description')} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
+                                            <span className="inline-flex items-center gap-1">Descrição <SortIcon field="description" /></span>
+                                        </th>
                                         <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Categoria</th>
                                         <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tags</th>
                                         <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tipo</th>
-                                        <th className="px-6 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Valor</th>
+                                        <th onClick={() => toggleSort('amount')} className="px-6 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
+                                            <span className="inline-flex items-center gap-1">Valor <SortIcon field="amount" /></span>
+                                        </th>
                                         <th className="px-6 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200/40">
                                     {data.map(t => (
-                                        <tr key={t.id} className="hover:bg-gray-100/40 transition group">
+                                        <tr key={t.id} className="hover:bg-gray-100/40 transition group cursor-pointer" onClick={() => router.visit(`/transactions/${t.id}`)}>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {parseDate(t.transaction_date)}
                                             </td>
@@ -295,7 +335,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                     {t.type === 'income' ? '+' : '-'} {formatBR(t.amount)}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right">
+                                            <td className="px-6 py-4 whitespace-nowrap text-right" onClick={e => e.stopPropagation()}>
                                                 <div className="flex items-center justify-end gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition">
                                                     <Link href={`/transactions/${t.id}`} className="text-gray-500 hover:text-gray-700 transition p-1.5 rounded-lg hover:bg-gray-100">
                                                         <Eye className="w-4 h-4" />

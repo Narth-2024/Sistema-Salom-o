@@ -31,7 +31,7 @@ class AnalyticsService
     public function getExpensesByCategory(User $user, string $period = 'all', int $limit = 5): array
     {
         $categories = $user->transactions()
-            ->selectRaw('categories.name, categories.color, SUM(transactions.amount) as total')
+            ->selectRaw('categories.id, categories.name, categories.color, SUM(transactions.amount) as total')
             ->join('categories', 'categories.id', '=', 'transactions.category_id')
             ->where('transactions.type', 'expense')
             ->tap(function ($query) use ($period) {

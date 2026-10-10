@@ -302,6 +302,16 @@ export default function Analytics({
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: baseAnim,
+                        onHover: (evt, elements) => {
+                            evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'
+                        },
+                        onClick: (evt, elements) => {
+                            if (!elements.length) return
+                            const cat = categoryChart[elements[0].index]
+                            if (cat?.id) {
+                                router.visit('/transactions', { type: 'expense', category_id: cat.id })
+                            }
+                        },
                         plugins: {
                             legend: { display: false },
                             tooltip: {

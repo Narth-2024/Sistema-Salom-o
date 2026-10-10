@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\StreamedResponse;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TransactionController extends Controller
 {
-    public function index(Request $request): Response
+    private function filteredQuery(Request $request): \Illuminate\Database\Eloquent\Builder
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -57,9 +58,18 @@ class TransactionController extends Controller
             $query->orderBy('transaction_date', 'desc');
         }
 
+        return $query;
+    }
+
+    public function index(Request $request): Response
+    {
+        $query = $this->filteredQuery($request);
+
         $perPage = min((int) $request->query('per_page', 15), 50);
         $transactions = $query->paginate($perPage)->withQueryString();
 
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
         $categories = $user->categories()->get();
         $tags = $user->tags()->get();
 
@@ -68,6 +78,33 @@ class TransactionController extends Controller
             'categories' => $categories,
             'tags' => $tags,
             'filters' => $request->only(['search', 'type', 'category_id', 'tag_id', 'date_from', 'date_to', 'sort', 'direction']),
+        ]);
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $transactions = $this->filteredQuery($request)->get();
+
+        $filename = 'transacoes_' . now()->format('Y-m-d_H-i') . '.csv';
+
+        return response()->streamDownload(function () use ($transactions) {
+            $out = fopen('php://output', 'w');
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($out, ['Data', 'Tipo', 'Descrição', 'Categoria', 'Valor (R$)', 'Tags', 'Recorrente'], ';');
+            foreach ($transactions as $t) {
+                fputcsv($out, [
+                    $t->transaction_date,
+                    $t->type === 'income' ? 'Receita' : 'Despesa',
+                    $t->description ?? '',
+                    $t->category?->name ?? '',
+                    number_format((float) $t->amount, 2, ',', '.'),
+                    $t->tags->pluck('name')->implode(', '),
+                    $t->is_recurring ? 'Sim' : 'Não',
+                ], ';');
+            }
+            fclose($out);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
 

@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/investments/simulations/{simulation}', [InvestmentForecastController::class, 'destroy'])->name('investments.simulations.destroy');
     Route::resource('categories', CategoryController::class);
     Route::resource('tags', TagController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/transactions/export', [TransactionController::class, 'export'])->name('transactions.export');
     Route::resource('transactions', TransactionController::class);
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::post('/settings/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
