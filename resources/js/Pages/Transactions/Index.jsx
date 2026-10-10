@@ -271,88 +271,149 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                             )}
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="border-b border-border">
-                                        <th onClick={() => toggleSort('transaction_date')} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
-                                            <span className="inline-flex items-center gap-1">Data <SortIcon field="transaction_date" /></span>
-                                        </th>
-                                        <th onClick={() => toggleSort('description')} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
-                                            <span className="inline-flex items-center gap-1">Descrição <SortIcon field="description" /></span>
-                                        </th>
-                                        <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Categoria</th>
-                                        <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tags</th>
-                                        <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tipo</th>
-                                        <th onClick={() => toggleSort('amount')} className="px-6 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
-                                            <span className="inline-flex items-center gap-1">Valor <SortIcon field="amount" /></span>
-                                        </th>
-                                        <th className="px-6 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200/40">
-                                    {data.map(t => (
-                                        <tr key={t.id} className="hover:bg-gray-100/40 transition group cursor-pointer" onClick={() => router.visit(`/transactions/${t.id}`)}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {parseDate(t.transaction_date)}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-800 min-w-[140px]">
-                                                <span className="font-medium">{t.description || '—'}</span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Badge variant="green">{t.category?.name || 'Sem categoria'}</Badge>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex flex-wrap gap-1">
-                                                    {t.tags?.length > 0 ? t.tags.slice(0, 2).map(tag => (
+                        <>
+                            {/* Mobile: cards */}
+                            <div className="sm:hidden divide-y divide-gray-200/40">
+                                {data.map(t => (
+                                    <div
+                                        key={t.id}
+                                        className="flex items-start gap-3 px-4 py-3.5 hover:bg-gray-100/40 transition cursor-pointer"
+                                        onClick={() => router.visit(`/transactions/${t.id}`)}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-primary/10 text-accent-text' : 'bg-red-500/10 text-red-400'} ring-1 ring-border-strong`}>
+                                            {t.type === 'income' ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-gray-800 truncate">{t.description || 'Sem descrição'}</p>
+                                            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                                <span className="text-xs text-gray-500 shrink-0">{parseDate(t.transaction_date)}</span>
+                                                <span className="text-xs text-gray-500">·</span>
+                                                <span className="text-xs text-gray-500 truncate">{t.category?.name || 'Sem categoria'}</span>
+                                                {t.is_recurring && (
+                                                    <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-accent-text bg-primary/10 px-1.5 py-0.5 rounded-full">
+                                                        <RefreshCcw className="w-2.5 h-2.5" />
+                                                        Recorrente
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {t.tags?.length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-1.5">
+                                                    {t.tags.slice(0, 3).map(tag => (
                                                         <span
                                                             key={tag.id}
-                                                            className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium text-white"
+                                                            className="inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-medium text-white"
                                                             style={{ backgroundColor: tag.color }}
                                                         >
                                                             {tag.name}
                                                         </span>
-                                                    )) : <span className="text-gray-500 text-xs">—</span>}
-                                                    {t.tags?.length > 2 && (
-                                                        <span className="text-[10px] text-gray-500">+{t.tags.length - 2}</span>
+                                                    ))}
+                                                    {t.tags.length > 3 && (
+                                                        <span className="text-[10px] text-gray-500">+{t.tags.length - 3}</span>
                                                     )}
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Badge variant={t.type === 'income' ? 'income' : 'expense'}>
-                                                    {t.type === 'income' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                                                    {t.type === 'income' ? 'Receita' : 'Despesa'}
-                                                </Badge>
-                                                {t.is_recurring && (
-                                                    <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-medium text-accent-text bg-primary/10 px-2 py-0.5 rounded-full">
-                                                        <RefreshCcw className="w-3 h-3" />
-                                                        Recorrente
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
-                                                    {t.type === 'income' ? '+' : '-'} {formatBR(t.amount)}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right" onClick={e => e.stopPropagation()}>
-                                                <div className="flex items-center justify-end gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition">
-                                                    <Link href={`/transactions/${t.id}`} className="text-gray-500 hover:text-gray-700 transition p-1.5 rounded-lg hover:bg-gray-100">
-                                                        <Eye className="w-4 h-4" />
-                                                    </Link>
-                                                    <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
-                                                        <Edit2 className="w-4 h-4" />
-                                                    </Link>
-                                                    <button onClick={() => setDeleteTarget(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            </td>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col items-end gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+                                            <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
+                                                {t.type === 'income' ? '+' : '-'} {formatBR(t.amount)}
+                                            </span>
+                                            <div className="flex items-center gap-0.5">
+                                                <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                    <Edit2 className="w-4 h-4" />
+                                                </Link>
+                                                <button onClick={() => setDeleteTarget(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Desktop: table */}
+                            <div className="hidden sm:block overflow-x-auto">
+                                <table className="w-full">
+                                    <thead>
+                                        <tr className="border-b border-border">
+                                            <th onClick={() => toggleSort('transaction_date')} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
+                                                <span className="inline-flex items-center gap-1">Data <SortIcon field="transaction_date" /></span>
+                                            </th>
+                                            <th onClick={() => toggleSort('description')} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
+                                                <span className="inline-flex items-center gap-1">Descrição <SortIcon field="description" /></span>
+                                            </th>
+                                            <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Categoria</th>
+                                            <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tags</th>
+                                            <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tipo</th>
+                                            <th onClick={() => toggleSort('amount')} className="px-6 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 select-none">
+                                                <span className="inline-flex items-center gap-1">Valor <SortIcon field="amount" /></span>
+                                            </th>
+                                            <th className="px-6 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Ações</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200/40">
+                                        {data.map(t => (
+                                            <tr key={t.id} className="hover:bg-gray-100/40 transition group cursor-pointer" onClick={() => router.visit(`/transactions/${t.id}`)}>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {parseDate(t.transaction_date)}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-800 min-w-[140px]">
+                                                    <span className="font-medium">{t.description || '—'}</span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <Badge variant="green">{t.category?.name || 'Sem categoria'}</Badge>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {t.tags?.length > 0 ? t.tags.slice(0, 2).map(tag => (
+                                                            <span
+                                                                key={tag.id}
+                                                                className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium text-white"
+                                                                style={{ backgroundColor: tag.color }}
+                                                            >
+                                                                {tag.name}
+                                                            </span>
+                                                        )) : <span className="text-gray-500 text-xs">—</span>}
+                                                        {t.tags?.length > 2 && (
+                                                            <span className="text-[10px] text-gray-500">+{t.tags.length - 2}</span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <Badge variant={t.type === 'income' ? 'income' : 'expense'}>
+                                                        {t.type === 'income' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                                                        {t.type === 'income' ? 'Receita' : 'Despesa'}
+                                                    </Badge>
+                                                    {t.is_recurring && (
+                                                        <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-medium text-accent-text bg-primary/10 px-2 py-0.5 rounded-full">
+                                                            <RefreshCcw className="w-3 h-3" />
+                                                            Recorrente
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right">
+                                                    <span className={`text-sm font-semibold tabular-nums ${t.type === 'income' ? 'text-accent-text' : 'text-red-400'}`}>
+                                                        {t.type === 'income' ? '+' : '-'} {formatBR(t.amount)}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right" onClick={e => e.stopPropagation()}>
+                                                    <div className="flex items-center justify-end gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition">
+                                                        <Link href={`/transactions/${t.id}`} className="text-gray-500 hover:text-gray-700 transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                            <Eye className="w-4 h-4" />
+                                                        </Link>
+                                                        <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                            <Edit2 className="w-4 h-4" />
+                                                        </Link>
+                                                        <button onClick={() => setDeleteTarget(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
+                                                            <Trash2 className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
                     )}
 
                     <Pagination meta={meta} />
