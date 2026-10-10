@@ -10,8 +10,8 @@ createInertiaApp({
         import.meta.glob('./Pages/**/*.jsx')
     ),
     setup({ el, App, props }) {
-        router.onError((error) => {
-            if (error.response?.status === 419) {
+        router.on('inertia:httpException', (event) => {
+            if (event.detail?.response?.status === 419) {
                 window.location.reload()
             }
         })
