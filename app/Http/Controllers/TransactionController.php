@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\StreamedResponse;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TransactionController extends Controller
 {
-    private function filteredQuery(Request $request): \Illuminate\Database\Eloquent\Builder
+    private function filteredQuery(Request $request): \Illuminate\Database\Eloquent\Relations\Relation
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -81,7 +80,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function export(Request $request): StreamedResponse
+    public function export(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $transactions = $this->filteredQuery($request)->get();
 
