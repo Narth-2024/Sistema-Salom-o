@@ -19,7 +19,7 @@ export default function Investments({ inputs, marketRates, instruments, history 
     const lineInstance = useRef(null)
     const [confirmDelete, setConfirmDelete] = useState(null)
 
-    const { data, setData, get, processing } = useForm({
+    const { data, setData, get, processing, errors } = useForm({
         amount: inputs.amount,
         months: inputs.months,
         monthly: inputs.monthly,
@@ -130,6 +130,11 @@ export default function Investments({ inputs, marketRates, instruments, history 
                     </h2>
 
                     <form onSubmit={submit} className="space-y-4">
+                        {(errors.amount || errors.months || errors.monthly || errors.ipca) && (
+                            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-400" role="alert">
+                                {errors.amount || errors.months || errors.monthly || errors.ipca}
+                            </div>
+                        )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">

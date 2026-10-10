@@ -15,7 +15,7 @@ export default function CategoriesIndex({ categories }) {
     const meta = categories.meta || null
     const [deleteTarget, setDeleteTarget] = useState(null)
 
-    const { data, setData, post, processing, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         type: 'expense',
         color: '#6366f1',
@@ -57,6 +57,7 @@ export default function CategoriesIndex({ categories }) {
                             required
                             placeholder="Ex: Alimentação, Transporte..."
                             className="flex-1 min-w-[160px]"
+                            error={errors.name}
                         />
                         <Select
                             value={data.type}

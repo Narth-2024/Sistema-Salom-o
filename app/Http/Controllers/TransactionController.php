@@ -109,7 +109,8 @@ class TransactionController extends Controller
             $transaction->tags()->sync($tagIds);
         }
 
-        return redirect()->route('transactions.index');
+        return redirect()->route('transactions.index', $request->query())
+            ->with('success', 'Transação criada com sucesso.');
     }
 
     public function show(Transaction $transaction): Response
@@ -163,7 +164,7 @@ class TransactionController extends Controller
 
         $transaction->tags()->sync($request->input('tag_ids', []));
 
-        return redirect()->route('transactions.index')
+        return redirect()->route('transactions.index', $request->query())
             ->with('success', 'Transação atualizada com sucesso.');
     }
 

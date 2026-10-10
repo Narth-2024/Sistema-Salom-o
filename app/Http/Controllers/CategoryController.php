@@ -40,7 +40,8 @@ class CategoryController extends Controller
 
         $user->categories()->create($request->only('name', 'type', 'color'));
 
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')
+            ->with('success', 'Categoria criada com sucesso.');
     }
 
     public function show(Category $category): Response

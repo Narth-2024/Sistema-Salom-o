@@ -14,13 +14,14 @@ export default function TagsIndex({ tags }) {
     const items = tags.data || tags
     const meta = tags.meta || null
 
-    const { data, setData, post, processing, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         color: '#6366f1',
     })
 
     const [editingId, setEditingId] = useState(null)
     const [editForm, setEditForm] = useState({ name: '', color: '' })
+    const [editError, setEditError] = useState(null)
     const [deleteTarget, setDeleteTarget] = useState(null)
 
     function handleSubmit(e) {
@@ -35,17 +36,21 @@ export default function TagsIndex({ tags }) {
     function startEdit(tag) {
         setEditingId(tag.id)
         setEditForm({ name: tag.name, color: tag.color })
+        setEditError(null)
     }
 
     function saveEdit(tag) {
+        setEditError(null)
         router.put(`/tags/${tag.id}`, editForm, {
             preserveScroll: true,
             onSuccess: () => setEditingId(null),
+            onError: (errs) => setEditError(errs.name || 'Não foi possível salvar.'),
         })
     }
 
     function cancelEdit() {
         setEditingId(null)
+        setEditError(null)
     }
 
     return (
@@ -74,6 +79,7 @@ export default function TagsIndex({ tags }) {
                             required
                             placeholder="Ex: cartão_credito, parcelado..."
                             className="flex-1"
+                            error={errors.name}
                         />
                         <div className="flex items-center gap-1">
                             {presetColors.map(c => (
@@ -130,6 +136,9 @@ export default function TagsIndex({ tags }) {
                                             className="flex-1 px-3 py-1.5 rounded-lg border border-border bg-surface-elevated text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/20"
                                             autoFocus
                                         />
+                                        {editError && (
+                                            <span className="text-xs text-red-400">{editError}</span>
+                                        )}
                                         <Button size="sm" variant="primary" onClick={() => saveEdit(tag)}>Salvar</Button>
                                         <Button size="sm" variant="ghost" onClick={cancelEdit}>Cancelar</Button>
                                     </div>

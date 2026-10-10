@@ -25,7 +25,7 @@ class TagController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:50|unique:tags,name,'.auth()->id().',user_id',
             'color' => 'required|string|size:7',
         ]);
 
@@ -43,7 +43,7 @@ class TagController extends Controller
         $this->authorize('update', $tag);
 
         $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:50|unique:tags,name,'.$tag->id.',id,user_id,'.auth()->id(),
             'color' => 'required|string|size:7',
         ]);
 

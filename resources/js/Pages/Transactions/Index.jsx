@@ -5,7 +5,7 @@ import {
     Plus, Eye, Edit2, Trash2, TrendingUp, TrendingDown,
     Search, X, Download, RefreshCcw
 } from 'lucide-react'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 function formatBR(value) {
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -25,6 +25,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
     const [dateTo, setDateTo] = useState(filters?.date_to || '')
     const [deleteTarget, setDeleteTarget] = useState(null)
     const [loading, setLoading] = useState(false)
+    const searchTimer = useRef(null)
 
     function applyFilters(overrides = {}) {
         const params = {}
@@ -43,19 +44,10 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
         })
     }
 
-    const debouncedSearch = useCallback(
-        (function () {
-            let timer
-            return (value) => {
-                clearTimeout(timer)
-                timer = setTimeout(() => applyFilters({ search: value }), 400)
-            }
-        })(),
-        [search, typeFilter, categoryFilter, dateFrom, dateTo]
-    )
-
     useEffect(() => {
-        debouncedSearch(search)
+        clearTimeout(searchTimer.current)
+        searchTimer.current = setTimeout(() => applyFilters({ search }), 400)
+        return () => clearTimeout(searchTimer.current)
     }, [search])
 
     function clearFilters() {
