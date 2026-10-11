@@ -16,7 +16,7 @@ function MetricsCarousel() {
     const [state, setState] = useState('visible') // visible | leaving | entering
     const timerRef = useRef(null)
 
-    function scheduleNext(delay = 3200) {
+    function scheduleNext(delay = 10000) {
         clearTimeout(timerRef.current)
         timerRef.current = setTimeout(() => {
             setState('leaving')
