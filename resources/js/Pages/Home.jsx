@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react'
+import { Coins } from 'lucide-react'
 
 export default function Home() {
     return (
@@ -24,9 +25,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                     <Link href="/" className="flex items-center gap-2.5 group">
                         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-                            <svg className="w-4 h-4 text-primary-fg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                            </svg>
+                            <Coins className="w-4 h-4 text-primary-fg" strokeWidth={2.5} />
                         </div>
                         <span className="text-lg font-bold text-gray-800 tracking-tight">Salomão</span>
                     </Link>
@@ -91,7 +90,7 @@ export default function Home() {
                                     <div className="w-3 h-3 rounded-full bg-yellow-400/80"></div>
                                     <div className="w-3 h-3 rounded-full bg-green-400/80"></div>
                                 </div>
-                                <span className="text-panel-muted text-xs font-medium">Salomão — Dashboard</span>
+                                <span className="text-panel-muted text-xs font-medium">Salomão — Visão geral</span>
                             </div>
                             <div className="p-6 space-y-5">
                                 <div className="flex items-center justify-between">
@@ -106,9 +105,9 @@ export default function Home() {
                                         <p className="text-xs text-gray-500">Receitas</p>
                                         <p className="text-lg font-bold text-accent-text">R$ 8.200</p>
                                     </div>
-                                    <div className="bg-green-50 rounded-xl p-4">
+                                    <div className="bg-red-50 rounded-xl p-4">
                                         <p className="text-xs text-gray-500">Despesas</p>
-                                        <p className="text-lg font-bold text-accent-text">R$ 5.750</p>
+                                        <p className="text-lg font-bold text-red-400">R$ 5.750</p>
                                     </div>
                                 </div>
                                 <div className="h-20 flex items-end gap-2 pt-2">
@@ -164,7 +163,7 @@ export default function Home() {
                             {
                                 icon: <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>,
                                 title: 'Autenticação segura',
-                                desc: 'Login protegido com criptografia. Seus dados financeiros ficam seguros.',
+                                desc: 'Acesso com email e senha, protegido por sessão segura. Seus dados financeiros ficam privados.',
                             },
                             {
                                 icon: <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>,
@@ -217,7 +216,7 @@ export default function Home() {
 
                     <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
                         {[
-                            { num: '1', title: 'Crie sua conta', desc: 'Cadastre-se gratuitamente em segundos com seu Google ou email.' },
+                            { num: '1', title: 'Crie sua conta', desc: 'Cadastre-se gratuitamente em segundos com seu email.' },
                             { num: '2', title: 'Registre seus dados', desc: 'Adicione suas receitas, despesas e crie categorias personalizadas.' },
                             { num: '3', title: 'Acompanhe', desc: 'Veja gráficos, compare meses e tenha controle total das suas finanças.' },
                         ].map((step, i) => (
@@ -256,9 +255,7 @@ export default function Home() {
                         <div className="md:col-span-2">
                             <div className="flex items-center gap-2.5 mb-4">
                                 <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center">
-                                    <svg className="w-4 h-4 text-panel-fg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                                    </svg>
+                                    <Coins className="w-4 h-4 text-panel-fg" strokeWidth={2.5} />
                                 </div>
                                 <span className="text-lg font-bold text-panel-fg">Salomão</span>
                             </div>
@@ -269,7 +266,7 @@ export default function Home() {
                             <ul className="space-y-2.5">
                                 <li><a href="#recursos" className="text-sm text-panel-muted hover:text-panel-fg transition">Recursos</a></li>
                                 <li><Link href="/register" className="text-sm text-panel-muted hover:text-panel-fg transition">Cadastro</Link></li>
-                                <li><Link href="/login" className="text-sm text-panel-muted hover:text-panel-fg transition">Login</Link></li>
+                                <li><Link href="/login" className="text-sm text-panel-muted hover:text-panel-fg transition">Entrar</Link></li>
                             </ul>
                         </div>
                         <div>
