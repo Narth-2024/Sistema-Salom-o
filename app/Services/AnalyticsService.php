@@ -51,6 +51,61 @@ class AnalyticsService
         return $top->all();
     }
 
+    public function getBudgetStatus(User $user, string $month = null): array
+    {
+        $month = $month ? Carbon::parse($month) : Carbon::now();
+        $start = $month->copy()->startOfMonth();
+        $end = $month->copy()->endOfMonth();
+
+        // Gasto do mês por categoria de despesa (sem limite de top-N nem "Outros")
+        $spentByCategory = $user->transactions()
+            ->selectRaw('category_id, SUM(amount) as spent')
+            ->where('type', 'expense')
+            ->whereBetween('transaction_date', [$start, $end])
+            ->groupBy('category_id')
+            ->pluck('spent', 'category_id');
+
+        // Categorias de despesa que possuem orçamento definido
+        $budgets = $user->categories()
+            ->where('type', 'expense')
+            ->whereNotNull('budget_amount')
+            ->get()
+            ->map(function ($category) use ($spentByCategory) {
+                $limit = (float) $category->budget_amount;
+                $spent = (float) ($spentByCategory[$category->id] ?? 0);
+                $percentage = $limit > 0 ? round(($spent / $limit) * 100, 1) : 0;
+                $remaining = $limit - $spent;
+
+                $status = 'ok';
+                if ($percentage >= 100) {
+                    $status = 'over';
+                } elseif ($percentage >= 80) {
+                    $status = 'warning';
+                }
+
+                return [
+                    'category' => $category,
+                    'limit' => $limit,
+                    'spent' => $spent,
+                    'percentage' => $percentage,
+                    'remaining' => $remaining,
+                    'status' => $status,
+                ];
+            })
+            ->sortByDesc('percentage')
+            ->values();
+
+        $totalLimit = (float) $budgets->sum('limit');
+        $totalSpent = (float) $budgets->sum('spent');
+
+        return [
+            'budgets' => $budgets,
+            'totalLimit' => $totalLimit,
+            'totalSpent' => $totalSpent,
+            'totalPercentage' => $totalLimit > 0 ? round(($totalSpent / $totalLimit) * 100, 1) : 0,
+        ];
+    }
+
     public function countExpenses(User $user, string $period = 'all'): int
     {
         $query = $user->transactions()->where('type', 'expense');

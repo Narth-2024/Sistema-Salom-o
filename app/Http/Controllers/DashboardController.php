@@ -16,6 +16,7 @@ class DashboardController extends Controller
 
         $totals = $analytics->getTotals($user, $period);
         $comparison = $analytics->getMonthlyComparison($user);
+        $budget = $analytics->getBudgetStatus($user);
 
         $recentQuery = $user->transactions()->with('category');
 
@@ -64,6 +65,13 @@ class DashboardController extends Controller
             'incomeTrend' => $comparison['incomeTrend'],
             'expenseTrend' => $comparison['expenseTrend'],
             'period' => $period,
+            'budget' => [
+                'totalLimit' => $budget['totalLimit'],
+                'totalSpent' => $budget['totalSpent'],
+                'totalPercentage' => $budget['totalPercentage'],
+                'over' => collect($budget['budgets'])->contains('status', 'over'),
+                'count' => count($budget['budgets']),
+            ],
         ]);
     }
 }

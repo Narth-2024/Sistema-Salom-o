@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Head, Link, router, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, OnboardingChecklist } from '@/Components'
+import { Card, Button, Progress, OnboardingChecklist } from '@/Components'
 import { chartColors } from '@/lib/chartColors.js'
 import { usePWAInstall } from '@/lib/pwa'
 import {
     TrendingUp, TrendingDown, Wallet, Plus, ArrowRight,
     ArrowUpRight, ArrowDownRight, CalendarDays,
-    ArrowLeftRight, Tags as TagsIcon, Filter, Download, X
+    ArrowLeftRight, Tags as TagsIcon, Filter, Download, X, Target, AlertTriangle
 } from 'lucide-react'
 
 function formatBR(value) {
@@ -36,7 +36,7 @@ function formatDate() {
     return `${getWeekday()}, ${hoje.toLocaleDateString('pt-BR')}`
 }
 
-export default function Dashboard({ income, expense, balance, recentTransactions, expensesByCategory, incomeTrend, expenseTrend, period = 'all' }) {
+export default function Dashboard({ income, expense, balance, recentTransactions, expensesByCategory, incomeTrend, expenseTrend, period = 'all', budget = null }) {
     const { auth } = usePage().props
     const { canInstall, isInstalled, promptInstall } = usePWAInstall()
     const [installDismissed, setInstallDismissed] = useState(
@@ -269,6 +269,42 @@ export default function Dashboard({ income, expense, balance, recentTransactions
 
                 {/* Onboarding checklist */}
                 <OnboardingChecklist />
+
+                {/* Budget card */}
+                {budget && budget.count > 0 && (
+                    <Link href="/budgets" className="block mb-8 group">
+                        <Card accent={budget.over ? 'danger' : budget.totalPercentage >= 80 ? 'warning' : true} className="hover:border-border-strong transition duration-200">
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-9 h-9 rounded-xl bg-primary/10 text-accent-text flex items-center justify-center ring-1 ring-border-strong">
+                                        <Target className="w-[18px] h-[18px]" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Orçamento do mês</p>
+                                        <p className="text-sm text-gray-500">{budget.count} {budget.count === 1 ? 'categoria' : 'categorias'} com limite</p>
+                                    </div>
+                                </div>
+                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ring-1 ring-border-strong ${
+                                    budget.over ? 'bg-red-500/10 text-red-400' : budget.totalPercentage >= 80 ? 'bg-amber-500/10 text-amber-500' : 'bg-primary/10 text-accent-text'
+                                }`}>
+                                    {budget.over && <AlertTriangle className="w-3 h-3" />}
+                                    {budget.totalPercentage}%
+                                </span>
+                            </div>
+                            <div className="flex items-baseline justify-between mb-2">
+                                <p className={`text-xl font-extrabold tabular-nums ${budget.over ? 'text-red-400' : 'text-gray-800'}`}>
+                                    {formatBR(budget.totalSpent)}
+                                    <span className="text-gray-400 font-semibold text-base"> / {formatBR(budget.totalLimit)}</span>
+                                </p>
+                                <span className="text-xs text-gray-500 inline-flex items-center gap-1 group-hover:text-accent-text transition-colors">
+                                    Ver detalhes
+                                    <ArrowRight className="w-3 h-3" />
+                                </span>
+                            </div>
+                            <Progress value={budget.totalSpent} max={budget.totalLimit} barClassName={budget.over ? 'bg-red-500' : budget.totalPercentage >= 80 ? 'bg-amber-500' : 'bg-primary'} />
+                        </Card>
+                    </Link>
+                )}
 
                 {/* Chart + Recent transactions */}
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
