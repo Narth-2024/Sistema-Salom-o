@@ -3,13 +3,15 @@ import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
 import { startAppTour } from '@/tour/AppTour'
 import useTheme from '@/hooks/useTheme'
-import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug, Lock } from 'lucide-react'
+import { usePWAInstall } from '@/lib/pwa'
+import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug, Lock, Download, Smartphone } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function Settings() {
     const { theme, toggle } = useTheme()
     const { auth } = usePage().props
     const user = auth.user
+    const { canInstall, isInstalled, isIOS, promptInstall } = usePWAInstall()
 
     const { data, setData, post, processing, errors, recentlySuccessful } = useForm({
         name: user.name || '',
@@ -235,6 +237,43 @@ export default function Settings() {
                             />
                         </button>
                     </div>
+                </Card>
+
+                {/* Install app */}
+                <Card className="mt-6">
+                    <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        <Download className="w-4 h-4 text-accent-text" />
+                        Instalar aplicativo
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-5">
+                        Instale o Salomão na tela inicial do celular para abrir como um aplicativo, em tela cheia.
+                    </p>
+
+                    {isInstalled ? (
+                        <div className="flex items-center gap-2 text-sm text-accent-text font-medium">
+                            <CheckCircle className="w-4 h-4" />
+                            Aplicativo instalado neste dispositivo.
+                        </div>
+                    ) : canInstall ? (
+                        <Button variant="primary" onClick={() => promptInstall()}>
+                            <Download className="w-4 h-4" />
+                            Instalar agora
+                        </Button>
+                    ) : isIOS ? (
+                        <div className="text-sm text-gray-600 space-y-1">
+                            <p className="font-medium text-gray-700 flex items-center gap-2">
+                                <Smartphone className="w-4 h-4 text-accent-text" />
+                                No iPhone/iPad:
+                            </p>
+                            <p>1. Abra esta página no <strong>Safari</strong></p>
+                            <p>2. Toque em <strong>Compartilhar</strong> (ícone de quadrado com seta)</p>
+                            <p>3. Escolha <strong>Adicionar à Tela de Início</strong></p>
+                        </div>
+                    ) : (
+                        <p className="text-sm text-gray-500">
+                            Para instalar, abra o sistema pelo <strong>Chrome</strong> ou <strong>Edge</strong> no celular — o botão de instalação fica disponível na barra de endereço.
+                        </p>
+                    )}
                 </Card>
 
                 {/* Help / onboarding */}

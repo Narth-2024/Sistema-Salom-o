@@ -1,5 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react'
-import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins, PiggyBank } from 'lucide-react'
+import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins, PiggyBank, WifiOff } from 'lucide-react'
 import { FlashMessage, OnboardingWelcome } from '@/Components'
 import Sidebar from '@/Components/Sidebar'
 import { useEffect, useState } from 'react'
@@ -23,6 +23,19 @@ export default function AppLayout({ children }) {
         }
         return false
     })
+    const [isOnline, setIsOnline] = useState(true)
+
+    useEffect(() => {
+        setIsOnline(navigator.onLine)
+        const handleOnline = () => setIsOnline(true)
+        const handleOffline = () => setIsOnline(false)
+        window.addEventListener('online', handleOnline)
+        window.addEventListener('offline', handleOffline)
+        return () => {
+            window.removeEventListener('online', handleOnline)
+            window.removeEventListener('offline', handleOffline)
+        }
+    }, [])
 
     useEffect(() => {
         localStorage.setItem(SIDEBAR_KEY, sidebarCollapsed)
@@ -45,6 +58,14 @@ export default function AppLayout({ children }) {
 
     return (
         <div className="min-h-screen bg-background">
+            {/* Offline banner */}
+            {!isOnline && (
+                <div className="fixed top-0 left-0 right-0 z-[100] bg-amber-500 text-white text-xs font-medium py-1.5 px-4 flex items-center justify-center gap-2" role="status">
+                    <WifiOff className="w-3.5 h-3.5" />
+                    Sem conexão — exibindo dados salvos
+                </div>
+            )}
+
             {/* Desktop sidebar */}
             <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(c => !c)} />
 

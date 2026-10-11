@@ -1,12 +1,13 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Head, Link, router, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, OnboardingChecklist } from '@/Components'
 import { chartColors } from '@/lib/chartColors.js'
+import { usePWAInstall } from '@/lib/pwa'
 import {
     TrendingUp, TrendingDown, Wallet, Plus, ArrowRight,
     ArrowUpRight, ArrowDownRight, CalendarDays,
-    ArrowLeftRight, Tags as TagsIcon, Filter
+    ArrowLeftRight, Tags as TagsIcon, Filter, Download, X
 } from 'lucide-react'
 
 function formatBR(value) {
@@ -37,6 +38,15 @@ function formatDate() {
 
 export default function Dashboard({ income, expense, balance, recentTransactions, expensesByCategory, incomeTrend, expenseTrend, period = 'all' }) {
     const { auth } = usePage().props
+    const { canInstall, isInstalled, promptInstall } = usePWAInstall()
+    const [installDismissed, setInstallDismissed] = useState(
+        () => typeof window !== 'undefined' && localStorage.getItem('salomao-pwa-dismissed') === '1'
+    )
+
+    function dismissInstallBanner() {
+        localStorage.setItem('salomao-pwa-dismissed', '1')
+        setInstallDismissed(true)
+    }
 
     const periodOptions = [
         { value: 'month', label: 'Este mês' },
@@ -189,6 +199,29 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                         </Link>
                     </div>
                 </div>
+
+                {/* Install app banner */}
+                {canInstall && !isInstalled && !installDismissed && (
+                    <div className="bg-primary/5 border border-border rounded-2xl p-4 mb-6 flex items-center gap-3" data-tour="pwa-banner">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 ring-1 ring-border-strong flex items-center justify-center shrink-0">
+                            <Download className="w-5 h-5 text-accent-text" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-800">Instalar o Salomão</p>
+                            <p className="text-xs text-gray-500">Adicione à tela inicial para acesso rápido, como um aplicativo.</p>
+                        </div>
+                        <Button variant="primary" size="sm" onClick={() => promptInstall()}>
+                            Instalar
+                        </Button>
+                        <button
+                            onClick={dismissInstallBanner}
+                            aria-label="Dispensar"
+                            className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer shrink-0"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                )}
 
                 {/* Period filter */}
                 <div className="flex items-center gap-2 mb-6 flex-wrap" data-tour="dash-period">

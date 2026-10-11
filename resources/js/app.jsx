@@ -1,8 +1,10 @@
 import './bootstrap';
 import { createRoot } from 'react-dom/client';
-import { createInertiaApp } from '@inertiajs/react';
+import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { router } from '@inertiajs/react';
+import { registerServiceWorker } from '@/lib/pwa';
+
+registerServiceWorker();
 
 createInertiaApp({
     resolve: (name) => resolvePageComponent(
