@@ -21,7 +21,7 @@ class SpawnRecurringTransactions extends Command
         $recurring = Transaction::where('is_recurring', true)
             ->where('transaction_date', '<=', $monthEnd)
             ->get()
-            ->unique(fn ($t) => $t->user_id.'|'.$t->category_id.'|'.$t->type.'|'.$t->amount.'|'.$t->description);
+            ->unique(fn ($t) => $t->user_id . '|' . $t->category_id . '|' . $t->type . '|' . $t->amount . '|' . $t->description);
 
         $created = 0;
 

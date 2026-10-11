@@ -9,7 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TransactionController;
-use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

@@ -53,7 +53,7 @@ class InvestmentForecastService
                 'updated' => now()->format('d/m/Y H:i'),
             ];
         } catch (\Throwable $e) {
-            Log::warning('InvestmentForecastService: falha ao buscar taxas do BCB: '.$e->getMessage());
+            Log::warning('InvestmentForecastService: falha ao buscar taxas do BCB: ' . $e->getMessage());
 
             return null;
         }
@@ -62,8 +62,6 @@ class InvestmentForecastService
     /**
      * Projeção de um instrumento: aporte único + aportes mensais, juros compostos
      * mensais, IR regressivo sobre o lucro (quando aplicável).
-     *
-     * @return array
      */
     public function project(
         array $instrument,

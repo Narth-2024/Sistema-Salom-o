@@ -18,7 +18,7 @@ class SupabaseStorageService
     public function __construct()
     {
         $this->bucket = 'avatars';
-        $this->baseUrl = rtrim(config('services.supabase.url'), '/').'/storage/v1';
+        $this->baseUrl = rtrim(config('services.supabase.url'), '/') . '/storage/v1';
         $this->serviceKey = config('services.supabase.key');
     }
 
@@ -29,7 +29,7 @@ class SupabaseStorageService
         }
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->serviceKey,
+            'Authorization' => 'Bearer ' . $this->serviceKey,
         ])->post("{$this->baseUrl}/bucket", [
             'id' => $this->bucket,
             'name' => $this->bucket,
@@ -39,7 +39,7 @@ class SupabaseStorageService
         if (! $response->successful()
             && $response->status() !== 409
             && ! str_contains($response->body(), 'BucketAlreadyExists')) {
-            throw new \RuntimeException('Supabase Storage bucket: '.($response->body() ?: $response->status()));
+            throw new \RuntimeException('Supabase Storage bucket: ' . ($response->body() ?: $response->status()));
         }
 
         static::$bucketEnsured = true;
@@ -52,7 +52,7 @@ class SupabaseStorageService
         $contentType = $file->getMimeType() ?: 'application/octet-stream';
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->serviceKey,
+            'Authorization' => 'Bearer ' . $this->serviceKey,
             'Content-Type' => $contentType,
         ])->withBody(
             file_get_contents($file->getRealPath()),
@@ -60,7 +60,7 @@ class SupabaseStorageService
         )->post("{$this->baseUrl}/object/{$this->bucket}/{$path}");
 
         if (! $response->successful()) {
-            throw new \RuntimeException('Supabase Storage upload: '.($response->body() ?: $response->status()));
+            throw new \RuntimeException('Supabase Storage upload: ' . ($response->body() ?: $response->status()));
         }
 
         return "{$this->baseUrl}/object/public/{$this->bucket}/{$path}";
@@ -71,7 +71,7 @@ class SupabaseStorageService
         $this->ensureBucket();
 
         Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->serviceKey,
+            'Authorization' => 'Bearer ' . $this->serviceKey,
         ])->delete("{$this->baseUrl}/object/{$this->bucket}", [
             'prefixes' => [$path],
         ]);

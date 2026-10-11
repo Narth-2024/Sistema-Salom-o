@@ -5,6 +5,8 @@
 **Aplicação web de controle financeiro pessoal**
 
 [![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge)](https://github.com/Narth-2024/Sistema-Salom-o)
+[![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](.github/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
@@ -215,7 +217,13 @@ app-salomao/
 │   │   └── tour/                    # AppTour (driver.js)
 │   └── views/                       # Templates Blade
 ├── routes/                          # web, api, console, channels
+├── tests/                           # Testes (Unit e Feature)
+│   ├── Unit/
+│   └── Feature/
+├── .github/workflows/ci.yml         # CI: Pint + testes a cada push/PR
 ├── vercel.json                      # Deploy + cron na Vercel
+├── pint.json                        # Padronização de código PHP
+├── LICENSE                          # MIT
 ├── .env.example
 ├── composer.json
 ├── package.json
@@ -295,11 +303,18 @@ Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em
 
 1. Faça um fork do projeto
 2. Crie uma branch de feature (`git checkout -b feature/amazing-feature`)
-3. Committe suas mudanças (`git commit -m 'Add amazing feature'`)
+3. Committe suas mudanças (`git commit -m 'Add amazing-feature'`)
 4. Envie para a branch (`git push origin feature/amazing-feature`)
 5. Abra um Pull Request
 
-Certifique-se de que o código passe no Laravel Pint (`./vendor/bin/pint`) antes de enviar.
+O **CI (GitHub Actions)** roda automaticamente a cada push e PR: valida o estilo de código com **Laravel Pint** (`vendor/bin/pint --test`) e executa os **testes** (`php artisan test`). Se estiver verde no CI, está pronto para revisão.
+
+Para checar localmente antes de enviar:
+
+```bash
+vendor/bin/pint      # formata o código
+php artisan test     # roda os testes
+```
 
 ---
 

@@ -45,7 +45,7 @@ class Controller extends BaseController
         $s = preg_replace('/[^0-9.]/', '', $s);
         $parts = explode('.', $s);
         if (count($parts) > 2) {
-            $s = $parts[0].'.'.implode('', array_slice($parts, 1));
+            $s = $parts[0] . '.' . implode('', array_slice($parts, 1));
         }
 
         return $s;

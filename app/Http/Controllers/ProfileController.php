@@ -34,7 +34,7 @@ class ProfileController extends Controller
                 }
 
                 $file = $request->file('avatar');
-                $path = $user->id.'_'.time().'.'.$file->extension();
+                $path = $user->id . '_' . time() . '.' . $file->extension();
                 $data['avatar_url'] = $storage->upload($file, $path);
             }
         } catch (\Throwable $e) {
@@ -120,7 +120,7 @@ class ProfileController extends Controller
 
     private function extractPath(string $url): ?string
     {
-        $baseUrl = rtrim(config('services.supabase.url'), '/').'/storage/v1/object/public/avatars/';
+        $baseUrl = rtrim(config('services.supabase.url'), '/') . '/storage/v1/object/public/avatars/';
         if (str_starts_with($url, $baseUrl)) {
             return substr($url, strlen($baseUrl));
         }
