@@ -8,10 +8,10 @@ const SIDEBAR_KEY = 'salomao-sidebar'
 
 const navLinks = [
     { href: '/dashboard', label: 'Início', icon: LayoutDashboard },
-    { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/transactions', label: 'Transações', icon: ArrowLeftRight },
     { href: '/categories', label: 'Categorias', icon: Tags },
+    { href: '/transactions', label: 'Transações', icon: ArrowLeftRight },
     { href: '/tags', label: 'Tags', icon: Hash },
+    { href: '/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/investments', label: 'Inv.', icon: PiggyBank },
 ]
 
