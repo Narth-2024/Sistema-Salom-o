@@ -44,13 +44,14 @@ export default function Sidebar({ collapsed, onToggle }) {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 flex flex-col gap-0.5 p-2 overflow-y-auto">
+            <nav aria-label="Navegação principal" className="flex-1 flex flex-col gap-0.5 p-2 overflow-y-auto">
                 {navLinks.map(link => {
                     const active = isActive(link.href)
                     return (
                         <Link
                             key={link.href}
                             href={link.href}
+                            aria-current={active ? 'page' : undefined}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-150 ${
                                 collapsed ? 'justify-center px-0' : ''
                             } ${
@@ -60,10 +61,10 @@ export default function Sidebar({ collapsed, onToggle }) {
                             }`}
                             title={collapsed ? link.label : undefined}
                         >
-                            <link.icon className={`w-5 h-5 shrink-0 ${active ? 'text-accent-text' : ''}`} />
+                            <link.icon className={`w-5 h-5 shrink-0 ${active ? 'text-accent-text' : ''}`} aria-hidden="true" />
                             {!collapsed && <span>{link.label}</span>}
                             {active && !collapsed && (
-                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
+                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
                             )}
                         </Link>
                     )
@@ -74,6 +75,7 @@ export default function Sidebar({ collapsed, onToggle }) {
             <div className="border-t border-border p-2 flex flex-col gap-0.5">
                 <Link
                     href="/settings"
+                    aria-current={isActive('/settings') ? 'page' : undefined}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition duration-150 ${
                         collapsed ? 'justify-center px-0' : ''
                     } ${
@@ -83,29 +85,31 @@ export default function Sidebar({ collapsed, onToggle }) {
                     }`}
                     title={collapsed ? 'Ajustes' : undefined}
                 >
-                    <Settings className="w-5 h-5 shrink-0" />
+                    <Settings className="w-5 h-5 shrink-0" aria-hidden="true" />
                     {!collapsed && <span>Ajustes</span>}
                 </Link>
                 <button
                     onClick={handleLogout}
+                    aria-label="Sair"
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition duration-150 cursor-pointer ${
                         collapsed ? 'justify-center px-0' : ''
                     }`}
                     title={collapsed ? 'Sair' : undefined}
                 >
-                    <LogOut className="w-5 h-5 shrink-0" />
+                    <LogOut className="w-5 h-5 shrink-0" aria-hidden="true" />
                     {!collapsed && <span>Sair</span>}
                 </button>
 
                 <button
                     onClick={onToggle}
+                    aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+                    aria-expanded={!collapsed}
                     className="flex items-center justify-center w-full py-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition duration-150 cursor-pointer mt-1"
-                    title={collapsed ? 'Expandir' : 'Recolher'}
                 >
                     {collapsed ? (
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="w-4 h-4" aria-hidden="true" />
                     ) : (
-                        <ChevronLeft className="w-4 h-4" />
+                        <ChevronLeft className="w-4 h-4" aria-hidden="true" />
                     )}
                 </button>
             </div>

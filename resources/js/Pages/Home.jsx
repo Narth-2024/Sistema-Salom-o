@@ -14,6 +14,7 @@ const METRICS = [
 function MetricsCarousel() {
     const [index, setIndex] = useState(0)
     const [state, setState] = useState('visible') // visible | leaving | entering
+    const [paused, setPaused] = useState(false)
     const timerRef = useRef(null)
 
     function scheduleNext(delay = 10000) {
@@ -28,17 +29,20 @@ function MetricsCarousel() {
     }
 
     useEffect(() => {
-        scheduleNext()
+        // Respeita prefers-reduced-motion: não rotaciona sozinho
+        const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+        if (mq.matches) return
+        if (!paused) scheduleNext()
         return () => clearTimeout(timerRef.current)
-    }, [])
+    }, [paused])
 
     useEffect(() => {
         if (state === 'entering') {
             const raf = requestAnimationFrame(() => setState('visible'))
-            scheduleNext()
+            if (!paused) scheduleNext()
             return () => cancelAnimationFrame(raf)
         }
-    }, [state])
+    }, [state, paused])
 
     function goTo(i) {
         if (i === index && state === 'visible') return
@@ -57,7 +61,13 @@ function MetricsCarousel() {
         'translate-x-0 opacity-100'
 
     return (
-        <section className="relative py-16 lg:py-20 bg-surface border-y border-border overflow-hidden">
+        <section
+            className="relative py-16 lg:py-20 bg-surface border-y border-border overflow-hidden"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onFocus={() => setPaused(true)}
+            onBlur={() => setPaused(false)}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative h-28 sm:h-24 flex items-center justify-center">
                     <div
@@ -74,6 +84,7 @@ function MetricsCarousel() {
                             key={i}
                             onClick={() => goTo(i)}
                             aria-label={`Métrica ${i + 1}`}
+                            aria-pressed={i === index}
                             className={`rounded-full transition-all duration-300 cursor-pointer ${
                                 i === index ? 'w-6 h-2 bg-primary' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
                             }`}

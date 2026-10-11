@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Badge, Button } from '@/Components'
 import { Edit2, Trash2, ArrowLeft, TrendingUp, TrendingDown, CalendarDays, Clock, Tag, RefreshCcw } from 'lucide-react'
+import { contrastText } from '@/lib/contrast'
 
 function formatBR(value) {
     return Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -27,7 +28,7 @@ export default function TransactionsShow({ transaction }) {
         <AppLayout>
             <Head title={`Transação #${transaction.id}`} />
 
-            <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Back link */}
                 <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-6 transition">
                     <ArrowLeft className="w-4 h-4" />
@@ -131,8 +132,8 @@ export default function TransactionsShow({ transaction }) {
                                 {transaction.tags.map(tag => (
                                     <span
                                         key={tag.id}
-                                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ring-1 ring-white/10"
-                                        style={{ backgroundColor: tag.color }}
+                                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1 ring-white/10"
+                                        style={{ backgroundColor: tag.color, color: contrastText(tag.color) }}
                                     >
                                         {tag.name}
                                     </span>
@@ -141,7 +142,7 @@ export default function TransactionsShow({ transaction }) {
                         </div>
                     )}
                 </Card>
-            </main>
+            </div>
         </AppLayout>
     )
 }

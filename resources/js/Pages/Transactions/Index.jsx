@@ -6,6 +6,7 @@ import {
     Search, X, Download, RefreshCcw, ChevronUp, ChevronDown
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
+import { contrastText } from '@/lib/contrast'
 
 function formatBR(value) {
     return Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -113,7 +114,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
         <AppLayout>
             <Head title="Transações" />
 
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="tx-header">
                     <div>
@@ -166,9 +167,10 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         {search && (
                             <button
                                 onClick={() => { setSearch(''); applyFilters({ search: '' }) }}
+                                aria-label="Limpar busca"
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="w-4 h-4" aria-hidden="true" />
                             </button>
                         )}
                     </div>
@@ -301,8 +303,8 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                     {t.tags.slice(0, 3).map(tag => (
                                                         <span
                                                             key={tag.id}
-                                                            className="inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-medium text-white"
-                                                            style={{ backgroundColor: tag.color }}
+                                                            className="inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-medium"
+                                                            style={{ backgroundColor: tag.color, color: contrastText(tag.color) }}
                                                         >
                                                             {tag.name}
                                                         </span>
@@ -318,11 +320,11 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                 {t.type === 'income' ? '+' : '-'} {formatBR(t.amount)}
                                             </span>
                                             <div className="flex items-center gap-0.5">
-                                                <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
-                                                    <Edit2 className="w-4 h-4" />
+                                                <Link href={`/transactions/${t.id}/edit`} aria-label="Editar transação" className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                    <Edit2 className="w-4 h-4" aria-hidden="true" />
                                                 </Link>
-                                                <button onClick={() => setDeleteTarget(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                                    <Trash2 className="w-4 h-4" />
+                                                <button onClick={() => setDeleteTarget(t)} aria-label="Excluir transação" className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
+                                                    <Trash2 className="w-4 h-4" aria-hidden="true" />
                                                 </button>
                                             </div>
                                         </div>
@@ -367,8 +369,8 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                         {t.tags?.length > 0 ? t.tags.slice(0, 2).map(tag => (
                                                             <span
                                                                 key={tag.id}
-                                                                className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium text-white"
-                                                                style={{ backgroundColor: tag.color }}
+                                                                className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium"
+                                                                style={{ backgroundColor: tag.color, color: contrastText(tag.color) }}
                                                             >
                                                                 {tag.name}
                                                             </span>
@@ -397,14 +399,14 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right" onClick={e => e.stopPropagation()}>
                                                     <div className="flex items-center justify-end gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition">
-                                                        <Link href={`/transactions/${t.id}`} className="text-gray-500 hover:text-gray-700 transition p-1.5 rounded-lg hover:bg-gray-100">
-                                                            <Eye className="w-4 h-4" />
+                                                        <Link href={`/transactions/${t.id}`} aria-label="Ver transação" className="text-gray-500 hover:text-gray-700 transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                            <Eye className="w-4 h-4" aria-hidden="true" />
                                                         </Link>
-                                                        <Link href={`/transactions/${t.id}/edit`} className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
-                                                            <Edit2 className="w-4 h-4" />
+                                                        <Link href={`/transactions/${t.id}/edit`} aria-label="Editar transação" className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
+                                                            <Edit2 className="w-4 h-4" aria-hidden="true" />
                                                         </Link>
-                                                        <button onClick={() => setDeleteTarget(t)} className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                                            <Trash2 className="w-4 h-4" />
+                                                        <button onClick={() => setDeleteTarget(t)} aria-label="Excluir transação" className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
+                                                            <Trash2 className="w-4 h-4" aria-hidden="true" />
                                                         </button>
                                                     </div>
                                                 </td>
@@ -428,7 +430,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                     itemLabel={deleteTarget ? `${deleteTarget.description || 'Sem descrição'} — ${formatBR(parseFloat(deleteTarget.amount))}` : ''}
                 />
 
-            </main>
+            </div>
         </AppLayout>
     )
 }

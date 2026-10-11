@@ -42,7 +42,7 @@ export default function CategoriesIndex({ categories, sort = 'name', direction =
         <AppLayout>
             <Head title="Categorias" />
 
-            <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="cat-header">
                     <div>
@@ -50,7 +50,7 @@ export default function CategoriesIndex({ categories, sort = 'name', direction =
                         <p className="text-gray-500 mt-1">Organize suas receitas e despesas em categorias.</p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <ArrowUpDown className="w-4 h-4 text-gray-400" />
+                        <ArrowUpDown className="w-4 h-4 text-gray-500" aria-hidden="true" />
                         <Select
                             value={`${sort}:${direction}`}
                             onChange={e => handleSort(e.target.value)}
@@ -92,12 +92,14 @@ export default function CategoriesIndex({ categories, sort = 'name', direction =
                             <option value="expense">Despesa</option>
                             <option value="income">Receita</option>
                         </Select>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1" role="group" aria-label="Cor da categoria">
                             {presetColors.map(c => (
                                 <button
                                     key={c}
                                     type="button"
                                     onClick={() => setData('color', c)}
+                                    aria-label={`Cor ${c}`}
+                                    aria-pressed={data.color === c}
                                     className={`w-6 h-6 rounded-full border-2 transition cursor-pointer ${
                                         data.color === c ? 'border-border scale-110' : 'border-transparent'
                                     }`}
@@ -137,12 +139,14 @@ export default function CategoriesIndex({ categories, sort = 'name', direction =
                                     </div>
                                     <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition">
                                         <Link href={`/categories/${category.id}/edit`}
+                                            aria-label={`Editar categoria ${category.name}`}
                                             className="text-gray-500 hover:text-accent-text transition p-1.5 rounded-lg hover:bg-gray-100">
-                                            <Edit2 className="w-4 h-4" />
+                                            <Edit2 className="w-4 h-4" aria-hidden="true" />
                                         </Link>
                                         <button onClick={() => setDeleteTarget(category)}
+                                            aria-label={`Excluir categoria ${category.name}`}
                                             className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-4 h-4" aria-hidden="true" />
                                         </button>
                                     </div>
                                 </div>
@@ -172,7 +176,7 @@ export default function CategoriesIndex({ categories, sort = 'name', direction =
                     message="Tem certeza que deseja excluir esta categoria? As transações vinculadas serão mantidas, mas ficarão sem categoria. Você poderá desfazer."
                     itemLabel={deleteTarget?.name}
                 />
-            </main>
+            </div>
         </AppLayout>
     )
 }

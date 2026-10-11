@@ -1,7 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Select } from '@/Components'
-import { ArrowLeft, Plus, AlertTriangle } from 'lucide-react'
+import { Card, Button, Input, Select, ErrorSummary } from '@/Components'
+import { ArrowLeft, Plus } from 'lucide-react'
 
 export default function CategoriesCreate() {
     const { data, setData, post, processing, errors } = useForm({
@@ -18,7 +18,7 @@ export default function CategoriesCreate() {
         <AppLayout>
             <Head title="Nova Categoria" />
 
-            <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8">
                     <Link href="/categories" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
                         <ArrowLeft className="w-4 h-4" />
@@ -28,14 +28,7 @@ export default function CategoriesCreate() {
                     <p className="text-gray-500 mt-1">Cadastre uma nova categoria de receita ou despesa.</p>
                 </div>
 
-                {Object.keys(errors).length > 0 && (
-                    <div className="bg-red-500/10 border border-danger/20 rounded-xl p-4 mb-6 flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-danger shrink-0 mt-0.5" />
-                        <ul className="list-disc list-inside text-sm text-danger space-y-0.5">
-                            {Object.values(errors).map((error, i) => <li key={i}>{error}</li>)}
-                        </ul>
-                    </div>
-                )}
+                <ErrorSummary errors={errors} />
 
                 <Card>
                     <form onSubmit={handleSubmit} className="space-y-5">
@@ -71,7 +64,7 @@ export default function CategoriesCreate() {
                         </div>
                     </form>
                 </Card>
-            </main>
+            </div>
         </AppLayout>
     )
 }

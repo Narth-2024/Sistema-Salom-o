@@ -38,10 +38,10 @@ export default function OnboardingChecklist() {
                 </div>
                 <button
                     onClick={dismiss}
-                    title="Ocultar checklist"
+                    aria-label="Ocultar checklist"
                     className="text-gray-500 hover:text-gray-700 transition p-1 rounded-lg hover:bg-gray-100 cursor-pointer"
                 >
-                    <X className="w-4 h-4" />
+                    <X className="w-4 h-4" aria-hidden="true" />
                 </button>
             </div>
 

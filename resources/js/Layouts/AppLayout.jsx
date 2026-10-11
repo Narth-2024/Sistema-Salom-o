@@ -58,10 +58,18 @@ export default function AppLayout({ children }) {
 
     return (
         <div className="min-h-screen bg-background">
+            {/* Skip link: primeiro focável da página, leva direto ao conteúdo */}
+            <a
+                href="#content"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:bg-primary focus:text-primary-fg focus:px-4 focus:py-2 focus:rounded-xl focus:shadow-lg focus:outline-none"
+            >
+                Pular para o conteúdo
+            </a>
+
             {/* Offline banner */}
             {!isOnline && (
                 <div className="fixed top-0 left-0 right-0 z-[100] bg-amber-500 text-white text-xs font-medium py-1.5 px-4 flex items-center justify-center gap-2" role="status">
-                    <WifiOff className="w-3.5 h-3.5" />
+                    <WifiOff className="w-3.5 h-3.5" aria-hidden="true" />
                     Sem conexão — exibindo dados salvos
                 </div>
             )}
@@ -73,14 +81,14 @@ export default function AppLayout({ children }) {
             <div className={`pb-20 md:pb-0 ${sidebarMargin} transition-all duration-200`}>
                 <div className="md:pt-0">
                     <FlashMessage />
-                    <main>
+                    <div id="content">
                         {children}
-                    </main>
+                    </div>
                 </div>
             </div>
 
             {/* Mobile top bar */}
-            <nav className="md:hidden sticky top-0 z-30 bg-surface/80 backdrop-blur-xl border-b border-border">
+            <nav aria-label="Barra superior" className="md:hidden sticky top-0 z-30 bg-surface/80 backdrop-blur-xl border-b border-border">
                 <div className="flex items-center justify-between h-16 px-4">
                     <Link href="/dashboard" className="flex items-center gap-2.5 group">
                         <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
@@ -90,16 +98,16 @@ export default function AppLayout({ children }) {
                     </Link>
                     <button
                         onClick={handleLogout}
+                        aria-label="Sair"
                         className="text-gray-500 hover:text-gray-700 p-2 rounded-xl hover:bg-gray-100 transition cursor-pointer"
-                        title="Sair"
                     >
-                        <LogOut className="w-5 h-5" />
+                        <LogOut className="w-5 h-5" aria-hidden="true" />
                     </button>
                 </div>
             </nav>
 
             {/* Bottom navigation — mobile only */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-t border-border" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+            <nav aria-label="Navegação principal" className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-t border-border" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
                 <div className="flex items-center justify-around h-16 px-1">
                     {navLinks.map(link => {
                         const active = isActive(link.href)
@@ -107,6 +115,7 @@ export default function AppLayout({ children }) {
                             <Link
                                 key={link.href}
                                 href={link.href}
+                                aria-current={active ? 'page' : undefined}
                                 className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-xl min-w-0 flex-1 transition duration-150 ${
                                     active ? 'text-accent-text' : 'text-gray-500'
                                 }`}
@@ -114,7 +123,7 @@ export default function AppLayout({ children }) {
                                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition duration-150 ${
                                     active ? 'bg-primary/10' : ''
                                 }`}>
-                                    <link.icon className={`w-5 h-5 ${active ? 'text-accent-text' : ''}`} />
+                                    <link.icon className={`w-5 h-5 ${active ? 'text-accent-text' : ''}`} aria-hidden="true" />
                                 </div>
                                 <span className={`text-[10px] font-medium leading-tight ${
                                     active ? 'text-accent-text' : 'text-gray-500'
@@ -126,6 +135,7 @@ export default function AppLayout({ children }) {
                     })}
                     <Link
                         href="/settings"
+                        aria-current={isActive('/settings') ? 'page' : undefined}
                         className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-xl min-w-0 flex-1 transition duration-150 ${
                             isActive('/settings') ? 'text-accent-text' : 'text-gray-500'
                         }`}
@@ -133,7 +143,7 @@ export default function AppLayout({ children }) {
                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition duration-150 ${
                             isActive('/settings') ? 'bg-primary/10' : ''
                         }`}>
-                            <SettingsIcon className={`w-5 h-5 ${isActive('/settings') ? 'text-accent-text' : ''}`} />
+                            <SettingsIcon className={`w-5 h-5 ${isActive('/settings') ? 'text-accent-text' : ''}`} aria-hidden="true" />
                         </div>
                         <span className={`text-[10px] font-medium leading-tight ${
                             isActive('/settings') ? 'text-accent-text' : 'text-gray-500'

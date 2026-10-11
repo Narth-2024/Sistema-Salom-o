@@ -36,7 +36,7 @@ export default function CategoriesShow({ category, transactions }) {
         <AppLayout>
             <Head title={category.name} />
 
-            <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <Link href="/categories" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
                     <ArrowLeft className="w-4 h-4" />
                     Voltar para Categorias
@@ -122,8 +122,9 @@ export default function CategoriesShow({ category, transactions }) {
                                                 {t.type === 'income' ? '+' : '-'}{formatBR(t.amount)}
                                             </span>
                                             <button onClick={() => handleDeleteTransaction(t)}
+                                                aria-label="Excluir transação"
                                                 className="text-gray-500 hover:text-red-400 transition p-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 cursor-pointer">
-                                                <Trash2 className="w-4 h-4" />
+                                                <Trash2 className="w-4 h-4" aria-hidden="true" />
                                             </button>
                                         </div>
                                     </div>
@@ -154,7 +155,7 @@ export default function CategoriesShow({ category, transactions }) {
                         Atualizada {formatDateTime(category.updated_at)}
                     </span>
                 </div>
-            </main>
+            </div>
         </AppLayout>
     )
 }

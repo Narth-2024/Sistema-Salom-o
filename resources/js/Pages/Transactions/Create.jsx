@@ -1,9 +1,9 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, MoneyInput, Select, TagPicker } from '@/Components'
+import { Card, Button, Input, MoneyInput, Select, TagPicker, ErrorSummary } from '@/Components'
 import useSubmitLock from '@/hooks/useSubmitLock'
 import { toNumberString } from '@/lib/decimal'
-import { ArrowLeft, Plus, AlertTriangle, RefreshCcw } from 'lucide-react'
+import { ArrowLeft, Plus, RefreshCcw } from 'lucide-react'
 
 export default function TransactionsCreate({ categories, tags }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -32,7 +32,7 @@ export default function TransactionsCreate({ categories, tags }) {
         <AppLayout>
             <Head title="Nova Transação" />
 
-            <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8">
                     <Link href="/transactions" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
                         <ArrowLeft className="w-4 h-4" />
@@ -42,17 +42,7 @@ export default function TransactionsCreate({ categories, tags }) {
                     <p className="text-gray-500 mt-1">Registre uma nova entrada ou saída financeira.</p>
                 </div>
 
-                {Object.keys(errors).length > 0 && (
-                    <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                        <div>
-                            <p className="text-sm font-semibold text-red-400 mb-1">Verifique os campos abaixo</p>
-                            <ul className="list-disc list-inside text-sm text-red-400 space-y-0.5">
-                                {Object.values(errors).map((error, i) => <li key={i}>{error}</li>)}
-                            </ul>
-                        </div>
-                    </div>
-                )}
+                <ErrorSummary errors={errors} />
 
                 <Card>
                     <form onSubmit={handleSubmit}>
@@ -143,7 +133,7 @@ export default function TransactionsCreate({ categories, tags }) {
                         </div>
                     </form>
                 </Card>
-            </main>
+            </div>
         </AppLayout>
     )
 }

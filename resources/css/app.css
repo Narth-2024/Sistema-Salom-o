@@ -71,6 +71,9 @@
   --color-border: #323238;
   --color-border-strong: #3f3f46;
 
+  /* Muted text (readable secondary) */
+  --color-muted: #8b8b95;
+
   /* Panels (theme-aware dark blocks) */
   --color-panel-bg: #022c22;
   --color-panel-fg: #ffffff;
@@ -205,6 +208,8 @@
 
   --color-border: #c9c3b4;
   --color-border-strong: #b0aa98;
+
+  --color-muted: #73716b;
 
   --color-panel-bg: #ecfdf5;
   --color-panel-fg: #065f46;

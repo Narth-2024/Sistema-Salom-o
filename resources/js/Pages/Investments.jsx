@@ -137,7 +137,7 @@ export default function Investments({ inputs, marketRates, instruments, history 
         <AppLayout>
             <Head title="Investimentos" />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8" data-tour="inv-header">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
                         <PiggyBank className="w-7 h-7 text-accent-text" />
@@ -396,10 +396,10 @@ export default function Investments({ inputs, marketRates, instruments, history 
                                             <td className="py-2.5 text-right">
                                                 <button
                                                     onClick={() => setConfirmDelete(sim)}
-                                                    title="Excluir simulação"
-                                                    className="text-gray-400 hover:text-red-400 transition p-1 rounded-lg hover:bg-red-500/10 cursor-pointer"
+                                                    aria-label="Excluir simulação"
+                                                    className="text-gray-500 hover:text-red-400 transition p-1 rounded-lg hover:bg-red-500/10 cursor-pointer"
                                                 >
-                                                    <Trash2 className="w-4 h-4" />
+                                                    <Trash2 className="w-4 h-4" aria-hidden="true" />
                                                 </button>
                                             </td>
                                         </tr>
@@ -409,7 +409,7 @@ export default function Investments({ inputs, marketRates, instruments, history 
                         </div>
                     )}
                 </Card>
-            </main>
+            </div>
 
             <ConfirmDialog
                 open={!!confirmDelete}

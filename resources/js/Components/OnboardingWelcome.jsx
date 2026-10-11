@@ -15,6 +15,12 @@ export default function OnboardingWelcome() {
         startAppTour({ locked: true })
     }
 
+    function skipTour() {
+        localStorage.setItem(ONBOARDING_STORAGE.WELCOME, '1')
+        localStorage.setItem(ONBOARDING_STORAGE.DISMISSED, '1')
+        setOpen(false)
+    }
+
     useEffect(() => {
         if (
             onboarding?.inProgress &&
@@ -83,10 +89,13 @@ export default function OnboardingWelcome() {
                     Menos de 2 minutos — depois você pode reassistir quando quiser pelo botão ? da tela.
                 </p>
 
-                <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
+                <div className="flex items-center justify-between gap-2 pt-4 border-t border-border">
+                    <Button variant="ghost" size="sm" onClick={skipTour}>
+                        Pular tour
+                    </Button>
                     <Button variant="primary" size="sm" onClick={startTour}>
                         Iniciar tour
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                     </Button>
                 </div>
             </Modal>

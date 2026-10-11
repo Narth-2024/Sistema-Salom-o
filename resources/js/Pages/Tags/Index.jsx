@@ -65,14 +65,14 @@ export default function TagsIndex({ tags, sort = 'name', direction = 'asc' }) {
         <AppLayout>
             <Head title="Tags" />
 
-            <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="tags-header">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Tags</h1>
                         <p className="text-gray-500 mt-1">Adicione rótulos às suas transações para organizar melhor.</p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <ArrowUpDown className="w-4 h-4 text-gray-400" />
+                        <ArrowUpDown className="w-4 h-4 text-gray-500" aria-hidden="true" />
                         <Select
                             value={`${sort}:${direction}`}
                             onChange={e => handleSort(e.target.value)}
@@ -103,12 +103,14 @@ export default function TagsIndex({ tags, sort = 'name', direction = 'asc' }) {
                             className="flex-1"
                             error={errors.name}
                         />
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1" role="group" aria-label="Cor da tag">
                             {presetColors.map(c => (
                                 <button
                                     key={c}
                                     type="button"
                                     onClick={() => setData('color', c)}
+                                    aria-label={`Cor ${c}`}
+                                    aria-pressed={data.color === c}
                                     className={`w-7 h-7 rounded-full border-2 transition cursor-pointer ${
                                         data.color === c ? 'border-border scale-110' : 'border-transparent'
                                     }`}
@@ -138,12 +140,14 @@ export default function TagsIndex({ tags, sort = 'name', direction = 'asc' }) {
                             <Card key={tag.id} className="flex items-center justify-between gap-4" hover>
                                 {editingId === tag.id ? (
                                     <div className="flex-1 flex items-center gap-3">
-                                        <div className="flex items-center gap-1">
+                                        <div className="flex items-center gap-1" role="group" aria-label="Cor da tag">
                                             {presetColors.map(c => (
                                                 <button
                                                     key={c}
                                                     type="button"
                                                     onClick={() => setEditForm(f => ({ ...f, color: c }))}
+                                                    aria-label={`Cor ${c}`}
+                                                    aria-pressed={editForm.color === c}
                                                     className={`w-6 h-6 rounded-full border-2 transition cursor-pointer ${
                                                         editForm.color === c ? 'border-border scale-110' : 'border-transparent'
                                                     }`}
@@ -183,9 +187,10 @@ export default function TagsIndex({ tags, sort = 'name', direction = 'asc' }) {
                                             </button>
                                             <button
                                                 onClick={() => setDeleteTarget(tag)}
+                                                aria-label={`Excluir tag ${tag.name}`}
                                                 className="text-gray-500 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer"
                                             >
-                                                <Trash2 className="w-4 h-4" />
+                                                <Trash2 className="w-4 h-4" aria-hidden="true" />
                                             </button>
                                         </div>
                                     </>
@@ -205,7 +210,7 @@ export default function TagsIndex({ tags, sort = 'name', direction = 'asc' }) {
                     message="Tem certeza que deseja excluir esta tag? Ela será removida de todas as transações vinculadas. Você poderá desfazer."
                     itemLabel={deleteTarget?.name}
                 />
-            </main>
+            </div>
         </AppLayout>
     )
 }

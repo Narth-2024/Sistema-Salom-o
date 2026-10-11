@@ -398,7 +398,7 @@ export default function Analytics({
         <AppLayout>
             <Head title="Análises" />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8" data-tour="an-header">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
                         <BarChart3 className="w-7 h-7 text-accent-text" />
@@ -432,7 +432,7 @@ export default function Analytics({
                                 <Percent className="w-[18px] h-[18px] text-accent-text" />
                             </div>
                         </div>
-                        <p className={`text-2xl font-extrabold tabular-nums ${economyRate == null ? 'text-gray-400' : economyRate >= 0 ? 'text-accent-text' : 'text-red-400'}`}>
+                        <p className={`text-2xl font-extrabold tabular-nums ${economyRate == null ? 'text-gray-500' : economyRate >= 0 ? 'text-accent-text' : 'text-red-400'}`}>
                             {economyRate == null ? '—' : `${economyRate}%`}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">Quanto sobra das receitas no período</p>
@@ -483,12 +483,13 @@ export default function Analytics({
                     })}
                 </div>
 
-                <div className="flex items-center gap-2 mb-6 flex-wrap" data-tour="an-period">
-                    <Filter className="w-4 h-4 text-gray-500" />
+                <div className="flex items-center gap-2 mb-6 flex-wrap" data-tour="an-period" role="group" aria-label="Filtrar por período">
+                    <Filter className="w-4 h-4 text-gray-500" aria-hidden="true" />
                     {periodOptions.map(opt => (
                         <button
                             key={opt.value}
                             onClick={() => handlePeriodChange(opt.value)}
+                            aria-pressed={period === opt.value}
                             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer ${
                                 period === opt.value
                                     ? 'bg-primary text-primary-fg shadow-sm'
@@ -503,7 +504,7 @@ export default function Analytics({
                 {!hasData ? (
                     <Card data-tour="an-empty">
                         <div className="text-center py-10">
-                            <Wallet2 className="w-10 h-10 mx-auto text-gray-400 mb-3" />
+                            <Wallet2 className="w-10 h-10 mx-auto text-gray-500 mb-3" aria-hidden="true" />
                             <p className="text-gray-600 font-medium">Sem transações no período</p>
                             <p className="text-sm text-gray-500 mt-1">Registre entradas e saídas para ver os gráficos de análise.</p>
                         </div>
@@ -560,7 +561,7 @@ export default function Analytics({
                         )}
                     </>
                 )}
-            </main>
+            </div>
         </AppLayout>
     )
 }

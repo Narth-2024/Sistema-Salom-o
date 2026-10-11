@@ -169,7 +169,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
             <Head title="Início" />
 
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Welcome banner */}
                 <div className="relative bg-panel-bg rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 border border-panel-border" data-tour="dash-banner">
                     <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -216,7 +216,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                         <button
                             onClick={dismissInstallBanner}
                             aria-label="Dispensar"
-                            className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer shrink-0"
+                            className="text-gray-500 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer shrink-0"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -224,12 +224,13 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                 )}
 
                 {/* Period filter */}
-                <div className="flex items-center gap-2 mb-6 flex-wrap" data-tour="dash-period">
-                    <Filter className="w-4 h-4 text-gray-500" />
+                <div className="flex items-center gap-2 mb-6 flex-wrap" data-tour="dash-period" role="group" aria-label="Filtrar por período">
+                    <Filter className="w-4 h-4 text-gray-500" aria-hidden="true" />
                     {periodOptions.map(opt => (
                         <button
                             key={opt.value}
                             onClick={() => handlePeriodChange(opt.value)}
+                            aria-pressed={period === opt.value}
                             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer ${
                                 period === opt.value
                                     ? 'bg-primary text-primary-fg shadow-sm'
@@ -366,7 +367,7 @@ export default function Dashboard({ income, expense, balance, recentTransactions
                         </Link>
                     ))}
                 </div>
-            </main>
+            </div>
         </AppLayout>
     )
 }

@@ -78,7 +78,7 @@ export default function Settings() {
         <AppLayout>
             <Head title="Configurações" />
 
-            <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <div className="mb-6 sm:mb-8">
                     <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium mb-4 transition">
                         <ArrowLeft className="w-4 h-4" />
@@ -113,15 +113,17 @@ export default function Settings() {
                                 <button
                                     type="button"
                                     onClick={() => fileRef.current?.click()}
+                                    aria-label="Trocar foto do perfil"
                                     className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-md hover:bg-primary-hover transition cursor-pointer"
                                 >
-                                    <Camera className="w-3 h-3 text-primary-fg" />
+                                    <Camera className="w-3 h-3 text-primary-fg" aria-hidden="true" />
                                 </button>
                                 <input
                                     ref={fileRef}
                                     type="file"
                                     accept="image/*"
                                     onChange={handleFile}
+                                    aria-label="Selecionar nova foto"
                                     className="hidden"
                                 />
                             </div>
@@ -381,7 +383,7 @@ export default function Settings() {
                         </form>
                     )}
                 </Card>
-            </main>
+            </div>
         </AppLayout>
     )
 }
