@@ -2,8 +2,10 @@ import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, MoneyInput, Select, TagPicker } from '@/Components'
 import useSubmitLock from '@/hooks/useSubmitLock'
-import { toNumberString } from '@/lib/decimal'
-import { ArrowLeft, Plus, AlertTriangle, RefreshCcw } from 'lucide-react'
+import { toNumberString, toNumber } from '@/lib/decimal'
+import { ArrowLeft, Plus, AlertTriangle, RefreshCcw, Layers } from 'lucide-react'
+
+const INSTALLMENT_OPTIONS = [1, 2, 3, 4, 5, 6, 10, 12, 18, 24, 36, 48]
 
 export default function TransactionsCreate({ categories, tags }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -13,17 +15,35 @@ export default function TransactionsCreate({ categories, tags }) {
         transaction_date: new Date().toISOString().slice(0, 10),
         description: '',
         is_recurring: false,
+        installments: 1,
         tag_ids: [],
     })
     const submitLock = useSubmitLock()
 
+    const isInstallment = data.installments > 1
+    const perInstallment = isInstallment && toNumber(data.amount) > 0
+        ? toNumber(data.amount) / data.installments
+        : 0
+
     function handleSubmit(e) {
         e.preventDefault()
         if (!submitLock.tryLock()) return
-        post('/transactions', {
-            data: { ...data, amount: toNumberString(data.amount) },
-            onFinish: submitLock.unlock,
-        })
+        const payload = { ...data, amount: toNumberString(data.amount) }
+        if (isInstallment) {
+            post('/installments', {
+                data: {
+                    category_id: data.category_id,
+                    type: data.type,
+                    total_amount: payload.amount,
+                    installments: data.installments,
+                    first_date: data.transaction_date,
+                    description: data.description || null,
+                },
+                onFinish: submitLock.unlock,
+            })
+        } else {
+            post('/transactions', { data: payload, onFinish: submitLock.unlock })
+        }
     }
 
     const filteredCategories = categories.filter(c => c.type === data.type)
@@ -115,21 +135,53 @@ export default function TransactionsCreate({ categories, tags }) {
                             />
                         </div>
 
-                        <label className="flex items-center gap-3 p-4 rounded-xl border border-border bg-surface-elevated mb-6 cursor-pointer hover:border-border-strong transition" data-tour="tx-recurring">
-                            <input
-                                type="checkbox"
-                                checked={data.is_recurring}
-                                onChange={e => setData('is_recurring', e.target.checked)}
-                                className="w-4 h-4 rounded accent-[var(--color-primary)] cursor-pointer"
-                            />
-                            <div className="flex items-center gap-2">
-                                <RefreshCcw className="w-4 h-4 text-accent-text" />
-                                <div>
-                                    <p className="text-sm font-medium text-gray-800">Transação recorrente</p>
-                                    <p className="text-xs text-gray-500">Será replicada automaticamente todo mês</p>
-                                </div>
+                        <div className="mb-6">
+                            <p className="text-sm font-medium text-gray-600 mb-2 flex items-center gap-1.5">
+                                <Layers className="w-4 h-4 text-accent-text" />
+                                Parcelamento
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                                {INSTALLMENT_OPTIONS.map(n => (
+                                    <button
+                                        key={n}
+                                        type="button"
+                                        onClick={() => setData('installments', n)}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                                            data.installments === n
+                                                ? 'bg-primary text-primary-fg shadow-sm'
+                                                : 'bg-surface border border-border text-gray-600 hover:border-border-strong hover:bg-gray-100'
+                                        }`}
+                                    >
+                                        {n}x
+                                    </button>
+                                ))}
                             </div>
-                        </label>
+                            {isInstallment && (
+                                <p className="text-xs text-gray-500 mt-2">
+                                    {toNumber(data.amount) > 0
+                                        ? <span>Serão criadas <strong className="text-gray-700">{data.installments} parcelas</strong> de <strong className="text-gray-700">{perInstallment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>, uma por mês a partir da data escolhida.</span>
+                                        : <span>Preencha o valor para ver o valor de cada parcela.</span>}
+                                </p>
+                            )}
+                        </div>
+
+                        {!isInstallment && (
+                            <label className="flex items-center gap-3 p-4 rounded-xl border border-border bg-surface-elevated mb-6 cursor-pointer hover:border-border-strong transition" data-tour="tx-recurring">
+                                <input
+                                    type="checkbox"
+                                    checked={data.is_recurring}
+                                    onChange={e => setData('is_recurring', e.target.checked)}
+                                    className="w-4 h-4 rounded accent-[var(--color-primary)] cursor-pointer"
+                                />
+                                <div className="flex items-center gap-2">
+                                    <RefreshCcw className="w-4 h-4 text-accent-text" />
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-800">Transação recorrente</p>
+                                        <p className="text-xs text-gray-500">Será replicada automaticamente todo mês</p>
+                                    </div>
+                                </div>
+                            </label>
+                        )}
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-border">
                             <Button type="submit" variant="primary" disabled={processing || submitLock.locked} className="flex-1 sm:flex-none">

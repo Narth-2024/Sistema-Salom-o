@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Badge, Button, Pagination, ConfirmDialog, Skeleton } from '@/Components'
 import {
     Plus, Eye, Edit2, Trash2, TrendingUp, TrendingDown,
-    Search, X, Download, RefreshCcw, ChevronUp, ChevronDown
+    Search, X, Download, RefreshCcw, ChevronUp, ChevronDown, Layers
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 
@@ -295,6 +295,12 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                         Recorrente
                                                     </span>
                                                 )}
+                                                {t.installment_no && (
+                                                    <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-indigo-500 bg-indigo-500/10 px-1.5 py-0.5 rounded-full">
+                                                        <Layers className="w-2.5 h-2.5" />
+                                                        {t.installment_no}/{t.installment_total}
+                                                    </span>
+                                                )}
                                             </div>
                                             {t.tags?.length > 0 && (
                                                 <div className="flex flex-wrap gap-1 mt-1.5">
@@ -387,6 +393,12 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                                                         <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-medium text-accent-text bg-primary/10 px-2 py-0.5 rounded-full">
                                                             <RefreshCcw className="w-3 h-3" />
                                                             Recorrente
+                                                        </span>
+                                                    )}
+                                                    {t.installment_no && (
+                                                        <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-medium text-indigo-500 bg-indigo-500/10 px-2 py-0.5 rounded-full">
+                                                            <Layers className="w-3 h-3" />
+                                                            {t.installment_no}/{t.installment_total}
                                                         </span>
                                                     )}
                                                 </td>

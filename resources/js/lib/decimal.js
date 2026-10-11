@@ -26,6 +26,12 @@ export function toNumberString(raw) {
     return s
 }
 
+// Converte o que o usuário digitou para number (aceita vírgula/milhar).
+export function toNumber(raw) {
+    const n = Number(toNumberString(raw))
+    return Number.isFinite(n) ? n : 0
+}
+
 // Valida se a string normalizada é um número válido e dentro dos limites.
 export function isValidAmount(normalized, { min = 0.01, max = 99999999.99 } = {}) {
     if (normalized === '' || normalized === null || normalized === undefined) return false
