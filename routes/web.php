@@ -53,12 +53,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/investments', [InvestmentForecastController::class, 'store'])->name('investments.store');
     Route::delete('/investments/simulations/{simulation}', [InvestmentForecastController::class, 'destroy'])->name('investments.simulations.destroy');
     Route::resource('categories', CategoryController::class);
-    Route::post('/categories/{category}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+    Route::post('/categories/{category}/restore', [CategoryController::class, 'restore'])->withTrashed()->name('categories.restore');
     Route::resource('tags', TagController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::post('/tags/{tag}/restore', [TagController::class, 'restore'])->name('tags.restore');
+    Route::post('/tags/{tag}/restore', [TagController::class, 'restore'])->withTrashed()->name('tags.restore');
     Route::get('/transactions/export', [TransactionController::class, 'export'])->name('transactions.export');
     Route::resource('transactions', TransactionController::class);
-    Route::post('/transactions/{transaction}/restore', [TransactionController::class, 'restore'])->name('transactions.restore');
+    Route::post('/transactions/{transaction}/restore', [TransactionController::class, 'restore'])->withTrashed()->name('transactions.restore');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::post('/settings/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
     Route::post('/settings/password', [ProfileController::class, 'updatePassword'])->name('settings.password.update');
