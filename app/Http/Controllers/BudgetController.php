@@ -38,6 +38,8 @@ class BudgetController extends Controller
     {
         $this->authorize('update', $category);
 
+        $this->normalizeDecimals($request, ['budget_amount']);
+
         $request->validate([
             'budget_amount' => 'required|numeric|min:0.01|max:99999999.99',
         ], [], [
@@ -45,7 +47,7 @@ class BudgetController extends Controller
         ]);
 
         $category->update([
-            'budget_amount' => $this->normalizeDecimal($request->input('budget_amount')),
+            'budget_amount' => $request->input('budget_amount'),
         ]);
 
         return redirect()->route('budgets.index')
