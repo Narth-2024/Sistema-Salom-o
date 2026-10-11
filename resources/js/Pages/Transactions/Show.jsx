@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Badge, Button } from '@/Components'
-import { Edit2, Trash2, ArrowLeft, TrendingUp, TrendingDown, CalendarDays, Clock, Tag, RefreshCcw, Layers } from 'lucide-react'
+import { Edit2, Trash2, ArrowLeft, TrendingUp, TrendingDown, CalendarDays, Clock, Tag, RefreshCcw } from 'lucide-react'
 
 function formatBR(value) {
     return Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -58,14 +58,6 @@ export default function TransactionsShow({ transaction }) {
                                             <RefreshCcw className="w-3 h-3 mr-1" />
                                             Recorrente
                                         </Badge>
-                                    )}
-                                    {transaction.installment_no && (
-                                        <Link href={`/installments/${transaction.installment_group_id}`}>
-                                            <Badge variant="default" className="cursor-pointer hover:bg-indigo-500/20">
-                                                <Layers className="w-3 h-3 mr-1" />
-                                                Parcela {transaction.installment_no}/{transaction.installment_total}
-                                            </Badge>
-                                        </Link>
                                     )}
                                 </div>
                             </div>

@@ -155,7 +155,7 @@ class TransactionController extends Controller
     {
         $this->authorize('view', $transaction);
 
-        $transaction->load('category', 'tags', 'installmentGroup');
+        $transaction->load('category', 'tags');
 
         return Inertia::render('Transactions/Show', [
             'transaction' => $transaction,

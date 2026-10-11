@@ -50,9 +50,4 @@ class User extends Authenticatable implements Onboardable
     {
         return $this->hasMany(InvestmentSimulation::class);
     }
-
-    public function installmentGroups(): HasMany
-    {
-        return $this->hasMany(InstallmentGroup::class);
-    }
 }

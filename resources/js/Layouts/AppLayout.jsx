@@ -1,5 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react'
-import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins, PiggyBank, WifiOff, Target } from 'lucide-react'
+import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins, PiggyBank, WifiOff } from 'lucide-react'
 import { FlashMessage, OnboardingWelcome } from '@/Components'
 import Sidebar from '@/Components/Sidebar'
 import { useEffect, useState } from 'react'
@@ -10,7 +10,6 @@ const navLinks = [
     { href: '/dashboard', label: 'Início', icon: LayoutDashboard },
     { href: '/categories', label: 'Categorias', icon: Tags },
     { href: '/transactions', label: 'Transações', icon: ArrowLeftRight },
-    { href: '/budgets', label: 'Orç.', icon: Target },
     { href: '/tags', label: 'Tags', icon: Hash },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/investments', label: 'Inv.', icon: PiggyBank },

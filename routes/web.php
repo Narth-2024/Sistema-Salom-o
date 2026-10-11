@@ -2,10 +2,8 @@
 
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\InstallmentGroupController;
 use App\Http\Controllers\InvestmentForecastController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
@@ -56,19 +54,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/investments/simulations/{simulation}', [InvestmentForecastController::class, 'destroy'])->name('investments.simulations.destroy');
     Route::resource('categories', CategoryController::class);
     Route::post('/categories/{category}/restore', [CategoryController::class, 'restore'])->withTrashed()->name('categories.restore');
-    Route::get('/budgets', [BudgetController::class, 'index'])->name('budgets.index');
-    Route::put('/budgets/{category}', [BudgetController::class, 'update'])->name('budgets.update');
-    Route::delete('/budgets/{category}', [BudgetController::class, 'destroy'])->name('budgets.destroy');
     Route::resource('tags', TagController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('/tags/{tag}/restore', [TagController::class, 'restore'])->withTrashed()->name('tags.restore');
     Route::get('/transactions/export', [TransactionController::class, 'export'])->name('transactions.export');
     Route::resource('transactions', TransactionController::class);
     Route::post('/transactions/{transaction}/restore', [TransactionController::class, 'restore'])->withTrashed()->name('transactions.restore');
-    Route::get('/installments', [InstallmentGroupController::class, 'index'])->name('installment-groups.index');
-    Route::post('/installments', [InstallmentGroupController::class, 'store'])->name('installment-groups.store');
-    Route::get('/installments/{installmentGroup}', [InstallmentGroupController::class, 'show'])->name('installment-groups.show');
-    Route::delete('/installments/{installmentGroup}', [InstallmentGroupController::class, 'destroy'])->name('installment-groups.destroy');
-    Route::post('/installments/{installmentGroup}/restore', [InstallmentGroupController::class, 'restore'])->withTrashed()->name('installment-groups.restore');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::post('/settings/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
     Route::post('/settings/password', [ProfileController::class, 'updatePassword'])->name('settings.password.update');

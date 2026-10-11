@@ -17,11 +17,6 @@ class Category extends Model
         'name',
         'type',
         'color',
-        'budget_amount',
-    ];
-
-    protected $casts = [
-        'budget_amount' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
