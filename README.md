@@ -2,194 +2,220 @@
 
 # Sistema Salomão
 
-**Personal financial control web application**
+**Aplicação web de controle financeiro pessoal**
 
-[![Status](https://img.shields.io/badge/status-in%20development-yellow?style=for-the-badge)](https://github.com/Narth-2024/sistema-salomao)
-[![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
+[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge)](https://github.com/Narth-2024/Sistema-Salom-o)
 [![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![PWA](https://img.shields.io/badge/PWA-instalável-5E3EC8?style=for-the-badge&logo=pwa&logoColor=white)](https://sistema-salom-o.vercel.app)
+
+**Demo:** [sistema-salom-o.vercel.app](https://sistema-salom-o.vercel.app)
 
 </div>
 
 ---
 
-## Table of Contents
+## Sumário
 
-- [About](#about)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Setup](#environment-setup)
-- [Project Structure](#project-structure)
-- [Security](#security)
-  - [Security Measures](#security-measures)
-  - [Reporting a Vulnerability](#reporting-a-vulnerability)
-- [Project Status](#project-status)
-- [Contributing](#contributing)
-- [Author](#author)
+- [Sobre](#sobre)
+- [Funcionalidades](#funcionalidades)
+- [Stack](#stack)
+- [Começando](#começando)
+  - [Pré-requisitos](#pré-requisitos)
+  - [Instalação](#instalação)
+  - [Configuração de ambiente](#configuração-de-ambiente)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Segurança e privacidade](#segurança-e-privacidade)
+- [Status do projeto](#status-do-projeto)
+- [Contribuindo](#contribuindo)
+- [Autor](#autor)
 
 ---
 
-## About
+## Sobre
 
-**Sistema Salomão** is a web application focused on personal financial control. Users can register, organize, and track their expenses and income through an intuitive dashboard with reports, categories, and data visualizations.
+**Sistema Salomão** é uma aplicação web de **controle financeiro pessoal**. O usuário registra entradas e saídas, organiza por categorias e tags, acompanha o saldo e a evolução do patrimônio por meio de um painel com gráficos, além de simular o rendimento de investimentos.
 
-Built with **Laravel 10 + Inertia.js** SPA architecture, featuring a **React 19** frontend with **Tailwind CSS v4**. Authentication is handled by **Clerk**, and data is stored in **Supabase PostgreSQL**.
-
----
-
-## Features
-
-- **User authentication** via Clerk (Google OAuth, email/password, magic links)
-- **Dashboard** with income/expense/balance cards and expense breakdown by category
-- **Analytics page** with monthly bar charts, cumulative balance timeline, and period comparisons
-- **Categories CRUD** — organize expenses and income by type with color labels
-- **Transactions CRUD** — full register with category, tags, type, amount, and date
-- **Filters & search** — filter transactions by type, category, tag, date range, and description
-- **Pagination** — on transactions, categories, and tags index
-- **Dark/Light theme** — persistent theme toggle via local storage
-- **Tags** — additional categorization layer for transactions
-- **Clerk webhook sync** — automatic user creation/update/deletion
-- **Profile editing** — avatar upload to Supabase Storage
-- **Responsive design** — mobile sidebar, bottom navigation, and adaptive layout
+Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no frontend e **Tailwind CSS v4**. A autenticação é feita pela **sessão nativa do Laravel** (e-mail/senha + recuperação por link), e os dados ficam no **PostgreSQL do Supabase**. É um projeto acadêmico (TCC) e roda em produção na **Vercel**.
 
 ---
 
-## Tech Stack
+## Funcionalidades
 
-| Layer | Technology |
+- **Autenticação nativa** — cadastro, login, esqueci/redefinir senha (link por e-mail) e logout, via sessão do Laravel
+- **Painel (Dashboard)** — cards de receita, despesa e saldo, com filtro por período e quebra de despesas por categoria
+- **Analytics** — gráficos de barras mensais, linha de saldo acumulado e comparação entre períodos (Chart.js)
+- **Investimentos** — simulador que compara aplicações (Poupança, CDB, Tesouro etc.) com taxas oficiais de CDI/IPCA
+- **Transações** — CRUD completo com categoria, tags, tipo, valor e data
+- **Transações recorrentes** — lançamentos que se repetem todo mês, replicados por cron
+- **Categorias** — CRUD com tipo (receita/despesa) e rótulo de cor
+- **Tags** — camada extra de categorização, com cor própria
+- **Filtros e busca** — por tipo, categoria, tag, intervalo de datas e descrição
+- **Exportação CSV** — baixa o histórico com os filtros aplicados
+- **Exclusão reversível (soft delete)** — transações, categorias e tags vão para a lixeira e podem ser restauradas
+- **Exclusão de conta (LGPD)** — o usuário apaga definitivamente sua conta e dados
+- **Perfil** — edição de nome, e-mail e senha, com upload de avatar no Supabase Storage
+- **PWA instalável** — instala no celular e funciona offline (service worker + manifest)
+- **Tema claro/escuro** — alternância persistida no navegador
+- **Tour guiado e checklist de onboarding** — visita guiada às telas (driver.js)
+- **Acessibilidade** — skip link, navegação por teclado com focus trap, `aria-live` em avisos e contraste ajustado
+- **Design responsivo** — sidebar no desktop, navegação inferior no mobile
+
+---
+
+## Stack
+
+| Camada | Tecnologia |
 |---|---|
 | **Backend** | Laravel 10.x, PHP 8.1+ |
 | **Frontend** | React 19, Inertia.js 3, Tailwind CSS v4 |
-| **Database** | PostgreSQL 14+ (via Supabase) |
-| **Auth** | Clerk (OAuth, email/password, magic links) |
+| **Banco de dados** | PostgreSQL 14+ (via Supabase) |
+| **Autenticação** | Sessão nativa do Laravel (e-mail/senha) |
 | **Storage** | Supabase Storage (avatars) |
-| **Build** | Vite 7, Laravel Vite plugin |
-| **Charts** | Chart.js 4 |
-| **Icons** | Lucide React |
-| **HTTP** | Axios, Guzzle |
+| **Build** | Vite 7, plugin Laravel Vite |
+| **Gráficos** | Chart.js 4 |
+| **Ícones** | Lucide React |
+| **Tour guiado** | driver.js |
+| **Deploy** | Vercel (runtime `vercel-php`), com cron mensal |
 
 ---
 
-## Getting Started
+## Começando
 
-### Prerequisites
+### Pré-requisitos
 
 - PHP 8.1+
 - Composer 2.x
-- Node.js 18+ and npm
-- PostgreSQL 14+ (or Supabase account)
-- Clerk account ([clerk.com](https://clerk.com))
+- Node.js 18+ e npm
+- PostgreSQL 14+ (ou conta no Supabase)
+- Conta na [Vercel](https://vercel.com) para deploy (opcional, apenas para publicar)
 
-### Installation
+### Instalação
 
 ```bash
-# Clone the repository
-git clone https://github.com/Narth-2024/sistema-salomao.git
-cd app-salomao
+# Clone o repositório
+git clone https://github.com/Narth-2024/Sistema-Salom-o.git
+cd Sistema-Salom-o
 
-# Install PHP dependencies
+# Instale as dependências PHP
 composer install
 
-# Install JavaScript dependencies
+# Instale as dependências JavaScript
 npm install
 
-# Copy environment file (never commit .env)
+# Copie o arquivo de ambiente (nunca commite o .env)
 cp .env.example .env
 
-# Generate application key
+# Gere a chave da aplicação
 php artisan key:generate
 
-# Run database migrations
+# Rode as migrações do banco
 php artisan migrate
 
-# Compile frontend assets (development)
+# Compile os assets do frontend (desenvolvimento)
 npm run dev
 
-# In another terminal, start the Laravel server
+# Em outro terminal, suba o servidor Laravel
 php artisan serve
 ```
 
-Visit `http://localhost:8000` in your browser.
+Acesse `http://localhost:8000` no navegador.
 
-### Environment Setup
+### Configuração de ambiente
 
-Configure your `.env` file with the following required variables:
+Configure o `.env` com as variáveis obrigatórias:
 
 ```env
-# Database (Supabase PostgreSQL)
+# Aplicação
+APP_NAME="Sistema Salomao"
+APP_ENV=local
+APP_KEY=base64:...
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# Banco de dados (PostgreSQL do Supabase)
 # Local: host direto db.xxxxx.supabase.co (IPv6)
 # Produção (Vercel): session pooler IPv4 -> aws-1-sa-east-1.pooler.supabase.com
 #                    DB_USERNAME=postgres.xxxxx (ref anexada)
-DB_CONNECTION=supabase
+DB_CONNECTION=pgsql
 DB_HOST=db.xxxxx.supabase.co
 DB_PORT=5432
 DB_DATABASE=postgres
 DB_USERNAME=postgres
-DB_PASSWORD=your-password
+DB_PASSWORD=sua-senha
 
-# Supabase (chaves LEGACY em formato JWT, Dashboard -> Settings -> API)
+# Supabase (chaves em formato JWT, Dashboard -> Settings -> API)
 SUPABASE_URL=https://xxxxx.supabase.co
-SUPABASE_SERVICE_KEY=eyJ...   # legacy service_role
-SUPABASE_PUBLISHABLE_KEY=eyJ... # legacy anon
+SUPABASE_SERVICE_KEY=eyJ...     # service_role
+SUPABASE_PUBLISHABLE_KEY=eyJ... # anon
 
-# Clerk Authentication
-CLERK_PUBLISHABLE_KEY=pk_test_your-publishable-key
-CLERK_SECRET_KEY=sk_test_your-secret-key
-CLERK_FRONTEND_API_URL=https://your-instance.clerk.accounts.dev
-CLERK_WEBHOOK_SECRET=whsec_your-webhook-secret
+# Sessão
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_SECURE_COOKIE=true
 
-# CPF Validation API (optional)
-CPF_API_TOKEN=your-token
+# E-mail (usado no "esqueci a senha")
+MAIL_MAILER=smtp
+MAIL_HOST=...
+MAIL_USERNAME=...
+MAIL_PASSWORD=...
+
+# Segredo do cron de transações recorrentes (Vercel cron -> /cron/recurring?secret=...)
+CRON_SECRET=uma-string-longa-e-aleatoria
 ```
 
-> **Never commit your `.env` file.** It contains sensitive credentials. The `.env` is already listed in `.gitignore`.
+> **Nunca commite o arquivo `.env`.** Ele contém credenciais sensíveis e já está listado no `.gitignore`.
 
 ---
 
-## Project Structure
+## Estrutura do projeto
 
 ```
 app-salomao/
 ├── app/
-│   ├── Console/Commands/         # Artisan commands
-│   ├── Exceptions/               # Error handler
-│   ├── Facades/                  # Supabase facade
+│   ├── Console/Commands/            # transactions:spawn-recurring (transações recorrentes)
+│   ├── Exceptions/                  # Handler de erros
+│   ├── Facades/                     # Facade do Supabase
 │   ├── Http/
 │   │   ├── Controllers/
-│   │   │   ├── Auth/             # Auth, Clerk callback, webhook
+│   │   │   ├── Auth/AuthController.php   # Login, cadastro, recuperação de senha
 │   │   │   ├── AnalyticsController.php
 │   │   │   ├── CategoryController.php
 │   │   │   ├── DashboardController.php
+│   │   │   ├── InvestmentForecastController.php
 │   │   │   ├── ProfileController.php
 │   │   │   ├── SettingsController.php
 │   │   │   ├── TagController.php
 │   │   │   └── TransactionController.php
 │   │   └── Middleware/
-│   ├── Models/                   # User, Category, Transaction, Tag
-│   ├── Policies/                 # Authorization policies
-│   ├── Providers/                # Service providers
-│   └── Services/                 # AnalyticsService, SupabaseService, SupabaseStorageService
-├── config/                       # Application configuration
+│   ├── Models/                      # User, Category, Transaction, Tag, InvestmentSimulation
+│   ├── Policies/                    # Category, Transaction, Tag (escopadas por dono)
+│   ├── Providers/
+│   └── Services/                    # AnalyticsService, InvestmentForecastService,
+│                                    # SupabaseService, SupabaseStorageService
+├── config/                          # Configuração da aplicação
 ├── database/
 │   ├── factories/
 │   ├── migrations/
 │   └── seeders/
+├── public/
+│   ├── manifest.webmanifest         # Manifest do PWA
+│   ├── sw.js                        # Service worker (offline)
+│   └── icon-*.png                   # Ícones do PWA
 ├── resources/
 │   ├── css/
 │   ├── js/
-│   │   ├── Components/          # Reusable UI components
-│   │   ├── Layouts/             # AppLayout, GuestLayout
-│   │   ├── Pages/              # Inertia page components
-│   │   └── hooks/              # Custom React hooks
-│   └── views/                   # Blade templates
-├── routes/                       # Web, API, console, channels
-├── supabase/                     # Supabase config
-├── tests/
+│   │   ├── Components/              # UI reutilizável (Modal, Input, FlashMessage...)
+│   │   ├── Layouts/                 # AppLayout, GuestLayout
+│   │   ├── Pages/                   # Páginas Inertia
+│   │   ├── hooks/                   # Hooks React (useSubmitLock etc.)
+│   │   ├── lib/                     # Utilitários (decimal, contrast, pwa...)
+│   │   └── tour/                    # AppTour (driver.js)
+│   └── views/                       # Templates Blade
+├── routes/                          # web, api, console, channels
+├── vercel.json                      # Deploy + cron na Vercel
 ├── .env.example
 ├── composer.json
 ├── package.json
@@ -198,86 +224,86 @@ app-salomao/
 
 ---
 
-## Security
+## Segurança e privacidade
 
-### Security Measures
+### Medidas de segurança
 
-This project follows security best practices:
+- **`.env` no gitignore** — credenciais fora do controle de versão
+- **Proteção CSRF** — habilitada no middleware `VerifyCsrfToken` de todas as rotas web
+- **CORS restrito** — apenas `APP_URL` como origem permitida
+- **Sessão segura** — cookies `http_only`, `SameSite=Lax` e flag `secure` configurável
+- **HTTPS forçado em produção** — via `AppServiceProvider::boot()`
+- **Proteção contra mass assignment** — todos os models usam `$fillable`
+- **Políticas de autorização** — categorias, transações e tags escopadas pelo dono
+- **Autenticação obrigatória** — todas as rotas de dados protegidas pelo middleware `auth`
+- **Validação de entrada** — todo input validado antes do processamento
+- **Recuperação de senha por link único** — fluxo nativo do Laravel com token expirável
+- **Exclusão de conta com confirmação de senha** — endpoint LGPD exige senha atual
+- **Cron protegido por segredo** — `/cron/recurring` valida `CRON_SECRET` antes de rodar
+- **Proteção XSS** — escaping server-side do Inertia + proteção nativa do React
+- **`APP_DEBUG=false` em produção** — mensagens de erro detalhadas nunca expostas ao usuário
+- **`APP_KEY` obrigatória** — usada para criptografia (rode `php artisan key:generate`)
 
-- **`.env` is gitignored** — credentials never enter version control
-- **CSRF protection** — enabled via Laravel's VerifyCsrfToken middleware for all web routes
-- **CORS restricted** — only `APP_URL` is allowed as origin
-- **Session security** — `http_only` cookies, `SameSite=Lax`, configurable `secure` flag
-- **HTTPS enforced** in production via `AppServiceProvider::boot()`
-- **Mass-assignment protection** — all models use `$fillable` whitelists
-- **Authorization policies** — Category, Transaction, and Tag resources are owner-scoped via Policies
-- **Rate limiting** — API routes throttled at 60 requests/minute
-- **Authentication required** — all data routes protected by `auth` middleware
-- **Input validation** — all user inputs validated before processing
-- **Clerk webhook signature verification** — incoming webhooks verified via Svix
-- **XSS protection** — Inertia's server-side escaping + React's default XSS protection
-- **APP_DEBUG=false** in production — detailed error messages never exposed to users
-- **APP_KEY** must be set — used for encryption (run `php artisan key:generate`)
+### Checklist antes de produção
 
-### Recommended Production Checklist
+1. [ ] Defina `APP_ENV=production` e `APP_DEBUG=false`
+2. [ ] Aponte `APP_URL` para o domínio de produção
+3. [ ] Habilite HTTPS no proxy reverso ou load balancer
+4. [ ] Defina `SESSION_SECURE_COOKIE=true`
+5. [ ] Rode todas as migrações (`php artisan migrate --force`)
+6. [ ] Use uma `APP_KEY` forte e única
+7. [ ] Configure `DB_PASSWORD` forte e única
+8. [ ] Defina um `CRON_SECRET` longo e aleatório
+9. [ ] Revise as políticas de RLS do Supabase para suas tabelas
+10. [ ] Rotacione as credenciais caso o `.env` tenha sido exposto
 
-Before deploying:
+### Reportando uma vulnerabilidade
 
-1. [ ] Set `APP_ENV=production` and `APP_DEBUG=false`
-2. [ ] Set `APP_URL` to your production domain
-3. [ ] Enable HTTPS termination at your reverse proxy or load balancer
-4. [ ] Set `SESSION_SECURE_COOKIE=true` (already in `.env.example`)
-5. [ ] Rotate all credentials if `.env` was ever exposed
-6. [ ] Run `php artisan key:generate` if `.env` was shared
-7. [ ] Use a strong, random `APP_KEY`
-8. [ ] Configure database `DB_PASSWORD` with a strong, unique password
-9. [ ] Enable database encryption at rest (via Supabase)
-10. [ ] Review Supabase RLS policies for your tables
-
-### Reporting a Vulnerability
-
-If you discover a security vulnerability, please **do not open a public issue**. Instead, send an email to [nathanbs.trabalho@gmail.com](mailto:nathanbs.trabalho@gmail.com). Please do not report security issues via GitHub Issues.
+Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em vez disso, envie um e-mail para [nathanbs.trabalho@gmail.com](mailto:nathanbs.trabalho@gmail.com). Por favor, não reporte problemas de segurança via GitHub Issues.
 
 ---
 
-## Project Status
+## Status do projeto
 
-| Module | Status |
+| Módulo | Status |
 |---|---|
-| Authentication (Clerk) | Done |
-| Dashboard | Done |
-| Categories CRUD | Done |
-| Transactions CRUD | Done |
-| Tags CRUD | Done |
-| Analytics / Charts | Done |
-| Filters & Search | Done |
-| Pagination | Done |
-| Dark/Light Theme | Done |
-| Profile Editing (Avatar) | Done |
-| Clerk Webhook Sync | Done |
-| Responsive Layout | Done |
-| CPF Field / Validation | Database column ready, UI pending |
-| Subcategories | Not started |
-| Recurring Transactions | Not started |
-| Installments | Not started |
-| Reports & Advanced Charts | Not started |
-| Tests | Not started |
+| Autenticação (e-mail/senha + recuperação) | Feito |
+| Painel (Dashboard) | Feito |
+| CRUD de Categorias | Feito |
+| CRUD de Transações | Feito |
+| CRUD de Tags | Feito |
+| Analytics / Gráficos | Feito |
+| Simulador de Investimentos | Feito |
+| Transações Recorrentes | Feito |
+| Filtros e Busca | Feito |
+| Exportação CSV | Feito |
+| Exclusão Reversível (soft delete) | Feito |
+| Exclusão de Conta (LGPD) | Feito |
+| Tema Claro/Escuro | Feito |
+| Edição de Perfil (avatar) | Feito |
+| PWA (instalável + offline) | Feito |
+| Tour Guiado / Onboarding | Feito |
+| Acessibilidade | Feito |
+| Layout Responsivo | Feito |
+| Campo CPF (coluna no banco) | Coluna pronta, UI pendente |
+| Subcategorias | Não iniciado |
+| Testes automatizados | Não iniciado |
 
 ---
 
-## Contributing
+## Contribuindo
 
-1. Fork the project
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Faça um fork do projeto
+2. Crie uma branch de feature (`git checkout -b feature/amazing-feature`)
+3. Committe suas mudanças (`git commit -m 'Add amazing feature'`)
+4. Envie para a branch (`git push origin feature/amazing-feature`)
+5. Abra um Pull Request
 
-Please ensure your code passes Laravel Pint (`./vendor/bin/pint`) before submitting.
+Certifique-se de que o código passe no Laravel Pint (`./vendor/bin/pint`) antes de enviar.
 
 ---
 
-## Author
+## Autor
 
 **Nathan Bortolini**
 
@@ -289,6 +315,6 @@ Please ensure your code passes Laravel Pint (`./vendor/bin/pint`) before submitt
 
 <div align="center">
 
-*"Wisdom is more valuable than gold." — Proverbs 3:14*
+*"Mais preciosa do que o ouro é a sabedoria." — Provérbios 3:14*
 
 </div>
