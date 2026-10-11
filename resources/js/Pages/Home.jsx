@@ -128,22 +128,30 @@ export default function Home() {
             {/* MÉTRICAS */}
             <section className="relative py-16 lg:py-20 bg-surface border-y border-border">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-12">
                         <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">100%</p>
-                            <p className="text-sm text-gray-500 mt-1">Controle dos seus gastos</p>
+                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">6</p>
+                            <p className="text-sm text-gray-500 mt-1">Investimentos comparados: Poupança, CDB, Tesouro e mais</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">24/7</p>
-                            <p className="text-sm text-gray-500 mt-1">Acesso de qualquer lugar</p>
+                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">BACEN</p>
+                            <p className="text-sm text-gray-500 mt-1">Taxas oficiais de CDI e IPCA do Banco Central</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">Grátis</p>
-                            <p className="text-sm text-gray-500 mt-1">Sem custo para você</p>
+                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">4</p>
+                            <p className="text-sm text-gray-500 mt-1">Períodos de análise: 3 meses, 6 meses, 12 meses ou tudo</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">Seguro</p>
-                            <p className="text-sm text-gray-500 mt-1">Dados protegidos</p>
+                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">Automático</p>
+                            <p className="text-sm text-gray-500 mt-1">Transações recorrentes replicadas todo mês</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">1 clique</p>
+                            <p className="text-sm text-gray-500 mt-1">Exporte seu histórico em CSV com os filtros que quiser</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">App</p>
+                            <p className="text-sm text-gray-500 mt-1">Instalável no celular, com acesso offline</p>
                         </div>
                     </div>
                 </div>
