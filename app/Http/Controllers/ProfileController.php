@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\SupabaseStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -69,6 +71,51 @@ class ProfileController extends Controller
         ]);
 
         return back()->with('success', 'Senha alterada com sucesso.');
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'password' => ['required', 'string'],
+        ]);
+
+        $user = $request->user();
+
+        if (! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => 'A senha está incorreta.',
+            ]);
+        }
+
+        // Remove avatar do Storage (best-effort)
+        if ($user->avatar_url) {
+            try {
+                $path = $this->extractPath($user->avatar_url);
+                if ($path) {
+                    app(SupabaseStorageService::class)->delete($path);
+                }
+            } catch (\Throwable) {
+                // ignora falha ao deletar avatar
+            }
+        }
+
+        // Remove dados vinculados (hard delete de tudo, incluindo lixeira)
+        $transactionIds = $user->transactions()->withTrashed()->pluck('id');
+        if ($transactionIds->isNotEmpty()) {
+            DB::table('transaction_tag')->whereIn('transaction_id', $transactionIds)->delete();
+        }
+        $user->transactions()->withTrashed()->forceDelete();
+        $user->categories()->withTrashed()->forceDelete();
+        $user->tags()->withTrashed()->forceDelete();
+        $user->investmentSimulations()->forceDelete();
+        $user->delete();
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')
+            ->with('success', 'Sua conta e todos os dados foram excluídos definitivamente.');
     }
 
     private function extractPath(string $url): ?string

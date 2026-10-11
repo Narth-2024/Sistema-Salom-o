@@ -1,23 +1,31 @@
 import { useEffect, useState } from 'react'
-import { usePage } from '@inertiajs/react'
-import { CheckCircle, XCircle, X } from 'lucide-react'
+import { usePage, router } from '@inertiajs/react'
+import { CheckCircle, XCircle, X, Undo2 } from 'lucide-react'
 
 export default function FlashMessage() {
     const { flash } = usePage().props
     const [visible, setVisible] = useState(false)
     const [message, setMessage] = useState(null)
     const [type, setType] = useState('success')
+    const [undoUrl, setUndoUrl] = useState(null)
 
     useEffect(() => {
         const msg = flash?.success || flash?.error
         if (msg) {
             setMessage(msg)
             setType(flash.success ? 'success' : 'error')
+            setUndoUrl(flash.success ? flash.undo || null : null)
             setVisible(true)
-            const timer = setTimeout(() => setVisible(false), 5000)
+            const timer = setTimeout(() => setVisible(false), flash.undo ? 8000 : 5000)
             return () => clearTimeout(timer)
         }
     }, [flash])
+
+    function handleUndo() {
+        if (!undoUrl) return
+        setVisible(false)
+        router.post(undoUrl, {}, { preserveScroll: true })
+    }
 
     if (!visible || !message) return null
 
@@ -36,7 +44,16 @@ export default function FlashMessage() {
                     <XCircle className="w-5 h-5 shrink-0" />
                 )}
                 <span className="text-sm font-medium">{message}</span>
-                <button onClick={() => setVisible(false)} className="ml-2 opacity-60 hover:opacity-100 transition cursor-pointer">
+                {undoUrl && (
+                    <button
+                        onClick={handleUndo}
+                        className="ml-1 inline-flex items-center gap-1 text-sm font-semibold underline underline-offset-2 hover:opacity-80 transition cursor-pointer"
+                    >
+                        <Undo2 className="w-4 h-4" />
+                        Desfazer
+                    </button>
+                )}
+                <button onClick={() => setVisible(false)} className="ml-1 opacity-60 hover:opacity-100 transition cursor-pointer">
                     <X className="w-4 h-4" />
                 </button>
             </div>

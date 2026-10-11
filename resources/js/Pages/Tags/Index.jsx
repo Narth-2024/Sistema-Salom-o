@@ -202,7 +202,7 @@ export default function TagsIndex({ tags, sort = 'name', direction = 'asc' }) {
                     onClose={() => setDeleteTarget(null)}
                     onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
                     title="Excluir tag"
-                    message="Tem certeza que deseja excluir esta tag? Ela será removida de todas as transações vinculadas."
+                    message="Tem certeza que deseja excluir esta tag? Ela será removida de todas as transações vinculadas. Você poderá desfazer."
                     itemLabel={deleteTarget?.name}
                 />
             </main>

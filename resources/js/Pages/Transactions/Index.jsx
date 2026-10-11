@@ -424,7 +424,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                     onClose={() => setDeleteTarget(null)}
                     onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
                     title="Excluir transação"
-                    message="Tem certeza que deseja excluir esta transação? Esta ação não pode ser desfeita."
+                    message="Tem certeza que deseja excluir esta transação? Você poderá desfazer logo em seguida."
                     itemLabel={deleteTarget ? `${deleteTarget.description || 'Sem descrição'} — ${formatBR(parseFloat(deleteTarget.amount))}` : ''}
                 />
 

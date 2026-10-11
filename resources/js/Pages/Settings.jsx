@@ -4,7 +4,7 @@ import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
 import { startAppTour } from '@/tour/AppTour'
 import useTheme from '@/hooks/useTheme'
 import { usePWAInstall } from '@/lib/pwa'
-import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug, Lock, Download, Smartphone } from 'lucide-react'
+import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug, Lock, Download, Smartphone, Trash2, AlertTriangle } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function Settings() {
@@ -27,6 +27,11 @@ export default function Settings() {
         password_confirmation: '',
     })
 
+    const deleteForm = useForm({
+        password: '',
+    })
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
     function handleSubmit(e) {
         e.preventDefault()
         post('/settings/profile', {
@@ -40,6 +45,16 @@ export default function Settings() {
         pwdForm.post('/settings/password', {
             preserveScroll: true,
             onSuccess: () => pwdForm.reset(),
+        })
+    }
+
+    function handleDeleteSubmit(e) {
+        e.preventDefault()
+        deleteForm.delete('/settings/profile', {
+            preserveScroll: true,
+            onSuccess: () => {
+                window.location.href = '/'
+            },
         })
     }
 
@@ -315,6 +330,56 @@ export default function Settings() {
                         O formulário de avaliação deve ser respondido após o uso do sistema — leva menos de 2 minutos.
                         Encontrou um erro? Clique em "Reportar bug" para abrir um issue no GitHub.
                     </p>
+                </Card>
+
+                {/* Danger zone — delete account */}
+                <Card className="mt-6" accent="danger">
+                    <h2 className="text-base font-semibold text-red-500 mb-2 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4" />
+                        Excluir conta
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-5">
+                        Ao excluir sua conta, <strong className="text-gray-700">todos os seus dados serão removidos definitivamente</strong>:
+                        transações, categorias, tags e simulações de investimento. Esta ação não pode ser desfeita.
+                    </p>
+
+                    {!showDeleteConfirm ? (
+                        <Button variant="danger" onClick={() => setShowDeleteConfirm(true)}>
+                            <Trash2 className="w-4 h-4" />
+                            Excluir minha conta
+                        </Button>
+                    ) : (
+                        <form onSubmit={handleDeleteSubmit} className="space-y-4">
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-start gap-3">
+                                <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                                <p className="text-sm text-red-400">
+                                    Essa ação é <strong>irreversível</strong>. Confirme com sua senha para prosseguir.
+                                </p>
+                            </div>
+                            <Input
+                                label="Senha atual"
+                                type="password"
+                                value={deleteForm.data.password}
+                                onChange={e => deleteForm.setData('password', e.target.value)}
+                                autoComplete="current-password"
+                                required
+                                error={deleteForm.errors.password}
+                            />
+                            <div className="flex items-center gap-3 pt-2 border-t border-border">
+                                <Button type="submit" variant="danger" disabled={deleteForm.processing}>
+                                    <Trash2 className="w-4 h-4" />
+                                    {deleteForm.processing ? 'Excluindo...' : 'Confirmar exclusão definitiva'}
+                                </Button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setShowDeleteConfirm(false); deleteForm.reset() }}
+                                    className="px-5 py-2.5 text-sm text-gray-500 hover:text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition cursor-pointer"
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    )}
                 </Card>
             </main>
         </AppLayout>

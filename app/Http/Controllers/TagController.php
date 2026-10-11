@@ -71,6 +71,17 @@ class TagController extends Controller
         $tag->delete();
 
         return redirect()->route('tags.index')
-            ->with('success', 'Tag excluída com sucesso.');
+            ->with('success', 'Tag excluída.')
+            ->with('undo', route('tags.restore', $tag));
+    }
+
+    public function restore(Tag $tag): RedirectResponse
+    {
+        $this->authorize('delete', $tag);
+
+        $tag->restore();
+
+        return redirect()->route('tags.index')
+            ->with('success', 'Tag restaurada.');
     }
 }

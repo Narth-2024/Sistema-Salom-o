@@ -211,6 +211,17 @@ class TransactionController extends Controller
         $transaction->delete();
 
         return redirect()->route('transactions.index')
-            ->with('success', 'Transação excluída com sucesso.');
+            ->with('success', 'Transação excluída.')
+            ->with('undo', route('transactions.restore', $transaction));
+    }
+
+    public function restore(Transaction $transaction): RedirectResponse
+    {
+        $this->authorize('delete', $transaction);
+
+        $transaction->restore();
+
+        return redirect()->route('transactions.index')
+            ->with('success', 'Transação restaurada.');
     }
 }

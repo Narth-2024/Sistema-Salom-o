@@ -101,6 +101,17 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()->route('categories.index')
-            ->with('success', 'Categoria excluída com sucesso.');
+            ->with('success', 'Categoria excluída.')
+            ->with('undo', route('categories.restore', $category));
+    }
+
+    public function restore(Category $category): RedirectResponse
+    {
+        $this->authorize('delete', $category);
+
+        $category->restore();
+
+        return redirect()->route('categories.index')
+            ->with('success', 'Categoria restaurada.');
     }
 }

@@ -169,7 +169,7 @@ export default function CategoriesIndex({ categories, sort = 'name', direction =
                     onClose={() => setDeleteTarget(null)}
                     onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
                     title="Excluir categoria"
-                    message="Tem certeza que deseja excluir esta categoria? As transações vinculadas serão mantidas, mas ficarão sem categoria."
+                    message="Tem certeza que deseja excluir esta categoria? As transações vinculadas serão mantidas, mas ficarão sem categoria. Você poderá desfazer."
                     itemLabel={deleteTarget?.name}
                 />
             </main>
