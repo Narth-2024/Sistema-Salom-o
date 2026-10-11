@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { registerServiceWorker } from '@/lib/pwa';
+import ErrorBoundary from '@/Components/ErrorBoundary';
 
 registerServiceWorker();
 
@@ -19,7 +20,11 @@ createInertiaApp({
         })
 
         const root = createRoot(el);
-        root.render(<App {...props} />);
+        root.render(
+            <ErrorBoundary>
+                <App {...props} />
+            </ErrorBoundary>
+        );
     },
     progress: {
         color: 'var(--color-primary)',

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Head, router, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, ConfirmDialog } from '@/Components'
+import { Card, Button, Input, MoneyInput, ConfirmDialog } from '@/Components'
+import useSubmitLock from '@/hooks/useSubmitLock'
+import { toNumberString, formatForInput } from '@/lib/decimal'
 import { chartColors, hexToRgba } from '@/lib/chartColors.js'
 import {
     PiggyBank, TrendingUp, Calculator, Info, ShieldCheck,
@@ -18,17 +20,40 @@ export default function Investments({ inputs, marketRates, instruments, history 
     const lineRef = useRef(null)
     const lineInstance = useRef(null)
     const [confirmDelete, setConfirmDelete] = useState(null)
+    const simLock = useSubmitLock()
+    const saveLock = useSubmitLock()
 
     const { data, setData, get, processing, errors } = useForm({
-        amount: inputs.amount,
+        amount: formatForInput(inputs.amount),
         months: inputs.months,
-        monthly: inputs.monthly,
+        monthly: formatForInput(inputs.monthly),
         ipca: inputs.ipca,
     })
 
     function submit(e) {
         e.preventDefault()
-        get('/investments', { preserveState: true, preserveScroll: true })
+        if (!simLock.tryLock()) return
+        get('/investments', {
+            data: {
+                ...data,
+                amount: toNumberString(data.amount),
+                monthly: toNumberString(data.monthly),
+            },
+            preserveState: true,
+            preserveScroll: true,
+            onFinish: simLock.unlock,
+        })
+    }
+
+    function saveSimulation(inst) {
+        if (!saveLock.tryLock()) return
+        router.post('/investments', {
+            instrumentKey: inst.key,
+            amount: toNumberString(data.amount),
+            months: data.months,
+            monthly: toNumberString(data.monthly),
+            ipca: data.ipca,
+        }, { preserveScroll: true, onFinish: saveLock.unlock })
     }
 
     function setPresetMonths(months) {
@@ -130,9 +155,11 @@ export default function Investments({ inputs, marketRates, instruments, history 
                     </h2>
 
                     <form onSubmit={submit} className="space-y-4">
-                        {(errors.amount || errors.months || errors.monthly || errors.ipca) && (
+                        {Object.keys(errors).length > 0 && (
                             <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-400" role="alert">
-                                {errors.amount || errors.months || errors.monthly || errors.ipca}
+                                <ul className="list-disc list-inside space-y-0.5">
+                                    {Object.values(errors).map((err, i) => <li key={i}>{err}</li>)}
+                                </ul>
                             </div>
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -140,14 +167,14 @@ export default function Investments({ inputs, marketRates, instruments, history 
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                                     Valor inicial (R$)
                                 </label>
-                                <Input
-                                    type="number"
-                                    min="1"
-                                    max="10000000"
-                                    step="0.01"
+                                <MoneyInput
+                                    label={null}
                                     value={data.amount}
                                     onChange={e => setData('amount', e.target.value)}
+                                    min={1}
+                                    max={10000000}
                                     required
+                                    error={errors.amount}
                                 />
                             </div>
 
@@ -155,13 +182,13 @@ export default function Investments({ inputs, marketRates, instruments, history 
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                                     Aporte mensal (R$)
                                 </label>
-                                <Input
-                                    type="number"
-                                    min="0"
-                                    max="1000000"
-                                    step="0.01"
+                                <MoneyInput
+                                    label={null}
                                     value={data.monthly}
                                     onChange={e => setData('monthly', e.target.value)}
+                                    min={0}
+                                    max={1000000}
+                                    error={errors.monthly}
                                 />
                             </div>
 
@@ -213,7 +240,7 @@ export default function Investments({ inputs, marketRates, instruments, history 
                         </div>
 
                         <div className="flex justify-end pt-2">
-                            <Button type="submit" variant="primary" size="sm" disabled={processing}>
+                            <Button type="submit" variant="primary" size="sm" disabled={processing || simLock.locked}>
                                 {processing ? 'Calculando…' : 'Simular'}
                             </Button>
                         </div>
@@ -294,13 +321,8 @@ export default function Investments({ inputs, marketRates, instruments, history 
                                         variant="outline"
                                         size="sm"
                                         className="w-full"
-                                        onClick={() => router.post('/investments', {
-                                            instrumentKey: inst.key,
-                                            amount: data.amount,
-                                            months: data.months,
-                                            monthly: data.monthly,
-                                            ipca: data.ipca,
-                                        }, { preserveScroll: true })}
+                                        disabled={saveLock.locked}
+                                        onClick={() => saveSimulation(inst)}
                                     >
                                         Salvar no histórico
                                     </Button>

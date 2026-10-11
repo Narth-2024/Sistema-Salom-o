@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 function formatBR(value) {
-    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+    return Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
 function parseDate(dateStr) {

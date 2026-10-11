@@ -123,6 +123,8 @@ class TransactionController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->normalizeDecimals($request, ['amount']);
+
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:income,expense',
@@ -182,6 +184,8 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction): RedirectResponse
     {
         $this->authorize('update', $transaction);
+
+        $this->normalizeDecimals($request, ['amount']);
 
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',

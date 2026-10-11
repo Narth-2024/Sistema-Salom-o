@@ -13,6 +13,8 @@ class InvestmentForecastController extends Controller
 {
     public function index(Request $request, InvestmentForecastService $service): Response
     {
+        $this->normalizeDecimals($request, ['amount', 'monthly', 'ipca']);
+
         $validated = $request->validate([
             'amount' => ['sometimes', 'numeric', 'min:1', 'max:10000000'],
             'months' => ['sometimes', 'integer', 'min:1', 'max:120'],
@@ -60,6 +62,8 @@ class InvestmentForecastController extends Controller
 
     public function store(Request $request, InvestmentForecastService $service): RedirectResponse
     {
+        $this->normalizeDecimals($request, ['amount', 'monthly', 'ipca']);
+
         $validated = $request->validate([
             'instrumentKey' => ['required', 'string', 'max:40'],
             'amount' => ['required', 'numeric', 'min:1', 'max:10000000'],

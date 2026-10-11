@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Select, TagPicker } from '@/Components'
+import { Card, Button, Input, MoneyInput, Select, TagPicker } from '@/Components'
+import useSubmitLock from '@/hooks/useSubmitLock'
+import { toNumberString } from '@/lib/decimal'
 import { ArrowLeft, Plus, AlertTriangle, RefreshCcw } from 'lucide-react'
 
 export default function TransactionsCreate({ categories, tags }) {
@@ -13,10 +15,15 @@ export default function TransactionsCreate({ categories, tags }) {
         is_recurring: false,
         tag_ids: [],
     })
+    const submitLock = useSubmitLock()
 
     function handleSubmit(e) {
         e.preventDefault()
-        post('/transactions')
+        if (!submitLock.tryLock()) return
+        post('/transactions', {
+            data: { ...data, amount: toNumberString(data.amount) },
+            onFinish: submitLock.unlock,
+        })
     }
 
     const filteredCategories = categories.filter(c => c.type === data.type)
@@ -72,16 +79,13 @@ export default function TransactionsCreate({ categories, tags }) {
                                 ))}
                             </Select>
 
-                            <Input
-                                label="Valor (R$)"
-                                type="number"
-                                step="0.01"
-                                min="0.01"
-                                max="99999999.99"
+                            <MoneyInput
                                 value={data.amount}
                                 onChange={e => setData('amount', e.target.value)}
                                 required
-                                placeholder="0,00"
+                                min={0.01}
+                                max={99999999.99}
+                                error={errors.amount}
                             />
 
                             <Input
@@ -128,7 +132,7 @@ export default function TransactionsCreate({ categories, tags }) {
                         </label>
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-border">
-                            <Button type="submit" variant="primary" disabled={processing} className="flex-1 sm:flex-none">
+                            <Button type="submit" variant="primary" disabled={processing || submitLock.locked} className="flex-1 sm:flex-none">
                                 <Plus className="w-4 h-4" />
                                 Registrar transação
                             </Button>

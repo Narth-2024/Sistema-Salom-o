@@ -1,22 +1,29 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Select, TagPicker } from '@/Components'
+import { Card, Button, Input, MoneyInput, Select, TagPicker } from '@/Components'
+import useSubmitLock from '@/hooks/useSubmitLock'
+import { toNumberString, formatForInput } from '@/lib/decimal'
 import { ArrowLeft, Save, AlertTriangle, RefreshCcw } from 'lucide-react'
 
 export default function TransactionsEdit({ transaction, categories, tags }) {
     const { data, setData, put, processing, errors } = useForm({
         type: transaction.type,
         category_id: transaction.category_id,
-        amount: transaction.amount,
+        amount: formatForInput(transaction.amount),
         transaction_date: transaction.transaction_date,
         description: transaction.description || '',
         is_recurring: transaction.is_recurring || false,
         tag_ids: (transaction.tags || []).map(t => t.id),
     })
+    const submitLock = useSubmitLock()
 
     function handleSubmit(e) {
         e.preventDefault()
-        put(`/transactions/${transaction.id}`)
+        if (!submitLock.tryLock()) return
+        put(`/transactions/${transaction.id}`, {
+            data: { ...data, amount: toNumberString(data.amount) },
+            onFinish: submitLock.unlock,
+        })
     }
 
     const filteredCategories = categories.filter(c => c.type === data.type)
@@ -85,16 +92,13 @@ export default function TransactionsEdit({ transaction, categories, tags }) {
                                 ))}
                             </Select>
 
-                            <Input
-                                label="Valor (R$)"
-                                type="number"
-                                step="0.01"
-                                min="0.01"
-                                max="99999999.99"
+                            <MoneyInput
                                 value={data.amount}
                                 onChange={e => setData('amount', e.target.value)}
                                 required
-                                placeholder="0,00"
+                                min={0.01}
+                                max={99999999.99}
+                                error={errors.amount}
                             />
 
                             <Input
@@ -141,7 +145,7 @@ export default function TransactionsEdit({ transaction, categories, tags }) {
                         </label>
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-border">
-                            <Button type="submit" variant="primary" disabled={processing} className="flex-1 sm:flex-none">
+                            <Button type="submit" variant="primary" disabled={processing || submitLock.locked} className="flex-1 sm:flex-none">
                                 <Save className="w-4 h-4" />
                                 Salvar alterações
                             </Button>
