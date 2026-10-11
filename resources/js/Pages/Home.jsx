@@ -1,5 +1,89 @@
 import { Head, Link } from '@inertiajs/react'
 import { Coins } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+
+const METRICS = [
+    { value: '6', label: 'Investimentos comparados: Poupança, CDB, Tesouro e mais' },
+    { value: 'BACEN', label: 'Taxas oficiais de CDI e IPCA do Banco Central' },
+    { value: '4', label: 'Períodos de análise: 3 meses, 6 meses, 12 meses ou tudo' },
+    { value: 'Automático', label: 'Transações recorrentes replicadas todo mês' },
+    { value: '1 clique', label: 'Exporte seu histórico em CSV com os filtros que quiser' },
+    { value: 'App', label: 'Instalável no celular, com acesso offline' },
+]
+
+function MetricsCarousel() {
+    const [index, setIndex] = useState(0)
+    const [state, setState] = useState('visible') // visible | leaving | entering
+    const timerRef = useRef(null)
+
+    function scheduleNext(delay = 3200) {
+        clearTimeout(timerRef.current)
+        timerRef.current = setTimeout(() => {
+            setState('leaving')
+            timerRef.current = setTimeout(() => {
+                setIndex(i => (i + 1) % METRICS.length)
+                setState('entering')
+            }, 400) // duração do fade-out/slide
+        }, delay)
+    }
+
+    useEffect(() => {
+        scheduleNext()
+        return () => clearTimeout(timerRef.current)
+    }, [])
+
+    useEffect(() => {
+        if (state === 'entering') {
+            const raf = requestAnimationFrame(() => setState('visible'))
+            scheduleNext()
+            return () => cancelAnimationFrame(raf)
+        }
+    }, [state])
+
+    function goTo(i) {
+        if (i === index && state === 'visible') return
+        clearTimeout(timerRef.current)
+        setState('leaving')
+        setTimeout(() => {
+            setIndex(i)
+            setState('entering')
+        }, 400)
+    }
+
+    const metric = METRICS[index]
+    const transform =
+        state === 'leaving' ? '-translate-x-16 opacity-0' :
+        state === 'entering' ? 'translate-x-16 opacity-0' :
+        'translate-x-0 opacity-100'
+
+    return (
+        <section className="relative py-16 lg:py-20 bg-surface border-y border-border overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="relative h-28 sm:h-24 flex items-center justify-center">
+                    <div
+                        key={index}
+                        className={`text-center w-full transition-all duration-[400ms] ease-in-out ${transform}`}
+                    >
+                        <p className="text-4xl lg:text-5xl font-extrabold text-accent-text">{metric.value}</p>
+                        <p className="text-sm text-gray-500 mt-2 max-w-md mx-auto">{metric.label}</p>
+                    </div>
+                </div>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                    {METRICS.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => goTo(i)}
+                            aria-label={`Métrica ${i + 1}`}
+                            className={`rounded-full transition-all duration-300 cursor-pointer ${
+                                i === index ? 'w-6 h-2 bg-primary' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+                            }`}
+                        />
+                    ))}
+                </div>
+            </div>
+        </section>
+    )
+}
 
 export default function Home() {
     return (
@@ -125,37 +209,8 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* MÉTRICAS */}
-            <section className="relative py-16 lg:py-20 bg-surface border-y border-border">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-12">
-                        <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">6</p>
-                            <p className="text-sm text-gray-500 mt-1">Investimentos comparados: Poupança, CDB, Tesouro e mais</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">BACEN</p>
-                            <p className="text-sm text-gray-500 mt-1">Taxas oficiais de CDI e IPCA do Banco Central</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">4</p>
-                            <p className="text-sm text-gray-500 mt-1">Períodos de análise: 3 meses, 6 meses, 12 meses ou tudo</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">Automático</p>
-                            <p className="text-sm text-gray-500 mt-1">Transações recorrentes replicadas todo mês</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">1 clique</p>
-                            <p className="text-sm text-gray-500 mt-1">Exporte seu histórico em CSV com os filtros que quiser</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-3xl lg:text-4xl font-extrabold text-accent-text">App</p>
-                            <p className="text-sm text-gray-500 mt-1">Instalável no celular, com acesso offline</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* MÉTRICAS — carrossel */}
+            <MetricsCarousel />
 
             {/* RECURSOS */}
             <section id="recursos" className="relative py-20 lg:py-28">
