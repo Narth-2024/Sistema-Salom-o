@@ -1,7 +1,7 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, Badge, Pagination, ConfirmDialog } from '@/Components'
-import { Plus, Trash2, Hash, Palette } from 'lucide-react'
+import { Card, Button, Input, Select, Badge, Pagination, ConfirmDialog } from '@/Components'
+import { Plus, Trash2, Hash, Palette, ArrowUpDown } from 'lucide-react'
 import { useState } from 'react'
 
 const presetColors = [
@@ -10,9 +10,17 @@ const presetColors = [
     '#06b6d4', '#3b82f6',
 ]
 
-export default function TagsIndex({ tags }) {
+export default function TagsIndex({ tags, sort = 'name', direction = 'asc' }) {
     const items = tags.data || tags
     const meta = tags.meta || null
+
+    function handleSort(value) {
+        const [nextSort, nextDirection] = value.split(':')
+        router.get('/tags', { sort: nextSort, direction: nextDirection }, {
+            preserveState: true,
+            preserveScroll: true,
+        })
+    }
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -58,10 +66,24 @@ export default function TagsIndex({ tags }) {
             <Head title="Tags" />
 
             <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-                <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="tags-header">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8" data-tour="tags-header">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Tags</h1>
                         <p className="text-gray-500 mt-1">Adicione rótulos às suas transações para organizar melhor.</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <ArrowUpDown className="w-4 h-4 text-gray-400" />
+                        <Select
+                            value={`${sort}:${direction}`}
+                            onChange={e => handleSort(e.target.value)}
+                            className="w-48"
+                            aria-label="Ordenar tags"
+                        >
+                            <option value="name:asc">Nome (A–Z)</option>
+                            <option value="name:desc">Nome (Z–A)</option>
+                            <option value="transactions_count:desc">Mais usadas</option>
+                            <option value="transactions_count:asc">Menos usadas</option>
+                        </Select>
                     </div>
                 </div>
 

@@ -86,6 +86,13 @@ function MetricsCarousel() {
 }
 
 export default function Home() {
+    useEffect(() => {
+        const root = document.documentElement
+        const hadLight = root.classList.contains('light')
+        root.classList.add('light')
+        return () => { if (!hadLight) root.classList.remove('light') }
+    }, [])
+
     return (
         <>
             <Head title="Salomão - Controle Financeiro Inteligente" />
@@ -218,7 +225,7 @@ export default function Home() {
                     <div className="text-center max-w-2xl mx-auto mb-16">
                         <span className="text-xs font-semibold text-accent-text bg-green-100 px-4 py-1.5 rounded-full inline-block mb-4">Recursos</span>
                         <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Tudo que você precisa para<br/>organizar suas finanças</h2>
-                        <p className="text-gray-500/70">Ferramentas simples e eficientes para você ter controle total do seu dinheiro.</p>
+                        <p className="text-gray-500">Ferramentas simples e eficientes para você ter controle total do seu dinheiro.</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
@@ -274,7 +281,7 @@ export default function Home() {
                     <div className="text-center max-w-2xl mx-auto mb-16">
                         <span className="text-xs font-semibold text-accent-text bg-green-100 px-4 py-1.5 rounded-full inline-block mb-4">Como funciona</span>
                         <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Comece em 3 passos</h2>
-                        <p className="text-gray-500/70">Rápido e sem complicação.</p>
+                        <p className="text-gray-500">Rápido e sem complicação.</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8 lg:gap-12">

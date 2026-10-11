@@ -35,6 +35,19 @@ export default function TransactionsEdit({ transaction, categories, tags }) {
                     <p className="text-gray-500 mt-1">Altere os dados da transação #{transaction.id}.</p>
                 </div>
 
+                {transaction.is_recurring && (
+                    <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex items-start gap-3">
+                        <RefreshCcw className="w-5 h-5 text-accent-text shrink-0 mt-0.5" />
+                        <div>
+                            <p className="text-sm font-semibold text-gray-800">Transação recorrente</p>
+                            <p className="text-sm text-gray-500 mt-0.5">
+                                Esta transação faz parte de uma série recorrente e é replicada automaticamente todo mês.
+                                Alterações aqui valem apenas para esta ocorrência.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 {Object.keys(errors).length > 0 && (
                     <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 flex items-start gap-3">
                         <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />

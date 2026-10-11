@@ -1,7 +1,7 @@
 import { Head, Link, useForm, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Button, Input, Select, Badge, Pagination, ConfirmDialog } from '@/Components'
-import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, Tags, FolderOpen } from 'lucide-react'
+import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, Tags, FolderOpen, ArrowUpDown } from 'lucide-react'
 import { useState } from 'react'
 
 const presetColors = [
@@ -10,10 +10,18 @@ const presetColors = [
     '#06b6d4', '#3b82f6', '#8b6fe0', '#f87171',
 ]
 
-export default function CategoriesIndex({ categories }) {
+export default function CategoriesIndex({ categories, sort = 'name', direction = 'asc' }) {
     const items = categories.data || categories
     const meta = categories.meta || null
     const [deleteTarget, setDeleteTarget] = useState(null)
+
+    function handleSort(value) {
+        const [nextSort, nextDirection] = value.split(':')
+        router.get('/categories', { sort: nextSort, direction: nextDirection }, {
+            preserveState: true,
+            preserveScroll: true,
+        })
+    }
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -40,6 +48,22 @@ export default function CategoriesIndex({ categories }) {
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Categorias</h1>
                         <p className="text-gray-500 mt-1">Organize suas receitas e despesas em categorias.</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <ArrowUpDown className="w-4 h-4 text-gray-400" />
+                        <Select
+                            value={`${sort}:${direction}`}
+                            onChange={e => handleSort(e.target.value)}
+                            className="w-48"
+                            aria-label="Ordenar categorias"
+                        >
+                            <option value="name:asc">Nome (A–Z)</option>
+                            <option value="name:desc">Nome (Z–A)</option>
+                            <option value="type:asc">Tipo (receitas primeiro)</option>
+                            <option value="type:desc">Tipo (despesas primeiro)</option>
+                            <option value="transactions_count:desc">Mais transações</option>
+                            <option value="transactions_count:asc">Menos transações</option>
+                        </Select>
                     </div>
                 </div>
 

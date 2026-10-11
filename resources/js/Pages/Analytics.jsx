@@ -25,6 +25,21 @@ function formatCompactBRL(value) {
     return `${sign}R$ ${abs.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`
 }
 
+function monthRange(month) {
+    const [y, m] = month.split('-').map(Number)
+    const lastDay = new Date(y, m, 0).getDate()
+    const pad = n => String(n).padStart(2, '0')
+    return {
+        date_from: `${month}-01`,
+        date_to: `${month}-${pad(lastDay)}`,
+    }
+}
+
+function goToMonth(month) {
+    if (!month) return
+    router.visit('/transactions', monthRange(month))
+}
+
 const FALLBACK_CAT_COLORS = ['#f97316', '#8b5cf6', '#f59e0b', '#ec4899', '#14b8a6', '#6366f1', '#3ecf8e']
 
 function currencyTicks(c) {
@@ -166,6 +181,13 @@ export default function Analytics({
                         maintainAspectRatio: false,
                         animation: baseAnim,
                         interaction: { intersect: false, mode: 'index' },
+                        onHover: (evt, elements) => {
+                            evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'
+                        },
+                        onClick: (evt, elements) => {
+                            if (!elements.length) return
+                            goToMonth(barChart[elements[0].index]?.month)
+                        },
                         plugins: {
                             legend: legendOpts(c),
                             tooltip: currencyTooltip,
@@ -205,6 +227,13 @@ export default function Analytics({
                         maintainAspectRatio: false,
                         animation: baseAnim,
                         interaction: { intersect: false, mode: 'index' },
+                        onHover: (evt, elements) => {
+                            evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'
+                        },
+                        onClick: (evt, elements) => {
+                            if (!elements.length) return
+                            goToMonth(barChart[elements[0].index]?.month)
+                        },
                         plugins: {
                             legend: { display: false },
                             tooltip: currencyTooltip,
@@ -482,20 +511,26 @@ export default function Analytics({
                 ) : (
                     <>
                         <Card className="mb-8" data-tour="an-bars">
-                            <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                <BarChart3 className="w-5 h-5 text-accent-text" />
-                                Receitas vs Despesas por mês
-                            </h2>
+                            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                                <h2 className="text-base font-semibold text-gray-800 flex items-center gap-2">
+                                    <BarChart3 className="w-5 h-5 text-accent-text" />
+                                    Receitas vs Despesas por mês
+                                </h2>
+                                <span className="text-xs text-gray-500">Clique em um mês para ver as transações</span>
+                            </div>
                             <div className="w-full" style={{ height: 300 }}>
                                 <canvas ref={barRef} />
                             </div>
                         </Card>
 
                         <Card className="mb-8" data-tour="an-balance">
-                            <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                <Wallet className="w-5 h-5 text-accent-text" />
-                                Saldo por mês
-                            </h2>
+                            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                                <h2 className="text-base font-semibold text-gray-800 flex items-center gap-2">
+                                    <Wallet className="w-5 h-5 text-accent-text" />
+                                    Saldo por mês
+                                </h2>
+                                <span className="text-xs text-gray-500">Clique em um mês para ver as transações</span>
+                            </div>
                             <div className="w-full" style={{ height: 260 }}>
                                 <canvas ref={balanceRef} />
                             </div>

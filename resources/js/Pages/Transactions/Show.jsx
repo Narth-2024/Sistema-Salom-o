@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
 import { Card, Badge, Button } from '@/Components'
-import { Edit2, Trash2, ArrowLeft, TrendingUp, TrendingDown, CalendarDays, Clock, Tag } from 'lucide-react'
+import { Edit2, Trash2, ArrowLeft, TrendingUp, TrendingDown, CalendarDays, Clock, Tag, RefreshCcw } from 'lucide-react'
 
 function formatBR(value) {
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -49,9 +49,17 @@ export default function TransactionsShow({ transaction }) {
                             </div>
                             <div>
                                 <h1 className="text-2xl font-bold text-gray-800">Transação #{transaction.id}</h1>
-                                <Badge variant={transaction.type === 'income' ? 'income' : 'expense'} className="mt-1">
-                                    {transaction.type === 'income' ? 'Receita' : 'Despesa'}
-                                </Badge>
+                                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                    <Badge variant={transaction.type === 'income' ? 'income' : 'expense'}>
+                                        {transaction.type === 'income' ? 'Receita' : 'Despesa'}
+                                    </Badge>
+                                    {transaction.is_recurring && (
+                                        <Badge variant="default">
+                                            <RefreshCcw className="w-3 h-3 mr-1" />
+                                            Recorrente
+                                        </Badge>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         <div className="flex items-center gap-2">

@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title inertia>Sistema Salomão</title>
+    <meta name="description" content="Salomão — controle financeiro inteligente. Organize transações, categorias, tags e acompanhe seus investimentos com relatórios claros no celular ou no computador.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Salomão">
+    <meta property="og:title" content="Salomão — Controle Financeiro Inteligente">
+    <meta property="og:description" content="Organize transações, categorias e tags, acompanhe investimentos e tenha relatórios claros da sua vida financeira.">
+    <meta property="og:url" content="https://sistema-salom-o.vercel.app/">
+    <meta property="og:image" content="https://sistema-salom-o.vercel.app/icon-512.png">
+    <meta property="og:image:alt" content="Salomão — Controle Financeiro Inteligente">
+    <meta property="og:locale" content="pt_BR">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Salomão — Controle Financeiro Inteligente">
+    <meta name="twitter:description" content="Organize transações, categorias e tags, acompanhe investimentos e tenha relatórios claros da sua vida financeira.">
+    <meta name="twitter:image" content="https://sistema-salom-o.vercel.app/icon-512.png">
     <link rel="manifest" href="/manifest.webmanifest">
     <meta name="theme-color" content="#3ecf8e">
     <link rel="icon" href="/favicon.ico" sizes="any">

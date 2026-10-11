@@ -10,15 +10,26 @@ use Inertia\Response;
 
 class CategoryController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        $categories = $user->categories()->paginate(18);
+        $sort = in_array($request->query('sort'), ['name', 'type', 'transactions_count'], true)
+            ? $request->query('sort')
+            : 'name';
+        $direction = $request->query('direction') === 'desc' ? 'desc' : 'asc';
+
+        $categories = $user->categories()
+            ->withCount('transactions')
+            ->orderBy($sort, $direction)
+            ->paginate(18)
+            ->withQueryString();
 
         return Inertia::render('Categories/Index', [
             'categories' => $categories,
+            'sort' => $sort,
+            'direction' => $direction,
         ]);
     }
 

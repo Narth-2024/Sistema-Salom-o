@@ -10,15 +10,26 @@ use Inertia\Response;
 
 class TagController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        $tags = $user->tags()->withCount('transactions')->paginate(20);
+        $sort = in_array($request->query('sort'), ['name', 'transactions_count'], true)
+            ? $request->query('sort')
+            : 'name';
+        $direction = $request->query('direction') === 'desc' ? 'desc' : 'asc';
+
+        $tags = $user->tags()
+            ->withCount('transactions')
+            ->orderBy($sort, $direction)
+            ->paginate(20)
+            ->withQueryString();
 
         return Inertia::render('Tags/Index', [
             'tags' => $tags,
+            'sort' => $sort,
+            'direction' => $direction,
         ]);
     }
 
