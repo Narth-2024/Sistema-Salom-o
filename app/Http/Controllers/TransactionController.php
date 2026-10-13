@@ -3,24 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TransactionController extends Controller
 {
-    private function filteredQuery(Request $request): \Illuminate\Database\Eloquent\Relations\Relation
+    /**
+     * Garante que a categoria/tag exista E pertença ao usuário autenticado,
+     * impedindo que um usuário referencie registros de outro usuário.
+     */
+    private function belongsToUserRule(string $table, User $user): Exists
     {
-        /** @var \App\Models\User $user */
+        return Rule::exists($table, 'id')->where('user_id', $user->id);
+    }
+
+    private function filteredQuery(Request $request): Relation
+    {
+        /** @var User $user */
         $user = auth()->user();
 
         $query = $user->transactions()->with('category', 'tags');
 
-        // Filtro por descrição
+        // Filtro por descrição (case-insensitive; sqlite não suporta ilike)
         if ($search = $request->query('search')) {
-            $query->where('description', 'ilike', "%{$search}%");
+            $operator = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where('description', $operator, "%{$search}%");
         }
 
         // Filtro por tipo
@@ -67,7 +82,7 @@ class TransactionController extends Controller
         $perPage = min((int) $request->query('per_page', 15), 50);
         $transactions = $query->paginate($perPage)->withQueryString();
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $categories = $user->categories()->get();
         $tags = $user->tags()->get();
@@ -109,7 +124,7 @@ class TransactionController extends Controller
 
     public function create(): Response
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
 
         $categories = $user->categories()->get();
@@ -125,19 +140,19 @@ class TransactionController extends Controller
     {
         $this->normalizeDecimals($request, ['amount']);
 
+        /** @var User $user */
+        $user = auth()->user();
+
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => ['required', $this->belongsToUserRule('categories', $user)],
             'type' => 'required|in:income,expense',
             'amount' => 'required|numeric|min:0.01|max:99999999.99',
             'description' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
             'is_recurring' => 'nullable|boolean',
             'tag_ids' => 'nullable|array',
-            'tag_ids.*' => 'exists:tags,id',
+            'tag_ids.*' => $this->belongsToUserRule('tags', $user),
         ]);
-
-        /** @var \App\Models\User $user */
-        $user = auth()->user();
 
         $transaction = $user->transactions()->create(
             Arr::except($validated, ['tag_ids'])
@@ -166,7 +181,7 @@ class TransactionController extends Controller
     {
         $this->authorize('update', $transaction);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
 
         $categories = $user->categories()->get();
@@ -187,15 +202,18 @@ class TransactionController extends Controller
 
         $this->normalizeDecimals($request, ['amount']);
 
+        /** @var User $user */
+        $user = auth()->user();
+
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => ['required', $this->belongsToUserRule('categories', $user)],
             'type' => 'required|in:income,expense',
             'amount' => 'required|numeric|min:0.01|max:99999999.99',
             'description' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
             'is_recurring' => 'nullable|boolean',
             'tag_ids' => 'nullable|array',
-            'tag_ids.*' => 'exists:tags,id',
+            'tag_ids.*' => $this->belongsToUserRule('tags', $user),
         ]);
 
         $transaction->update(

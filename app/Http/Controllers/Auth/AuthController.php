@@ -39,9 +39,11 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Email é case-insensitive (RFC 5321): normaliza a entrada para que
-        // "User@X.com" e "user@x.com" caiam na mesma conta.
-        $credentials['email'] = strtolower(trim($credentials['email']));
+        // Email é case-insensitive (RFC 5321). Resolve o email como está
+        // armazenado antes do Auth::attempt, que compara de forma case-sensitive:
+        // assim "User@X.com", "user@x.com" e a forma salva caem na mesma conta.
+        $email = strtolower(trim($credentials['email']));
+        $credentials['email'] = User::whereRaw('lower(email) = ?', [$email])->value('email') ?? $email;
 
         if (! Auth::attempt($credentials)) {
             throw ValidationException::withMessages([

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -36,7 +37,14 @@ class TagController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:50|unique:tags,name,' . auth()->id() . ',user_id',
+            // O nome é único DENTRO do usuário: não pode repetir nas suas tags,
+            // mas pode coincidir com a tag de outra pessoa.
+            'name' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('tags', 'name')->where('user_id', auth()->id()),
+            ],
             'color' => 'required|string|size:7',
         ]);
 

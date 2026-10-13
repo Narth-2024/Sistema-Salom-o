@@ -43,12 +43,17 @@ class AnalyticsController extends Controller
         $months = collect(range(0, (int) $startDate->diffInMonths(now())))
             ->map(fn ($i) => $startDate->copy()->addMonths($i)->format('Y-m'));
 
+        // TO_CHAR é exclusivo do Postgres; sqlite usa strftime.
+        $monthExpression = DB::connection()->getDriverName() === 'pgsql'
+            ? "TO_CHAR(transaction_date, 'YYYY-MM')"
+            : "strftime('%Y-%m', transaction_date)";
+
         $monthlyData = $user->transactions()
-            ->selectRaw("TO_CHAR(transaction_date, 'YYYY-MM') as month")
+            ->selectRaw("{$monthExpression} as month")
             ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income")
             ->selectRaw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense")
             ->where('transaction_date', '>=', Carbon::createFromFormat('Y-m', $months->first())->startOfMonth())
-            ->groupBy(DB::raw("TO_CHAR(transaction_date, 'YYYY-MM')"))
+            ->groupBy(DB::raw($monthExpression))
             ->orderBy('month')
             ->get()
             ->keyBy('month');

@@ -295,7 +295,7 @@ Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em
 | Layout Responsivo | Feito |
 | Campo CPF (coluna no banco) | Coluna pronta, UI pendente |
 | Subcategorias | Não iniciado |
-| Testes automatizados | Não iniciado |
+| Testes automatizados | Feito — 76 testes de feature |
 
 ---
 
@@ -315,6 +315,11 @@ Para checar localmente antes de enviar:
 vendor/bin/pint      # formata o código
 php artisan test     # roda os testes
 ```
+
+Os testes de **feature** rodam em SQLite (`:memory:`) e cobrem: fluxo de autenticação
+(login, cadastro e recuperação de senha), autorização entre usuários (um usuário não
+vê/edita registros de outro), transações (criação, edição, soft delete, restauração,
+exportação CSV e busca), categorias, tags, dashboard, analytics e investimentos.
 
 ---
 
