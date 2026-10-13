@@ -68,7 +68,8 @@ Cadastre em `Settings → Environment Variables` (ou via CLI):
 | `FILESYSTEM_DISK` | `local` | uploads vão para o Supabase Storage |
 | `CLERK_PUBLISHABLE_KEY` | `pk_test_...` | |
 | `CLERK_SECRET_KEY` | `sk_test_...` | secret |
-| `CLERK_FRONTEND_API_URL` | `https://worthy-louse-58.clerk.accounts.dev` | |
+| `CLERK_FRONTEND_API_URL` | `https://worthy-louse-58.clerk.accounts.dev` | usado como `iss` na validação do JWT |
+| `CLERK_AUTHORIZED_PARTY` | `https://sistema-salom-o.vercel.app` | valor do claim `azp` aceito |
 | `CLERK_WEBHOOK_SECRET` | `whsec_...` | secret — signing secret do Svix |
 | `SUPABASE_URL` | `https://nozlarpehjgalsvwtwlj.supabase.co` | |
 | `SUPABASE_SERVICE_KEY` | JWT `eyJ...` (**service_role**) | secret |
@@ -129,13 +130,28 @@ PostgREST `PGRST301 Expected 3 parts in JWT`.
 
 ## 6. Clerk
 
+O login é feito pelos widgets `<SignIn/>` e `<SignUp/>` (SDK `@clerk/react`),
+dentro do `AuthShell` do sistema. Depois que o Clerk autentica no frontend, a
+página `/auth/clerk-callback` troca o session token do Clerk por uma sessão do
+Laravel.
+
+**A identidade vem do claim `sub` de um JWT cuja assinatura é conferida contra
+o JWKS da instância** (`app/Services/ClerkTokenValidator.php`), junto com `iss`
+e `azp`. Nada de identidade declarada no corpo da requisição.
+
 ### 6.1. Redirect URLs
 
 Dashboard → **Sessions → Redirect URLs**:
 
 ```
 https://sistema-salom-o.vercel.app/*
+http://localhost:8000/*
+http://localhost:5173/*
 ```
+
+O `azp` do token precisa bater com `CLERK_AUTHORIZED_PARTY` (em teste, com
+`APP_URL` e as origens de localhost). Se o Clerk emitir o token com outra
+origem, o login volta `401`.
 
 ### 6.2. Webhook (Svix)
 
@@ -151,6 +167,22 @@ endpoints, só `POST /webhooks/svix_url` para gerar o link do dashboard):
 
 A rota valida a assinatura Svix (`svix-id`/`svix-timestamp`/`svix-signature`);
 assinatura inválida → `401 {"error":"Invalid signature"}`.
+
+`user.created` e `user.updated` passam por `App\Services\ClerkUserSync`, que
+**vincula o `clerk_id` à conta local que já tem aquele e-mail** em vez de criar
+uma duplicata. É o que torna segura a migração de contas que já existiam.
+
+### 6.3. Migrando contas que já existiam no banco
+
+```bash
+php artisan clerk:import-users --dry-run   # mostra quem seria importado
+php artisan clerk:import-users             # cria no Clerk e grava o clerk_id
+```
+
+O endpoint de criação de usuários do Clerk marca o e-mail como **verificado**
+por padrão, então cada pessoa já pode entrar em `/login` → "Esqueci a senha" e
+definir a própria senha. O e-mail é enviado pela infraestrutura do próprio
+Clerk — não é preciso SMTP configurado no projeto.
 
 ---
 

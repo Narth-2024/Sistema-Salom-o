@@ -1,8 +1,9 @@
-import { Link, router, usePage } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import {
     LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash,
     Settings, LogOut, ChevronLeft, ChevronRight, Coins, PiggyBank,
 } from 'lucide-react'
+import useLogout from '@/hooks/useLogout'
 
 const navLinks = [
     { href: '/dashboard', label: 'Início', icon: LayoutDashboard },
@@ -15,18 +16,11 @@ const navLinks = [
 
 export default function Sidebar({ collapsed, onToggle }) {
     const { url } = usePage()
+    const handleLogout = useLogout()
 
     function isActive(href) {
         if (href === '/dashboard') return url === '/dashboard'
         return url.startsWith(href)
-    }
-
-    function handleLogout() {
-        router.post('/logout', {}, {
-            onFinish: () => {
-                window.location.href = '/'
-            },
-        })
     }
 
     return (

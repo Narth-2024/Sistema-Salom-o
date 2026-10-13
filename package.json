@@ -9,6 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@clerk/react": "^6.17.8",
     "@inertiajs/react": "^3.4.0",
     "@supabase/supabase-js": "^2.101.1",
     "@tailwindcss/vite": "^4.2.1",

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ClerkCallbackController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvestmentForecastController;
@@ -22,15 +23,17 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'timestamp' => now()->toIso8601String()]);
 });
 
-// Rotas de autenticação
+// Ponte entre a sessão do Clerk (frontend) e a sessão do Laravel.
+// A identidade vem do claim `sub` de um JWT verificado, nunca do corpo.
+Route::get('/auth/clerk-callback', [ClerkCallbackController::class, 'show'])
+    ->middleware('guest')
+    ->name('clerk.callback');
+
+Route::post('/auth/clerk-exchange', [ClerkCallbackController::class, 'exchange']);
+
+// Rotas de autenticação — o login/cadastro são feitos pelo Clerk.
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.attempt');
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
-Route::post('/password/recovery', [AuthController::class, 'resetWithRecoveryCode'])->name('password.recovery');
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Cron do Vercel: cria transações recorrentes do mês
@@ -61,8 +64,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('transactions', TransactionController::class);
     Route::post('/transactions/{transaction}/restore', [TransactionController::class, 'restore'])->withTrashed()->name('transactions.restore');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-    Route::get('/recovery-codes', [AuthController::class, 'showRecoveryCodes'])->name('recovery-codes.show');
-    Route::post('/settings/recovery-codes', [AuthController::class, 'regenerateRecoveryCodes'])->name('settings.recovery-codes.regenerate');
     Route::post('/settings/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
     Route::post('/settings/password', [ProfileController::class, 'updatePassword'])->name('settings.password.update');
     Route::delete('/settings/profile', [ProfileController::class, 'destroy'])->name('settings.profile.destroy');

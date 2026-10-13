@@ -40,14 +40,14 @@
 
 **Sistema Salomão** é uma aplicação web de **controle financeiro pessoal**. O usuário registra entradas e saídas, organiza por categorias e tags, acompanha o saldo e a evolução do patrimônio por meio de um painel com gráficos, além de simular o rendimento de investimentos.
 
-Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no frontend e **Tailwind CSS v4**. A autenticação é feita pela **sessão nativa do Laravel** (e-mail/senha + recuperação por códigos), e os dados ficam no **PostgreSQL do Supabase**. É um projeto acadêmico (TCC) e roda em produção na **Vercel**.
+Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no frontend e **Tailwind CSS v4**. A autenticação é feita pelo **Clerk** (widgets de login/cadastro) com troca de sessão para o **Laravel**, e os dados ficam no **PostgreSQL do Supabase**. É um projeto acadêmico (TCC) e roda em produção na **Vercel**.
 
 ---
 
 ## Funcionalidades
 
-- **Autenticação nativa** — cadastro, login, esqueci/redefinir senha e logout, via sessão do Laravel
-- **Recuperação sem e-mail** — 8 códigos de uso único gerados no cadastro, o que dispensa provedor de e-mail
+- **Autenticação via Clerk** — login e cadastro pelos widgets do Clerk, com tema do sistema; a sessão é trocada por uma do Laravel em `/auth/clerk-callback`
+- **Recuperação de senha sem SMTP** — "esqueci a senha" é resolvido pela infraestrutura de e-mail do próprio Clerk
 - **Painel (Dashboard)** — cards de receita, despesa e saldo, com filtro por período e quebra de despesas por categoria
 - **Analytics** — gráficos de barras mensais, linha de saldo acumulado e comparação entre períodos (Chart.js)
 - **Investimentos** — simulador que compara aplicações (Poupança, CDB, Tesouro etc.) com taxas oficiais de CDI/IPCA
@@ -75,7 +75,7 @@ Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no f
 | **Backend** | Laravel 10.x, PHP 8.1+ |
 | **Frontend** | React 19, Inertia.js 3, Tailwind CSS v4 |
 | **Banco de dados** | PostgreSQL 14+ (via Supabase) |
-| **Autenticação** | Sessão nativa do Laravel (e-mail/senha) |
+| **Autenticação** | Clerk (widgets) + sessão do Laravel |
 | **Storage** | Supabase Storage (avatars) |
 | **Build** | Vite 7, plugin Laravel Vite |
 | **Gráficos** | Chart.js 4 |
@@ -159,10 +159,7 @@ SESSION_DRIVER=database
 SESSION_LIFETIME=120
 SESSION_SECURE_COOKIE=true
 
-# E-mail (opcional — segundo caminho do "esqueci a senha")
-# A recuperação principal funciona com códigos e não depende de SMTP.
-# Sem MAIL_* configurado, a tela de login não oferece o envio de link.
-# Com SMTP configurado, o formulário de email aparece automaticamente.
+# E-mail (não é usado para autenticação — o Clerk cuida do "esqueci a senha")
 MAIL_MAILER=smtp
 MAIL_HOST=smtp-relay.brevo.com  # ou smtp.resend.com / smtp.gmail.com
 MAIL_PORT=587
@@ -190,7 +187,8 @@ app-salomao/
 │   ├── Facades/                     # Facade do Supabase
 │   ├── Http/
 │   │   ├── Controllers/
-│   │   │   ├── Auth/AuthController.php   # Login, cadastro, recuperação de senha
+│   │   │   ├── Auth/AuthController.php   # Telas de login/cadastro e logout
+│   │   │   ├── Auth/ClerkCallbackController.php  # Troca a sessão do Clerk por uma do Laravel
 │   │   │   ├── AnalyticsController.php
 │   │   │   ├── CategoryController.php
 │   │   │   ├── DashboardController.php
@@ -204,7 +202,8 @@ app-salomao/
 │   ├── Policies/                    # Category, Transaction, Tag (escopadas por dono)
 │   ├── Providers/
 │   └── Services/                    # AnalyticsService, InvestmentForecastService,
-│                                    # SupabaseService, SupabaseStorageService
+│                                    # SupabaseService, SupabaseStorageService,
+│                                    # ClerkTokenValidator, ClerkUserSync
 ├── config/                          # Configuração da aplicação
 ├── database/
 │   ├── factories/
@@ -253,8 +252,8 @@ app-salomao/
 - **Políticas de autorização** — categorias, transações e tags escopadas pelo dono
 - **Autenticação obrigatória** — todas as rotas de dados protegidas pelo middleware `auth`
 - **Validação de entrada** — todo input validado antes do processamento
-- **Recuperação de senha por códigos** — 8 códigos de uso único por usuário, guardados apenas como HMAC-SHA256; o valor em texto puro existe só no momento da geração
-- **Rede de segurança do administrador** — `php artisan user:password email senha` redefine a senha direto no terminal
+- **Recuperação de senha sem SMTP** — o "esqueci a senha" é resolvido pela infraestrutura de e-mail do próprio Clerk; o projeto não precisa de provedor
+- **Identidade provada por token** — a troca de sessão lê o `sub` de um JWT cuja assinatura é conferida contra o JWKS do Clerk, junto com `iss` e `azp`; o corpo da requisição não tem peso
 - **Exclusão de conta com confirmação de senha** — endpoint LGPD exige senha atual
 - **Cron protegido por segredo** — `/cron/recurring` valida `CRON_SECRET` antes de rodar
 - **Proteção XSS** — escaping server-side do Inertia + proteção nativa do React
@@ -284,7 +283,7 @@ Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em
 
 | Módulo | Status |
 |---|---|
-| Autenticação (e-mail/senha + recuperação) | Feito |
+| Autenticação (Clerk + sessão do Laravel) | Feito |
 | Painel (Dashboard) | Feito |
 | CRUD de Categorias | Feito |
 | CRUD de Transações | Feito |
@@ -304,7 +303,7 @@ Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em
 | Layout Responsivo | Feito |
 | Campo CPF (coluna no banco) | Coluna pronta, UI pendente |
 | Subcategorias | Não iniciado |
-| Testes automatizados | Feito — 97 testes de feature |
+| Testes automatizados | Feito — 82 testes (feature + unit) |
 
 ---
 
@@ -325,19 +324,28 @@ vendor/bin/pint      # formata o código
 php artisan test     # roda os testes
 ```
 
-Os testes de **feature** rodam em SQLite (`:memory:`) e cobrem: fluxo de autenticação
-(login, cadastro e recuperação de senha por códigos e por link), autorização entre
+Os testes de **feature** rodam em SQLite (`:memory:`) e cobrem: autorização entre
 usuários (um usuário não vê/edita registros de outro), transações (criação, edição,
 soft delete, restauração, exportação CSV e busca), categorias, tags, dashboard,
 analytics e investimentos.
 
+A autenticação tem testes próprios: um de **unit** valida o `ClerkTokenValidator`
+contra um par de chaves RS256 gerado em memória (assinatura, issuer, `azp`,
+expiração, token sem `sub`), e dois de **feature** cobrem a troca de sessão
+(`/auth/clerk-exchange`, incluindo o vínculo com conta local já existente) e o
+webhook (`/api/clerk/webhook`, com assinatura Svix calculada no próprio teste).
+
 ### Comandos do administrador
 
 ```bash
-php artisan user:password email@email.com nova-senha   # redefine a senha de um usuário
-php artisan recovery-codes:generate email@email.com    # gera (ou regenera) os códigos de um usuário
-php artisan recovery-codes:generate --all              # gera para quem ainda não tem
+php artisan clerk:import-users --dry-run   # mostra quem seria migrado para o Clerk
+php artisan clerk:import-users             # cria no Clerk e grava o clerk_id de volta
+php artisan transactions:spawn-recurring   # gera as recorrentes do mês (roda no cron)
 ```
+
+A migração cria as contas no Clerk com o e-mail **já verificado** (padrão do
+endpoint de criação deles), então cada pessoa entra em `/login` → "Esqueci a
+senha" e define a própria senha — o e-mail sai pela infraestrutura do Clerk.
 
 ---
 

@@ -40,4 +40,20 @@ return [
         'secret' => env('CRON_SECRET'),
     ],
 
+    'clerk' => [
+        'secret_key' => env('CLERK_SECRET_KEY'),
+        'publishable_key' => env('CLERK_PUBLISHABLE_KEY'),
+        'frontend_api_url' => env('CLERK_FRONTEND_API_URL'),
+        'webhook_secret' => env('CLERK_WEBHOOK_SECRET'),
+
+        // Origens aceitas no claim `azp` do session token. Sem essa lista um
+        // token emitido para outra app da mesma conta Clerk seria aceito.
+        'authorized_parties' => array_values(array_filter([
+            env('APP_URL'),
+            env('CLERK_AUTHORIZED_PARTY'),
+            'http://localhost:5173',
+            'http://localhost:8000',
+        ])),
+    ],
+
 ];

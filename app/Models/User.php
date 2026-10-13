@@ -15,6 +15,7 @@ class User extends Authenticatable implements Onboardable
     use GetsOnboarded, HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
+        'clerk_id',
         'name',
         'email',
         'password',
@@ -49,10 +50,5 @@ class User extends Authenticatable implements Onboardable
     public function investmentSimulations(): HasMany
     {
         return $this->hasMany(InvestmentSimulation::class);
-    }
-
-    public function recoveryCodes(): HasMany
-    {
-        return $this->hasMany(RecoveryCode::class);
     }
 }

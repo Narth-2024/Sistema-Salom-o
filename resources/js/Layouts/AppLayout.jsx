@@ -1,7 +1,8 @@
-import { Link, router, usePage } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import { LayoutDashboard, BarChart3, ArrowLeftRight, Tags, Hash, Settings as SettingsIcon, LogOut, Coins, PiggyBank, WifiOff } from 'lucide-react'
 import { FlashMessage, OnboardingWelcome } from '@/Components'
 import Sidebar from '@/Components/Sidebar'
+import useLogout from '@/hooks/useLogout'
 import { useEffect, useState } from 'react'
 
 const SIDEBAR_KEY = 'salomao-sidebar'
@@ -24,6 +25,7 @@ export default function AppLayout({ children }) {
         return false
     })
     const [isOnline, setIsOnline] = useState(true)
+    const handleLogout = useLogout()
 
     useEffect(() => {
         setIsOnline(navigator.onLine)
@@ -42,14 +44,6 @@ export default function AppLayout({ children }) {
     }, [sidebarCollapsed])
 
     const sidebarMargin = sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
-
-    function handleLogout() {
-        router.post('/logout', {}, {
-            onFinish: () => {
-                window.location.href = '/'
-            },
-        })
-    }
 
     function isActive(href) {
         if (href === '/dashboard') return url === '/dashboard'
