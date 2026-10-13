@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { AuthShell, Button, Input } from '@/Components'
-import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react'
+import { Mail, Lock, ArrowRight, ShieldCheck, KeyRound } from 'lucide-react'
 
-export default function Login({ resetToken, resetEmail }) {
+export default function Login({ resetToken, resetEmail, canEmailReset = false }) {
     const [mode, setMode] = useState(resetToken ? 'reset' : 'login')
     const [email, setEmail] = useState(resetEmail || '')
     const [password, setPassword] = useState('')
+    const [recoveryCode, setRecoveryCode] = useState('')
     const [token, setToken] = useState(resetToken || '')
     const [newPassword, setNewPassword] = useState('')
     const [newPasswordConfirmation, setNewPasswordConfirmation] = useState('')
@@ -19,8 +20,21 @@ export default function Login({ resetToken, resetEmail }) {
         setError(null)
         setSent(false)
         setPassword('')
+        setRecoveryCode('')
         setNewPassword('')
         setNewPasswordConfirmation('')
+    }
+
+    function validateNewPassword() {
+        if (newPassword.length < 8) {
+            setError('A senha precisa ter no mínimo 8 caracteres.')
+            return false
+        }
+        if (newPassword !== newPasswordConfirmation) {
+            setError('As senhas não coincidem.')
+            return false
+        }
+        return true
     }
 
     function handleLogin(e) {
@@ -33,6 +47,26 @@ export default function Login({ resetToken, resetEmail }) {
             onFinish: () => setLoading(false),
             onError: (errors) => {
                 setError(errors.email || 'Não foi possível entrar. Tente novamente.')
+            },
+        })
+    }
+
+    function handleRecovery(e) {
+        e.preventDefault()
+        setError(null)
+        if (loading) return
+        if (!validateNewPassword()) return
+
+        setLoading(true)
+        router.post('/password/recovery', {
+            email,
+            recovery_code: recoveryCode,
+            password: newPassword,
+            password_confirmation: newPasswordConfirmation,
+        }, {
+            onFinish: () => setLoading(false),
+            onError: (errors) => {
+                setError(errors.recovery_code || errors.password || errors.email || 'Não foi possível redefinir a senha.')
             },
         })
     }
@@ -57,15 +91,7 @@ export default function Login({ resetToken, resetEmail }) {
         e.preventDefault()
         setError(null)
         if (loading) return
-
-        if (newPassword.length < 8) {
-            setError('A senha precisa ter no mínimo 8 caracteres.')
-            return
-        }
-        if (newPassword !== newPasswordConfirmation) {
-            setError('As senhas não coincidem.')
-            return
-        }
+        if (!validateNewPassword()) return
 
         setLoading(true)
         router.post('/reset-password', {
@@ -83,12 +109,14 @@ export default function Login({ resetToken, resetEmail }) {
 
     const titles = {
         login: 'Entre na sua conta',
+        recovery: 'Recuperar senha',
         forgot: 'Recuperar senha',
         reset: 'Nova senha',
     }
 
     const subtitles = {
         login: 'Acesse o Sistema Salomão com seu email e senha.',
+        recovery: 'Informe seu email e um dos códigos de recuperação que você salvou no cadastro.',
         forgot: 'Informe seu email e enviaremos um link para criar uma nova senha.',
         reset: 'Escolha uma nova senha para a sua conta.',
     }
@@ -130,7 +158,7 @@ export default function Login({ resetToken, resetEmail }) {
                     <div className="flex justify-end">
                         <button
                             type="button"
-                            onClick={() => { setMode('forgot'); setError(null) }}
+                            onClick={() => { setMode('recovery'); setError(null) }}
                             className="text-xs text-accent-text hover:opacity-80 font-medium cursor-pointer"
                         >
                             Esqueci minha senha
@@ -147,6 +175,81 @@ export default function Login({ resetToken, resetEmail }) {
                         <Link href="/register" className="text-accent-text hover:opacity-80 font-medium">
                             Criar conta
                         </Link>
+                    </p>
+                </form>
+            )}
+
+            {mode === 'recovery' && (
+                <form onSubmit={handleRecovery} className="space-y-4">
+                    <Input
+                        label="Email"
+                        type="email"
+                        icon={Mail}
+                        placeholder="seu@email.com"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        autoComplete="email"
+                        required
+                    />
+                    <Input
+                        label="Código de recuperação"
+                        icon={KeyRound}
+                        placeholder="XXXX-XXXX-XXXX-XXXX"
+                        value={recoveryCode}
+                        onChange={e => setRecoveryCode(e.target.value)}
+                        autoComplete="one-time-code"
+                        autoCapitalize="characters"
+                        spellCheck="false"
+                        required
+                    />
+                    <Input
+                        label="Nova senha"
+                        type="password"
+                        icon={Lock}
+                        placeholder="••••••••"
+                        value={newPassword}
+                        onChange={e => setNewPassword(e.target.value)}
+                        autoComplete="new-password"
+                        minLength={8}
+                        required
+                    />
+                    <Input
+                        label="Confirmar nova senha"
+                        type="password"
+                        icon={Lock}
+                        placeholder="••••••••"
+                        value={newPasswordConfirmation}
+                        onChange={e => setNewPasswordConfirmation(e.target.value)}
+                        autoComplete="new-password"
+                        minLength={8}
+                        required
+                    />
+                    <p className="text-xs text-gray-500">Mínimo de 8 caracteres. Cada código funciona uma única vez.</p>
+
+                    <Button type="submit" variant="primary" className="w-full" disabled={loading || !recoveryCode}>
+                        {loading ? 'Redefinindo…' : 'Redefinir senha'}
+                    </Button>
+
+                    <p className="text-sm text-gray-500 text-center pt-2 border-t border-border space-y-2">
+                        {canEmailReset && (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => { setMode('forgot'); setError(null); setSent(false) }}
+                                    className="block w-full text-accent-text hover:opacity-80 font-medium cursor-pointer"
+                                >
+                                    ou envie um link por email
+                                </button>
+                                <span className="block text-xs text-gray-400">|</span>
+                            </>
+                        )}
+                        <button
+                            type="button"
+                            onClick={goBackToLogin}
+                            className="block w-full text-accent-text hover:opacity-80 font-medium cursor-pointer"
+                        >
+                            Voltar ao login
+                        </button>
                     </p>
                 </form>
             )}
@@ -184,10 +287,10 @@ export default function Login({ resetToken, resetEmail }) {
                     <p className="text-sm text-gray-500 text-center pt-2 border-t border-border">
                         <button
                             type="button"
-                            onClick={goBackToLogin}
+                            onClick={() => { setMode('recovery'); setError(null); setSent(false) }}
                             className="text-accent-text hover:opacity-80 font-medium cursor-pointer"
                         >
-                            Voltar ao login
+                            Voltar
                         </button>
                     </p>
                 </form>

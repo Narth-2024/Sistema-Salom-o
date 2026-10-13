@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react'
 import { ArrowLeft } from 'lucide-react'
+import FlashMessage from './FlashMessage'
 
 export default function AuthShell({ title, children, cardClassName = 'p-8' }) {
     return (
@@ -27,6 +28,7 @@ export default function AuthShell({ title, children, cardClassName = 'p-8' }) {
                     {children}
                 </div>
             </div>
+            <FlashMessage />
         </>
     )
 }

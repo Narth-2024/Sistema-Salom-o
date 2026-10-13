@@ -50,4 +50,9 @@ class User extends Authenticatable implements Onboardable
     {
         return $this->hasMany(InvestmentSimulation::class);
     }
+
+    public function recoveryCodes(): HasMany
+    {
+        return $this->hasMany(RecoveryCode::class);
+    }
 }

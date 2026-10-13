@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\PasswordResetLink;
+use App\Models\RecoveryCode;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -22,12 +23,29 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        // showRecoveryCodes e regenerateRecoveryCodes exigem sessão iniciada.
+        $this->middleware('guest')->except([
+            'logout',
+            'showRecoveryCodes',
+            'regenerateRecoveryCodes',
+        ]);
     }
 
     public function showLoginForm(): Response
     {
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Auth/Login', [
+            'canEmailReset' => $this->canEmailReset(),
+        ]);
+    }
+
+    /**
+     * O fluxo por email só aparece na tela se houver SMTP configurado. Sem
+     * isso o usuário cairia num formulário que nunca entrega o link.
+     */
+    private function canEmailReset(): bool
+    {
+        return filled(config('mail.mailers.smtp.host'))
+            && filled(config('mail.mailers.smtp.username'));
     }
 
     public function showRegistrationForm(): Response
@@ -82,11 +100,16 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
+        // Os códigos são a única forma de o usuário se recuperar sem depender
+        // de provedor de email, então são gerados já no cadastro e exibidos
+        // uma única vez — no banco fica só o hash.
+        $codes = RecoveryCode::generateFor($user);
+
         Auth::login($user);
 
         $request->session()->regenerate();
 
-        return redirect('/dashboard');
+        return redirect()->route('recovery-codes.show')->with('recoveryCodes', $codes);
     }
 
     public function forgotPassword(Request $request): RedirectResponse
@@ -139,6 +162,70 @@ class AuthController extends Controller
             // Falha de SMTP não pode quebrar a recuperação nem revelar se a conta existe.
             Log::warning('Não foi possível enviar o email de redefinição de senha: ' . $e->getMessage());
         }
+    }
+
+    public function showRecoveryCodes(Request $request): Response
+    {
+        return Inertia::render('Auth/RecoveryCodes', [
+            'codes' => $request->session()->get('recoveryCodes'),
+        ]);
+    }
+
+    public function resetWithRecoveryCode(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'email' => ['required', 'email'],
+            'recovery_code' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $email = strtolower(trim($data['email']));
+
+        $user = User::whereRaw('lower(email) = ?', [$email])->first();
+
+        $code = $user
+            ? RecoveryCode::query()
+                ->where('user_id', $user->id)
+                ->where('code_hash', RecoveryCode::hash($data['recovery_code']))
+                ->whereNull('used_at')
+                ->first()
+            : null;
+
+        if (! $user || ! $code) {
+            throw ValidationException::withMessages([
+                'recovery_code' => 'Email ou código de recuperação inválido.',
+            ]);
+        }
+
+        $user->update(['password' => Hash::make($data['password'])]);
+
+        // Código de uso único: uma vez consumido, não reabre a conta.
+        $code->update(['used_at' => now()]);
+
+        event(new PasswordReset($user));
+
+        return redirect()->route('login')->with(
+            'success',
+            'Senha redefinida com sucesso. Faça login com a nova senha.'
+        );
+    }
+
+    public function regenerateRecoveryCodes(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'password' => ['required', 'string'],
+        ]);
+
+        if (! Hash::check($request->password, $request->user()->password)) {
+            throw ValidationException::withMessages([
+                'password' => 'A senha está incorreta.',
+            ]);
+        }
+
+        // Regenerar invalida os antigos — por isso a confirmação de senha.
+        $codes = RecoveryCode::generateFor($request->user());
+
+        return redirect()->route('recovery-codes.show')->with('recoveryCodes', $codes);
     }
 
     public function resetPassword(Request $request): RedirectResponse

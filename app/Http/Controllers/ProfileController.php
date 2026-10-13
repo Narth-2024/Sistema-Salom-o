@@ -108,6 +108,7 @@ class ProfileController extends Controller
         $user->categories()->withTrashed()->forceDelete();
         $user->tags()->withTrashed()->forceDelete();
         $user->investmentSimulations()->forceDelete();
+        $user->recoveryCodes()->forceDelete();
         $user->delete();
 
         Auth::logout();

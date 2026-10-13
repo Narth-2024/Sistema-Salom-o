@@ -1,10 +1,10 @@
 import { Head, Link, usePage, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.jsx'
-import { Card, Button, Input, ONBOARDING_STORAGE } from '@/Components'
+import { Card, Button, Input, Modal, ONBOARDING_STORAGE } from '@/Components'
 import { startAppTour } from '@/tour/AppTour'
 import useTheme from '@/hooks/useTheme'
 import { usePWAInstall } from '@/lib/pwa'
-import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug, Lock, Download, Smartphone, Trash2, AlertTriangle } from 'lucide-react'
+import { Sun, Moon, ArrowLeft, Palette, User, Camera, CheckCircle, LifeBuoy, RefreshCcw, Star, Bug, Lock, Download, Smartphone, Trash2, AlertTriangle, KeyRound } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function Settings() {
@@ -32,6 +32,11 @@ export default function Settings() {
     })
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
+    const recoveryForm = useForm({
+        password: '',
+    })
+    const [showRecoveryConfirm, setShowRecoveryConfirm] = useState(false)
+
     function handleSubmit(e) {
         e.preventDefault()
         post('/settings/profile', {
@@ -45,6 +50,18 @@ export default function Settings() {
         pwdForm.post('/settings/password', {
             preserveScroll: true,
             onSuccess: () => pwdForm.reset(),
+        })
+    }
+
+    function handleRecoverySubmit(e) {
+        e.preventDefault()
+        // Regenerar invalida os códigos antigos, então a senha confirma a identidade.
+        recoveryForm.post('/settings/recovery-codes', {
+            preserveScroll: true,
+            onSuccess: () => {
+                recoveryForm.reset()
+                setShowRecoveryConfirm(false)
+            },
         })
     }
 
@@ -215,6 +232,60 @@ export default function Settings() {
                         </div>
                     </form>
                 </Card>
+
+                {/* Recovery codes */}
+                <Card className="mt-6">
+                    <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        <KeyRound className="w-4 h-4 text-accent-text" />
+                        Códigos de recuperação
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-5">
+                        São 8 códigos de uso único que permitem redefinir sua senha sem depender de email.
+                        Guarde-os em um lugar seguro, como um gerenciador de senhas.
+                    </p>
+
+                    <Button variant="outline" onClick={() => setShowRecoveryConfirm(true)}>
+                        <RefreshCcw className="w-4 h-4" />
+                        Gerar novos códigos
+                    </Button>
+                    <p className="text-xs text-gray-500 mt-3">
+                        Gerar novos códigos <strong>invalida os antigos</strong>. Você verá a lista nova uma única vez.
+                    </p>
+                </Card>
+
+                <Modal
+                    open={showRecoveryConfirm}
+                    onClose={() => { setShowRecoveryConfirm(false); recoveryForm.reset() }}
+                    title="Gerar novos códigos"
+                >
+                    <form onSubmit={handleRecoverySubmit} className="space-y-4">
+                        <p className="text-sm text-gray-600">
+                            Confirme com sua senha. Os códigos atuais deixarão de funcionar imediatamente.
+                        </p>
+                        <Input
+                            label="Senha atual"
+                            type="password"
+                            value={recoveryForm.data.password}
+                            onChange={e => recoveryForm.setData('password', e.target.value)}
+                            autoComplete="current-password"
+                            required
+                            error={recoveryForm.errors.password}
+                        />
+                        <div className="flex items-center gap-3 pt-2 border-t border-border">
+                            <Button type="submit" variant="primary" disabled={recoveryForm.processing}>
+                                <KeyRound className="w-4 h-4" />
+                                {recoveryForm.processing ? 'Gerando...' : 'Gerar códigos'}
+                            </Button>
+                            <button
+                                type="button"
+                                onClick={() => { setShowRecoveryConfirm(false); recoveryForm.reset() }}
+                                className="px-5 py-2.5 text-sm text-gray-500 hover:text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition cursor-pointer"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </Modal>
 
                 {/* Theme */}
                 <Card>

@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
                 'undo' => fn () => $request->session()->get('undo'),
+                'recoveryCodes' => fn () => $request->session()->get('recoveryCodes'),
             ],
             'onboarding' => fn () => $this->onboardingPayload($request),
         ];

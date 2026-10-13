@@ -40,13 +40,14 @@
 
 **Sistema Salomão** é uma aplicação web de **controle financeiro pessoal**. O usuário registra entradas e saídas, organiza por categorias e tags, acompanha o saldo e a evolução do patrimônio por meio de um painel com gráficos, além de simular o rendimento de investimentos.
 
-Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no frontend e **Tailwind CSS v4**. A autenticação é feita pela **sessão nativa do Laravel** (e-mail/senha + recuperação por link), e os dados ficam no **PostgreSQL do Supabase**. É um projeto acadêmico (TCC) e roda em produção na **Vercel**.
+Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no frontend e **Tailwind CSS v4**. A autenticação é feita pela **sessão nativa do Laravel** (e-mail/senha + recuperação por códigos), e os dados ficam no **PostgreSQL do Supabase**. É um projeto acadêmico (TCC) e roda em produção na **Vercel**.
 
 ---
 
 ## Funcionalidades
 
-- **Autenticação nativa** — cadastro, login, esqueci/redefinir senha (link por e-mail) e logout, via sessão do Laravel
+- **Autenticação nativa** — cadastro, login, esqueci/redefinir senha e logout, via sessão do Laravel
+- **Recuperação sem e-mail** — 8 códigos de uso único gerados no cadastro, o que dispensa provedor de e-mail
 - **Painel (Dashboard)** — cards de receita, despesa e saldo, com filtro por período e quebra de despesas por categoria
 - **Analytics** — gráficos de barras mensais, linha de saldo acumulado e comparação entre períodos (Chart.js)
 - **Investimentos** — simulador que compara aplicações (Poupança, CDB, Tesouro etc.) com taxas oficiais de CDI/IPCA
@@ -158,12 +159,13 @@ SESSION_DRIVER=database
 SESSION_LIFETIME=120
 SESSION_SECURE_COOKIE=true
 
-# E-mail (link do "esqueci a senha")
-# Sem isso configurado, o sistema aceita o pedido e registra um aviso no log,
-# mas nenhum email sai.
+# E-mail (opcional — segundo caminho do "esqueci a senha")
+# A recuperação principal funciona com códigos e não depende de SMTP.
+# Sem MAIL_* configurado, a tela de login não oferece o envio de link.
+# Com SMTP configurado, o formulário de email aparece automaticamente.
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.resend.com      # ou smtp-relay.brevo.com / smtp.gmail.com
-MAIL_PORT=465
+MAIL_HOST=smtp-relay.brevo.com  # ou smtp.resend.com / smtp.gmail.com
+MAIL_PORT=587
 MAIL_USERNAME=...
 MAIL_PASSWORD=...
 MAIL_ENCRYPTION=tls
@@ -251,7 +253,8 @@ app-salomao/
 - **Políticas de autorização** — categorias, transações e tags escopadas pelo dono
 - **Autenticação obrigatória** — todas as rotas de dados protegidas pelo middleware `auth`
 - **Validação de entrada** — todo input validado antes do processamento
-- **Recuperação de senha por link único** — fluxo nativo do Laravel com token expirável
+- **Recuperação de senha por códigos** — 8 códigos de uso único por usuário, guardados apenas como HMAC-SHA256; o valor em texto puro existe só no momento da geração
+- **Rede de segurança do administrador** — `php artisan user:password email senha` redefine a senha direto no terminal
 - **Exclusão de conta com confirmação de senha** — endpoint LGPD exige senha atual
 - **Cron protegido por segredo** — `/cron/recurring` valida `CRON_SECRET` antes de rodar
 - **Proteção XSS** — escaping server-side do Inertia + proteção nativa do React
@@ -301,7 +304,7 @@ Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em
 | Layout Responsivo | Feito |
 | Campo CPF (coluna no banco) | Coluna pronta, UI pendente |
 | Subcategorias | Não iniciado |
-| Testes automatizados | Feito — 81 testes de feature |
+| Testes automatizados | Feito — 97 testes de feature |
 
 ---
 
@@ -323,9 +326,18 @@ php artisan test     # roda os testes
 ```
 
 Os testes de **feature** rodam em SQLite (`:memory:`) e cobrem: fluxo de autenticação
-(login, cadastro e recuperação de senha), autorização entre usuários (um usuário não
-vê/edita registros de outro), transações (criação, edição, soft delete, restauração,
-exportação CSV e busca), categorias, tags, dashboard, analytics e investimentos.
+(login, cadastro e recuperação de senha por códigos e por link), autorização entre
+usuários (um usuário não vê/edita registros de outro), transações (criação, edição,
+soft delete, restauração, exportação CSV e busca), categorias, tags, dashboard,
+analytics e investimentos.
+
+### Comandos do administrador
+
+```bash
+php artisan user:password email@email.com nova-senha   # redefine a senha de um usuário
+php artisan recovery-codes:generate email@email.com    # gera (ou regenera) os códigos de um usuário
+php artisan recovery-codes:generate --all              # gera para quem ainda não tem
+```
 
 ---
 
