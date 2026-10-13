@@ -5,6 +5,40 @@ import { ONBOARDING_STORAGE } from '@/Components/OnboardingChecklist'
 
 const SEGMENTS = [
     {
+        path: '/dashboard',
+        steps: [
+            {
+                element: '[data-tour="dash-banner"]',
+                popover: {
+                    title: 'Seu painel',
+                    description:
+                        'Bem-vindo ao Salomão. Esse é o seu Dashboard: a saudação, o resumo do período e os atalhos mais usados. Ele é o ponto de partida de tudo o que vamos ver a seguir.',
+                    side: 'bottom',
+                },
+            },
+            {
+                element: '[data-tour="dash-period"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Filtro de período',
+                    description:
+                        'Escolha o recorte dos dados: este mês, mês passado, últimos 3 meses, ano inteiro ou tudo. O resumo, o gráfico e as transações recentes se ajustam na hora.',
+                    side: 'bottom',
+                },
+            },
+            {
+                element: '[data-tour="pwa-banner"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Instale o Salomão',
+                    description:
+                        'Se o seu navegador oferecer, instale o sistema na tela inicial: abre em tela cheia, sem barra de endereço, e continua funcionando offline.',
+                    side: 'bottom',
+                },
+            },
+        ],
+    },
+    {
         path: '/categories',
         steps: [
             {
@@ -344,34 +378,14 @@ const SEGMENTS = [
     },
     {
         path: '/dashboard',
-        steps: () => [
+        steps: [
             {
                 element: '[data-tour="checklist"]',
                 skipMissingElement: true,
                 popover: {
                     title: 'Checklist de boas-vindas',
                     description:
-                        'Seus primeiros passos com progresso em tempo real. Ele some sozinho quando tudo estiver concluído — e você pode ocultar quando quiser.',
-                    side: 'bottom',
-                },
-            },
-            {
-                element: '[data-tour="pwa-banner"]',
-                skipMissingElement: true,
-                popover: {
-                    title: 'Instale o Salomão',
-                    description:
-                        'Se o seu navegador oferecer, instale o sistema na tela inicial: abre em tela cheia, sem barra de endereço, e continua funcionando offline.',
-                    side: 'bottom',
-                },
-            },
-            {
-                element: '[data-tour="dash-period"]',
-                skipMissingElement: true,
-                popover: {
-                    title: 'Filtro de período',
-                    description:
-                        'Escolha o recorte dos dados: este mês, mês passado, últimos 3 meses, ano inteiro ou tudo. O resumo, o gráfico e as transações recentes se ajustam na hora.',
+                        'Agora que você já conhece as telas, este checklist acompanha os seus primeiros passos de verdade: criar a primeira categoria, registrar a primeira transação. O progresso é em tempo real — e ele some sozinho quando tudo estiver concluído.',
                     side: 'bottom',
                 },
             },
@@ -380,7 +394,7 @@ const SEGMENTS = [
                 popover: {
                     title: 'Tour concluído!',
                     description:
-                        'Esse é o seu Dashboard: saudação, resumo do período e atalhos. Sem internet? Um aviso no topo avisa e você continua vendo os dados salvos. O botão ? no canto da tela reassiste este tour a qualquer momento.',
+                        'Você terminou onde vai passar a maior parte do tempo: o Dashboard. Sem internet? Um aviso no topo avisa e você continua vendo os dados salvos. O botão ? no canto da tela reassiste este tour a qualquer momento.',
                     side: 'bottom',
                 },
             },
