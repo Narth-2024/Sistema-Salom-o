@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,7 +49,12 @@ class ClerkCallbackController extends Controller
         try {
             $claims = $validator->validate($token);
         } catch (ClerkTokenException $e) {
-            Log::warning('Clerk exchange: token rejeitado', ['reason' => $e->getMessage()]);
+            // Log de erro, não warning: o LOG_LEVEL da produção é `error`, e
+            // uma falha de login em produção precisa aparecer no log.
+            Log::error('Clerk exchange: token rejeitado', [
+                'reason' => $e->getMessage(),
+                'cause' => $e->getPrevious()?->getMessage(),
+            ]);
 
             return response()->json(['error' => 'Sessão inválida ou expirada. Entre novamente.'], 401);
         }
@@ -128,9 +134,10 @@ class ClerkCallbackController extends Controller
             ->get('https://api.clerk.com/v1/users/' . urlencode($clerkId));
 
         if (! $response->successful()) {
-            Log::warning('Clerk exchange: API do Clerk recusou', [
+            Log::error('Clerk exchange: API do Clerk recusou', [
                 'clerk_id' => $clerkId,
                 'status' => $response->status(),
+                'body' => Str::limit($response->body(), 400),
             ]);
 
             return null;
