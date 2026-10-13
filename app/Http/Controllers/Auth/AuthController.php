@@ -39,6 +39,10 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        // Email é case-insensitive (RFC 5321): normaliza a entrada para que
+        // "User@X.com" e "user@x.com" caiam na mesma conta.
+        $credentials['email'] = strtolower(trim($credentials['email']));
+
         if (! Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
                 'email' => 'Email ou senha incorretos.',
@@ -54,13 +58,22 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
+        $email = strtolower(trim($data['email']));
+
+        // unique case-insensitive: bloqueia "user@x.com" se "User@X.com" existe.
+        if (User::whereRaw('lower(email) = ?', [$email])->exists()) {
+            throw ValidationException::withMessages([
+                'email' => 'Este email já está em uso.',
+            ]);
+        }
+
         $user = User::create([
             'name' => $data['name'],
-            'email' => $data['email'],
+            'email' => $email,
             'password' => Hash::make($data['password']),
         ]);
 
@@ -77,7 +90,9 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $email = strtolower(trim($request->email));
+
+        $user = User::whereRaw('lower(email) = ?', [$email])->first();
 
         if (! $user) {
             return back()->withErrors([
@@ -106,8 +121,10 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
+        $email = strtolower(trim($request->email));
+
         $record = DB::table('password_reset_tokens')
-            ->where('email', $request->email)
+            ->where('email', $email)
             ->first();
 
         if (! $record || ! Hash::check($request->token, $record->token)) {
@@ -117,16 +134,16 @@ class AuthController extends Controller
         }
 
         if (now()->diffInMinutes($record->created_at) > 60) {
-            DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+            DB::table('password_reset_tokens')->where('email', $email)->delete();
             throw ValidationException::withMessages([
                 'token' => 'Token expirado. Solicite um novo.',
             ]);
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::whereRaw('lower(email) = ?', [$email])->firstOrFail();
         $user->update(['password' => Hash::make($request->password)]);
 
-        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+        DB::table('password_reset_tokens')->where('email', $email)->delete();
 
         event(new PasswordReset($user));
 
