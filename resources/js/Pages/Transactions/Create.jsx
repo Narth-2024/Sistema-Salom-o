@@ -76,6 +76,7 @@ export default function TransactionsCreate({ categories, tags }) {
                                 min={0.01}
                                 max={99999999.99}
                                 error={errors.amount}
+                                data-tour="tx-amount"
                             />
 
                             <Input

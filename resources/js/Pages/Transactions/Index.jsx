@@ -122,7 +122,7 @@ export default function TransactionsIndex({ transactions, categories, tags, filt
                         <p className="text-gray-500 mt-1">Registre e acompanhe suas movimentações financeiras.</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        <Button variant="outline" onClick={exportCsv}>
+                        <Button variant="outline" onClick={exportCsv} data-tour="tx-export">
                             <Download className="w-4 h-4" />
                             CSV
                         </Button>

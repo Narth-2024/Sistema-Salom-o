@@ -30,7 +30,7 @@ const SEGMENTS = [
                 popover: {
                     title: 'Sua lista',
                     description:
-                        'Cada carta mostra nome, tipo e quantas transações usam a categoria. O lápis edita e a lixeira exclui — sempre com confirmação.',
+                        'Cada carta mostra nome, tipo e quantas transações usam a categoria. Use o seletor de ordenação para reorganizar por nome, tipo ou data. O lápis edita e a lixeira exclui — e a exclusão é segura: você tem um aviso com botão "Desfazer" antes de a mudança se tornar definitiva.',
                     side: 'top',
                 },
             },
@@ -58,6 +58,15 @@ const SEGMENTS = [
                 },
             },
             {
+                element: '[data-tour="tx-export"]',
+                popover: {
+                    title: 'Exportar em CSV',
+                    description:
+                        'Baixa seu histórico em planilha. Exporta exatamente o que os filtros estão mostrando hoje — quer dizer, você pode buscar por um período ou categoria e exportar só aquilo.',
+                    side: 'bottom',
+                },
+            },
+            {
                 element: '[data-tour="tx-stats"]',
                 popover: {
                     title: 'Resumo do período',
@@ -80,7 +89,7 @@ const SEGMENTS = [
                 popover: {
                     title: 'Histórico',
                     description:
-                        'Cada linha é uma transação: data, descrição, categoria, tags, tipo e valor. Transações recorrentes exibem o selo "Recorrente" ao lado do tipo. Passe o mouse para ver os ícones de ver, editar e excluir — com confirmação antes de apagar.',
+                        'Cada linha é uma transação: data, descrição, categoria, tags, tipo e valor. Transações recorrentes exibem o selo "Recorrente" ao lado do tipo. No celular a lista vira cartões. Passe o mouse para ver os ícones de ver, editar e excluir — e se excluir por engano, o aviso logo acima traz um botão "Desfazer".',
                     side: 'top',
                 },
             },
@@ -89,6 +98,15 @@ const SEGMENTS = [
     {
         path: '/transactions/create',
         steps: [
+            {
+                element: '[data-tour="tx-amount"]',
+                popover: {
+                    title: 'Valor com vírgula',
+                    description:
+                        'Digite do jeito que você fala: aceita vírgula ("12,50") e ponto ("12.50"). No celular o teclado já abre numérico.',
+                    side: 'bottom',
+                },
+            },
             {
                 element: '[data-tour="tx-recurring"]',
                 popover: {
@@ -126,7 +144,7 @@ const SEGMENTS = [
                 popover: {
                     title: 'Suas tags',
                     description:
-                        'Cada tag mostra quantas transações está usando. Editar ou excluir uma tag nunca apaga as transações.',
+                        'Cada tag mostra quantas transações está usando, e dá para ordenar a lista por nome ou por uso. Editar ou excluir nunca apaga as transações — e a exclusão também pode ser desfeita.',
                     side: 'top',
                 },
             },
@@ -150,6 +168,15 @@ const SEGMENTS = [
                     title: 'Totais',
                     description:
                         'Receitas, despesas e saldo gerais do recorte atual, sempre no topo para consulta rápida.',
+                    side: 'bottom',
+                },
+            },
+            {
+                element: '[data-tour="an-metrics"]',
+                popover: {
+                    title: 'Taxa de economia e ticket médio',
+                    description:
+                        'A taxa de economia mostra quanto sobra das suas receitas — se sobra. O ticket médio divide as despesas pelo número de lançamentos: é o quanto custa, em média, cada saída.',
                     side: 'bottom',
                 },
             },
@@ -180,6 +207,16 @@ const SEGMENTS = [
                     side: 'top',
                 },
             },
+            {
+                element: '[data-tour="an-categories"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Despesas por categoria',
+                    description:
+                        'Onde o dinheiro realmente foi: as 5 categorias que mais consumiram no período. É o gráfico que costuma revelar o vazamento.',
+                    side: 'top',
+                },
+            },
         ],
     },
     {
@@ -204,20 +241,42 @@ const SEGMENTS = [
                 },
             },
             {
+                element: '[data-tour="inv-best"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Melhor resultado em destaque',
+                    description:
+                        'Depois de simular, o instrumento que rendeu mais aparece destacado no topo, com quanto rendeu a mais em relação aos demais.',
+                    side: 'bottom',
+                },
+            },
+            {
                 element: '[data-tour="inv-results"]',
+                skipMissingElement: true,
                 popover: {
                     title: 'Comparativo',
                     description:
-                        'Cada cartão mostra o valor líquido (já com IR, quando aplicável). O melhor resultado aparece em destaque — e você pode salvar qualquer simulação no histórico.',
+                        'Cada cartão mostra o valor líquido (já com IR, quando aplicável) e você pode salvar qualquer simulação no histórico para comparar depois.',
                     side: 'top',
                 },
             },
             {
                 element: '[data-tour="inv-chart"]',
+                skipMissingElement: true,
                 popover: {
                     title: 'Evolução projetada',
                     description:
-                        'A curva mostra como o valor líquido cresce mês a mês em cada instrumento. Taxas de referência do Banco Central no topo da página.',
+                        'A curva mostra como o valor líquido cresce mês a mês em cada instrumento. As taxas de referência do Banco Central ficam no topo da página.',
+                    side: 'top',
+                },
+            },
+            {
+                element: '[data-tour="inv-history"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Histórico de simulações',
+                    description:
+                        'Tudo o que você salvou fica aqui, pronto para rever. A lixeira remove uma simulação do histórico — os seus dados financeiros não são afetados.',
                     side: 'top',
                 },
             },
@@ -227,32 +286,57 @@ const SEGMENTS = [
         path: '/settings',
         steps: [
             {
-                element: '[data-tour="help-card"]',
+                element: '[data-tour="settings-profile"]',
+                popover: {
+                    title: 'Perfil',
+                    description:
+                        'Mude seu nome e a foto que aparece no sistema. A foto é opcional — sem ela, mostramos a inicial do seu nome.',
+                    side: 'top',
+                },
+            },
+            {
+                element: '[data-tour="settings-password"]',
+                popover: {
+                    title: 'Alterar senha',
+                    description:
+                        'Troque sua senha quando quiser, confirmando a atual. Mínimo de 8 caracteres.',
+                    side: 'top',
+                },
+            },
+            {
+                element: '[data-tour="settings-theme"]',
+                popover: {
+                    title: 'Aparência',
+                    description:
+                        'Alterna entre o tema escuro e o claro do sistema. A escolha fica salva neste dispositivo.',
+                    side: 'top',
+                },
+            },
+            {
+                element: '[data-tour="settings-install"]',
                 skipMissingElement: true,
+                popover: {
+                    title: 'Instalar aplicativo',
+                    description:
+                        'Instala o Salomão na tela inicial do celular, para abrir como um aplicativo em tela cheia. Quem instala continua usando o sistema mesmo sem internet — os dados salvos ficam disponíveis.',
+                    side: 'top',
+                },
+            },
+            {
+                element: '[data-tour="help-card"]',
                 popover: {
                     title: 'Central de ajuda',
                     description:
-                        'Aqui você refaz o tutorial e o checklist quando quiser — e também avalia o sistema.',
+                        'Aqui você refaz este tutorial, avalia o sistema e reporta um bug — tudo por três botões. O "?" flutuante no canto da tela faz o mesmo, de qualquer página.',
                     side: 'top',
                 },
             },
             {
-                element: '[data-tour="help-survey"]',
-                skipMissingElement: true,
+                element: '[data-tour="settings-account"]',
                 popover: {
-                    title: 'Avalie o sistema',
+                    title: 'Excluir conta',
                     description:
-                        'Este é o formulário de avaliação do Salomão. Depois de usá-lo no seu dia a dia, volte aqui e responda: sua opinião mostra se o sistema cumpriu o que propôs — organizar, controlar e apoiar suas decisões.',
-                    side: 'top',
-                },
-            },
-            {
-                element: '[data-tour="help-bug"]',
-                skipMissingElement: true,
-                popover: {
-                    title: 'Reportar bug',
-                    description:
-                        'Encontrou um erro? Clique aqui para abrir um issue no GitHub e descrever o problema — assim conseguimos corrigir mais rápido.',
+                        'A zona de risco: apaga definitivamente a sua conta e todos os dados — transações, categorias, tags e simulações. Pedimos a senha para confirmar, e essa ação não pode ser desfeita.',
                     side: 'top',
                 },
             },
@@ -272,6 +356,16 @@ const SEGMENTS = [
                 },
             },
             {
+                element: '[data-tour="pwa-banner"]',
+                skipMissingElement: true,
+                popover: {
+                    title: 'Instale o Salomão',
+                    description:
+                        'Se o seu navegador oferecer, instale o sistema na tela inicial: abre em tela cheia, sem barra de endereço, e continua funcionando offline.',
+                    side: 'bottom',
+                },
+            },
+            {
                 element: '[data-tour="dash-period"]',
                 skipMissingElement: true,
                 popover: {
@@ -286,7 +380,7 @@ const SEGMENTS = [
                 popover: {
                     title: 'Tour concluído!',
                     description:
-                        'Esse é o seu Dashboard: saudação, resumo do período e atalhos. O botão ? no canto da tela reassiste este tour a qualquer momento.',
+                        'Esse é o seu Dashboard: saudação, resumo do período e atalhos. Sem internet? Um aviso no topo avisa e você continua vendo os dados salvos. O botão ? no canto da tela reassiste este tour a qualquer momento.',
                     side: 'bottom',
                 },
             },

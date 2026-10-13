@@ -4,7 +4,7 @@ import Modal from './Modal'
 import Button from './Button'
 import { ONBOARDING_STORAGE } from './OnboardingChecklist'
 import { startAppTour, isTourRunning } from '@/tour/AppTour'
-import { ArrowRight, Rocket, CircleHelp, Tags, ArrowLeftRight, Hash, LineChart } from 'lucide-react'
+import { ArrowRight, Rocket, CircleHelp, Tags, ArrowLeftRight, Hash, LineChart, PiggyBank } from 'lucide-react'
 
 export default function OnboardingWelcome() {
     const { onboarding } = usePage().props
@@ -39,6 +39,7 @@ export default function OnboardingWelcome() {
         { icon: ArrowLeftRight, label: 'Transações — registre entradas e saídas' },
         { icon: Hash, label: 'Tags — rótulos flexíveis' },
         { icon: LineChart, label: 'Analytics — gráficos e comparações' },
+        { icon: PiggyBank, label: 'Investimentos — simule renda fixa' },
     ]
 
     return (
@@ -86,7 +87,7 @@ export default function OnboardingWelcome() {
                 </ul>
 
                 <p className="text-xs text-gray-500 mb-1">
-                    Menos de 2 minutos — depois você pode reassistir quando quiser pelo botão ? da tela.
+                    Poucos minutos — depois você pode reassistir quando quiser pelo botão ? da tela.
                 </p>
 
                 <div className="flex items-center justify-between gap-2 pt-4 border-t border-border">

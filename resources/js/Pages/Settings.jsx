@@ -92,7 +92,7 @@ export default function Settings() {
                 </div>
 
                 {/* Profile */}
-                <Card className="mb-6">
+                <Card className="mb-6" data-tour="settings-profile">
                     <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <User className="w-4 h-4 text-accent-text" />
                         Perfil
@@ -165,7 +165,7 @@ export default function Settings() {
                 </Card>
 
                 {/* Password */}
-                <Card className="mt-6">
+                <Card className="mt-6" data-tour="settings-password">
                     <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
                         <Lock className="w-4 h-4 text-accent-text" />
                         Alterar senha
@@ -217,7 +217,7 @@ export default function Settings() {
                 </Card>
 
                 {/* Theme */}
-                <Card>
+                <Card data-tour="settings-theme">
                     <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
                         <Palette className="w-4 h-4 text-accent-text" />
                         Aparência
@@ -257,7 +257,7 @@ export default function Settings() {
                 </Card>
 
                 {/* Install app */}
-                <Card className="mt-6">
+                <Card className="mt-6" data-tour="settings-install">
                     <h2 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
                         <Download className="w-4 h-4 text-accent-text" />
                         Instalar aplicativo
@@ -335,7 +335,7 @@ export default function Settings() {
                 </Card>
 
                 {/* Danger zone — delete account */}
-                <Card className="mt-6" accent="danger">
+                <Card className="mt-6" accent="danger" data-tour="settings-account">
                     <h2 className="text-base font-semibold text-red-500 mb-2 flex items-center gap-2">
                         <AlertTriangle className="w-4 h-4" />
                         Excluir conta
