@@ -107,6 +107,29 @@ class ClerkExchangeTest extends TestCase
         $this->assertDatabaseHas('users', ['clerk_id' => 'user_test123']);
     }
 
+    public function test_logs_in_with_a_compact_session_token_without_email_claims(): void
+    {
+        // Regressão: o session token padrão do Clerk é enxuto (só sub/sid/sts,
+        // sem `email`). A identidade vem da Backend API — o token não pode
+        // derrubar o exchange com TypeError.
+        Http::fake([
+            'api.clerk.com/v1/users/*' => Http::response($this->clerkUserPayload(), 200),
+        ]);
+
+        $this->postJson('/auth/clerk-exchange', [], [
+            'Authorization' => 'Bearer ' . $this->clerkCompactJwt(),
+        ])->assertOk()->assertJson(['redirect' => '/dashboard']);
+
+        $this->assertAuthenticatedAs(
+            User::where('clerk_id', 'user_test123')->firstOrFail()
+        );
+
+        $this->assertDatabaseHas('users', [
+            'clerk_id' => 'user_test123',
+            'email' => 'nathanbdsilvars@gmail.com',
+        ]);
+    }
+
     public function test_reports_a_failure_when_the_clerk_api_is_unreachable(): void
     {
         Http::fake([

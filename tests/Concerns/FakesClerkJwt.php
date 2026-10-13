@@ -79,6 +79,26 @@ trait FakesClerkJwt
         ], $overrides), $this->clerkPrivateKeyPem, 'RS256', $this->clerkKid);
     }
 
+    /**
+     * Session token enxuto, no formato do template padrão do Clerk: só `sub`,
+     * `sid` e `sts`, sem `email`/`first_name`. É exatamente o que a produção
+     * emite — o exchange tem de sobreviver a ele.
+     */
+    protected function clerkCompactJwt(array $overrides = []): string
+    {
+        return JWT::encode(array_merge([
+            'azp' => $this->clerkAuthorizedParty,
+            'iat' => time(),
+            'nbf' => time() - 10,
+            'exp' => time() + 60,
+            'iss' => $this->clerkIssuer,
+            'sid' => 'sess_test123',
+            'sts' => 'active',
+            'sub' => 'user_test123',
+            'v' => 2,
+        ], $overrides), $this->clerkPrivateKeyPem, 'RS256', $this->clerkKid);
+    }
+
     private function base64Url(string $data): string
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');

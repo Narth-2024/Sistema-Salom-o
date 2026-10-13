@@ -96,14 +96,18 @@ class ClerkCallbackController extends Controller
     }
 
     /**
-     * @return array<string, mixed>|null
+     * Sempre devolve array: o session token padrão do Clerk é enxuto e não
+     * traz `email`/`first_name`. Nesse caso simplesmente não há o que mesclar
+     * e a identidade vem da Backend API.
+     *
+     * @return array<string, mixed>
      */
-    private function claimsAsUser(object $claims, array $fallback): ?array
+    private function claimsAsUser(object $claims, array $fallback): array
     {
         $email = $claims->email ?? null;
 
         if (! is_string($email) || $email === '') {
-            return null;
+            return [];
         }
 
         return [
