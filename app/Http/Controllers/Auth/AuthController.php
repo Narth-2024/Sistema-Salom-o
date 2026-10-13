@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetLink;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -86,7 +89,7 @@ class AuthController extends Controller
         return redirect('/dashboard');
     }
 
-    public function forgotPassword(Request $request): Response|RedirectResponse
+    public function forgotPassword(Request $request): RedirectResponse
     {
         $request->validate([
             'email' => ['required', 'email'],
@@ -96,23 +99,46 @@ class AuthController extends Controller
 
         $user = User::whereRaw('lower(email) = ?', [$email])->first();
 
-        if (! $user) {
-            return back()->withErrors([
-                'email' => 'Nenhuma conta encontrada com este email.',
-            ]);
+        if ($user) {
+            $token = Str::random(64);
+
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $user->email],
+                ['token' => Hash::make($token), 'created_at' => now()]
+            );
+
+            $this->sendResetLink($user, $token);
         }
 
-        $token = Str::random(64);
-
-        DB::table('password_reset_tokens')->updateOrInsert(
-            ['email' => $user->email],
-            ['token' => Hash::make($token), 'created_at' => now()]
+        // Resposta idêntica existindo ou não a conta: sem isso, qualquer pessoa
+        // conseguiria descobrir quem tem cadastro no sistema.
+        return back()->with(
+            'success',
+            'Se existir uma conta com esse email, enviaremos um link de redefinição. Confira sua caixa de entrada.'
         );
+    }
 
+    public function showResetForm(Request $request, string $token): Response
+    {
         return Inertia::render('Auth/Login', [
             'resetToken' => $token,
-            'resetEmail' => $user->email,
+            'resetEmail' => $request->query('email'),
         ]);
+    }
+
+    private function sendResetLink(User $user, string $token): void
+    {
+        $resetUrl = route('password.reset', [
+            'token' => $token,
+            'email' => $user->email,
+        ]);
+
+        try {
+            Mail::to($user->email)->send(new PasswordResetLink($user, $resetUrl));
+        } catch (\Throwable $e) {
+            // Falha de SMTP não pode quebrar a recuperação nem revelar se a conta existe.
+            Log::warning('Não foi possível enviar o email de redefinição de senha: ' . $e->getMessage());
+        }
     }
 
     public function resetPassword(Request $request): RedirectResponse

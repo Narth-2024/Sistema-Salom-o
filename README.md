@@ -158,11 +158,17 @@ SESSION_DRIVER=database
 SESSION_LIFETIME=120
 SESSION_SECURE_COOKIE=true
 
-# E-mail (usado no "esqueci a senha")
+# E-mail (link do "esqueci a senha")
+# Sem isso configurado, o sistema aceita o pedido e registra um aviso no log,
+# mas nenhum email sai.
 MAIL_MAILER=smtp
-MAIL_HOST=...
+MAIL_HOST=smtp.resend.com      # ou smtp-relay.brevo.com / smtp.gmail.com
+MAIL_PORT=465
 MAIL_USERNAME=...
 MAIL_PASSWORD=...
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="nao-responda@seu-dominio.com"
+MAIL_FROM_NAME="Sistema Salomão"
 
 # Segredo do cron de transações recorrentes (Vercel cron -> /cron/recurring?secret=...)
 CRON_SECRET=uma-string-longa-e-aleatoria
@@ -295,7 +301,7 @@ Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em
 | Layout Responsivo | Feito |
 | Campo CPF (coluna no banco) | Coluna pronta, UI pendente |
 | Subcategorias | Não iniciado |
-| Testes automatizados | Feito — 76 testes de feature |
+| Testes automatizados | Feito — 81 testes de feature |
 
 ---
 

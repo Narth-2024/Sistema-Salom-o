@@ -11,11 +11,13 @@ export default function Login({ resetToken, resetEmail }) {
     const [newPassword, setNewPassword] = useState('')
     const [newPasswordConfirmation, setNewPasswordConfirmation] = useState('')
     const [error, setError] = useState(null)
+    const [sent, setSent] = useState(false)
     const [loading, setLoading] = useState(false)
 
     function goBackToLogin() {
         setMode('login')
         setError(null)
+        setSent(false)
         setPassword('')
         setNewPassword('')
         setNewPasswordConfirmation('')
@@ -42,7 +44,9 @@ export default function Login({ resetToken, resetEmail }) {
         setLoading(true)
 
         router.post('/forgot-password', { email }, {
+            preserveState: true,
             onFinish: () => setLoading(false),
+            onSuccess: () => setSent(true),
             onError: (errors) => {
                 setError(errors.email || 'Não foi possível enviar. Tente novamente.')
             },
@@ -85,8 +89,8 @@ export default function Login({ resetToken, resetEmail }) {
 
     const subtitles = {
         login: 'Acesse o Sistema Salomão com seu email e senha.',
-        forgot: 'Informe seu email e geraremos um código de recuperação.',
-        reset: 'Digite o código recebido e escolha uma nova senha.',
+        forgot: 'Informe seu email e enviaremos um link para criar uma nova senha.',
+        reset: 'Escolha uma nova senha para a sua conta.',
     }
 
     return (
@@ -147,7 +151,22 @@ export default function Login({ resetToken, resetEmail }) {
                 </form>
             )}
 
-            {mode === 'forgot' && (
+            {mode === 'forgot' && sent && (
+                <div className="space-y-5" role="status" aria-live="polite">
+                    <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 space-y-2">
+                        <p className="text-sm font-semibold text-accent-text">Link de recuperação enviado</p>
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                            Se existir uma conta com <span className="font-medium break-all">{email}</span>, você
+                            recebeu um email com o link para criar uma nova senha. Não esqueça de checar a caixa de spam.
+                        </p>
+                    </div>
+                    <Button type="button" variant="primary" className="w-full" onClick={goBackToLogin}>
+                        Voltar ao login
+                    </Button>
+                </div>
+            )}
+
+            {mode === 'forgot' && !sent && (
                 <form onSubmit={handleForgot} className="space-y-4">
                     <Input
                         label="Email"
@@ -160,7 +179,7 @@ export default function Login({ resetToken, resetEmail }) {
                         required
                     />
                     <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-                        {loading ? 'Gerando código…' : 'Gerar código'}
+                        {loading ? 'Enviando…' : 'Enviar link por email'}
                     </Button>
                     <p className="text-sm text-gray-500 text-center pt-2 border-t border-border">
                         <button
@@ -176,14 +195,16 @@ export default function Login({ resetToken, resetEmail }) {
 
             {mode === 'reset' && (
                 <form onSubmit={handleReset} className="space-y-4">
-                    <Input
-                        label="Código de recuperação"
-                        icon={ShieldCheck}
-                        placeholder="Cole o código aqui"
-                        value={token}
-                        onChange={e => setToken(e.target.value)}
-                        required
-                    />
+                    {!resetToken && (
+                        <Input
+                            label="Código de recuperação"
+                            icon={ShieldCheck}
+                            placeholder="Cole o código do email aqui"
+                            value={token}
+                            onChange={e => setToken(e.target.value)}
+                            required
+                        />
+                    )}
                     <Input
                         label="Nova senha"
                         type="password"
@@ -207,7 +228,7 @@ export default function Login({ resetToken, resetEmail }) {
                         required
                     />
                     <p className="text-xs text-gray-500">Mínimo de 8 caracteres.</p>
-                    <Button type="submit" variant="primary" className="w-full" disabled={loading || !token}>
+                    <Button type="submit" variant="primary" className="w-full" disabled={loading || (!resetToken && !token)}>
                         {loading ? 'Redefinindo…' : 'Redefinir senha'}
                     </Button>
                     <p className="text-sm text-gray-500 text-center pt-2 border-t border-border">
