@@ -25,6 +25,7 @@ server.log
 *.sqlite
 *.sqlite3
 *.sage
+*.deb
 Thumbs.db
 .DS_Store
 .Directory

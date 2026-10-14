@@ -60,11 +60,27 @@ Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no f
 - **Exclusão reversível (soft delete)** — transações, categorias e tags vão para a lixeira e podem ser restauradas
 - **Exclusão de conta (LGPD)** — o usuário apaga definitivamente sua conta e dados
 - **Perfil** — edição de nome, e-mail e senha, com upload de avatar no Supabase Storage
-- **PWA instalável** — instala no celular e funciona offline (service worker + manifest)
+- **PWA instalável** — instala no celular como aplicativo e tem modo offline de leitura (manifest, ícones, service worker e banner de instalação)
 - **Tema claro/escuro** — alternância persistida no navegador
 - **Tour guiado e checklist de onboarding** — visita guiada às telas (driver.js)
 - **Acessibilidade** — skip link, navegação por teclado com focus trap, `aria-live` em avisos e contraste ajustado
 - **Design responsivo** — sidebar no desktop, navegação inferior no mobile
+
+### PWA e modo offline
+
+O app é instalável pelo navegador — **Chrome/Edge** no Android (a barra de endereço oferece "Instalar aplicativo") e **Safari** no iOS, pelo menu *Compartilhar → Adicionar à Tela de Início*. Depois de instalado, abre em tela cheia, sem barra de endereço, e o banner de instalação também aparece na Dashboard.
+
+O **service worker** (`public/sw.js`) define o comportamento sem conexão:
+
+| Situação | O que acontece offline |
+|---|---|
+| Shell da aplicação (JS/CSS) | Pré-cacheado na instalação |
+| Páginas já visitadas | Servidas do cache — os dados exibidos são os da última visita |
+| Página nunca visitada | Tela `offline.html` |
+| Barra no topo | "Sem conexão — exibindo dados salvos" |
+| Criar, editar ou excluir | **Exige conexão** — não há fila de envio |
+
+O modo offline é, portanto, de **leitura**: serve para consultar o que já foi carregado. Inserir ou alterar dados continua precisando de internet.
 
 ---
 
