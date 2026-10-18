@@ -65,6 +65,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/transactions/{transaction}/restore', [TransactionController::class, 'restore'])->withTrashed()->name('transactions.restore');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::post('/settings/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
-    Route::post('/settings/password', [ProfileController::class, 'updatePassword'])->name('settings.password.update');
+    // A troca de senha não tem rota aqui: o login é do Clerk, que cuida da senha.
     Route::delete('/settings/profile', [ProfileController::class, 'destroy'])->name('settings.profile.destroy');
 });

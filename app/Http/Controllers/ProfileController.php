@@ -7,7 +7,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -51,39 +50,22 @@ class ProfileController extends Controller
         return back()->with('success', 'Perfil atualizado com sucesso.');
     }
 
-    public function updatePassword(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'current_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $user = $request->user();
-
-        if (! Hash::check($request->current_password, $user->password)) {
-            throw ValidationException::withMessages([
-                'current_password' => 'A senha atual está incorreta.',
-            ]);
-        }
-
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
-
-        return back()->with('success', 'Senha alterada com sucesso.');
-    }
-
     public function destroy(Request $request): RedirectResponse
     {
         $request->validate([
-            'password' => ['required', 'string'],
+            'confirmation' => ['required', 'string'],
+        ], [
+            'confirmation.required' => 'Digite seu e-mail para confirmar.',
         ]);
 
         $user = $request->user();
 
-        if (! Hash::check($request->password, $user->password)) {
+        // A confirmação é o próprio e-mail da conta. Não usamos a senha porque o
+        // login é do Clerk: o campo `password` do banco recebe um valor aleatório
+        // gerado no ClerkUserSync e que ninguém conhece — a checagem nunca passaria.
+        if (! hash_equals((string) $user->email, (string) $request->input('confirmation'))) {
             throw ValidationException::withMessages([
-                'password' => 'A senha está incorreta.',
+                'confirmation' => 'O e-mail digitado não corresponde ao da sua conta.',
             ]);
         }
 
@@ -99,6 +81,13 @@ class ProfileController extends Controller
             }
         }
 
+        // Encerra a sessão ANTES de excluir. O Auth::logout() gira o remember token
+        // do usuário (cycleRememberToken → $user->save()); se a linha já tivesse
+        // sido apagada, esse save faria um INSERT e ressuscitaria a conta.
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         // Remove dados vinculados (hard delete de tudo, incluindo lixeira)
         $transactionIds = $user->transactions()->withTrashed()->pluck('id');
         if ($transactionIds->isNotEmpty()) {
@@ -109,10 +98,6 @@ class ProfileController extends Controller
         $user->tags()->withTrashed()->forceDelete();
         $user->investmentSimulations()->forceDelete();
         $user->delete();
-
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         return redirect()->route('home')
             ->with('success', 'Sua conta e todos os dados foram excluídos definitivamente.');

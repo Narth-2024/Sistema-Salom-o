@@ -26,15 +26,6 @@ export function toNumberString(raw) {
     return s
 }
 
-// Valida se a string normalizada é um número válido e dentro dos limites.
-export function isValidAmount(normalized, { min = 0.01, max = 99999999.99 } = {}) {
-    if (normalized === '' || normalized === null || normalized === undefined) return false
-    const n = Number(normalized)
-    if (!Number.isFinite(n)) return false
-    if (n < min || n > max) return false
-    return true
-}
-
 // Formata para exibição amigável com vírgula decimal (usado em inputs).
 export function formatForInput(raw) {
     const normalized = toNumberString(raw)

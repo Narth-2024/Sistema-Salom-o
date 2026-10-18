@@ -168,7 +168,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\SupabaseServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -182,8 +181,6 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        'Supabase' => App\Facades\Supabase::class,
-    ])->toArray(),
+    'aliases' => Facade::defaultAliases()->toArray(),
 
 ];

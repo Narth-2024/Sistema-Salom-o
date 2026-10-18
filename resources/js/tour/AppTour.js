@@ -331,9 +331,9 @@ const SEGMENTS = [
             {
                 element: '[data-tour="settings-password"]',
                 popover: {
-                    title: 'Alterar senha',
+                    title: 'Senha de acesso',
                     description:
-                        'Troque sua senha quando quiser, confirmando a atual. Mínimo de 8 caracteres.',
+                        'A senha é gerenciada pelo Clerk. Se precisar trocar, use "Esqueci minha senha" na tela de login.',
                     side: 'top',
                 },
             },
