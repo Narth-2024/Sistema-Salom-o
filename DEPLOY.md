@@ -73,8 +73,6 @@ Cadastre em `Settings → Environment Variables` (ou via CLI):
 | `CLERK_WEBHOOK_SECRET` | `whsec_...` | secret — signing secret do Svix |
 | `SUPABASE_URL` | `https://nozlarpehjgalsvwtwlj.supabase.co` | |
 | `SUPABASE_SERVICE_KEY` | JWT `eyJ...` (**service_role**) | secret |
-| `SUPABASE_PUBLISHABLE_KEY` | JWT `eyJ...` (**anon**) | |
-| `CPF_API_TOKEN` | token gov.br | secret |
 | `VITE_CLERK_PUBLISHABLE_KEY` | igual ao `CLERK_PUBLISHABLE_KEY` | |
 | `VITE_APP_NAME` | `${APP_NAME}` | |
 | `INERTIA_SSR_ENABLED` | `false` | |
@@ -121,7 +119,7 @@ O projeto aceita **somente as chaves legacy em formato JWT (`eyJ...`)**:
 
 1. Dashboard do Supabase → **Project Settings → API**
 2. Revele as **legacy keys** (`anon` e `service_role`)
-3. `service_role` → `SUPABASE_SERVICE_KEY`; `anon` → `SUPABASE_PUBLISHABLE_KEY`
+3. `service_role` → `SUPABASE_SERVICE_KEY` (o código não usa a chave `anon`)
 
 Sintomas de chave errada: Storage `403 Invalid Compact JWS`,
 PostgREST `PGRST301 Expected 3 parts in JWT`.
