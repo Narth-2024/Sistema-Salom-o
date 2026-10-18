@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 // Eventos do Clerk (cadastro/atualização/exclusão de usuário).
 // A assinatura Svix é conferida dentro do controller.
 //
-// Observação: antes havia aqui um GET /api/user protegido por auth:sanctum.
-// Ele nunca era consumido pelo front (a sessão é do Laravel, não um token de
-// API), então foi removido — o que torna o Sanctum de fato sem uso no projeto.
+// Não existe nenhuma rota de API autenticada por token: a aplicação é uma SPA
+// com sessão do Laravel. Por isso o Sanctum — e a tabela personal_access_tokens
+// dele — foi removido do projeto.
 Route::post('/clerk/webhook', ClerkWebhookController::class);
