@@ -59,7 +59,7 @@ Construída com **Laravel 10 + Inertia.js** (arquitetura SPA), **React 19** no f
 - **Exportação CSV** — baixa o histórico com os filtros aplicados
 - **Exclusão reversível (soft delete)** — transações, categorias e tags vão para a lixeira e podem ser restauradas
 - **Exclusão de conta (LGPD)** — o usuário apaga definitivamente sua conta e dados
-- **Perfil** — edição de nome, e-mail e senha, com upload de avatar no Supabase Storage
+- **Perfil** — edição de nome e upload de avatar no Supabase Storage
 - **PWA instalável** — instala no celular como aplicativo e tem modo offline de leitura (manifest, ícones, service worker e banner de instalação)
 - **Tema claro/escuro** — alternância persistida no navegador
 - **Tour guiado e checklist de onboarding** — visita guiada às telas (driver.js)
@@ -218,8 +218,8 @@ app-salomao/
 │   ├── Policies/                    # Category, Transaction, Tag (escopadas por dono)
 │   ├── Providers/
 │   └── Services/                    # AnalyticsService, InvestmentForecastService,
-│                                    # SupabaseService, SupabaseStorageService,
-│                                    # ClerkTokenValidator, ClerkUserSync
+│                                    # SupabaseStorageService, ClerkTokenValidator,
+│                                    # ClerkUserSync
 ├── config/                          # Configuração da aplicação
 ├── database/
 │   ├── factories/
@@ -270,7 +270,7 @@ app-salomao/
 - **Validação de entrada** — todo input validado antes do processamento
 - **Recuperação de senha sem SMTP** — o "esqueci a senha" é resolvido pela infraestrutura de e-mail do próprio Clerk; o projeto não precisa de provedor
 - **Identidade provada por token** — a troca de sessão lê o `sub` de um JWT cuja assinatura é conferida contra o JWKS do Clerk, junto com `iss` e `azp`; o corpo da requisição não tem peso
-- **Exclusão de conta com confirmação de senha** — endpoint LGPD exige senha atual
+- **Exclusão de conta com confirmação de e-mail** — endpoint LGPD exige o e-mail da própria conta; a senha é do Clerk e o Laravel não a conhece
 - **Cron protegido por segredo** — `/cron/recurring` valida `CRON_SECRET` antes de rodar
 - **Proteção XSS** — escaping server-side do Inertia + proteção nativa do React
 - **`APP_DEBUG=false` em produção** — mensagens de erro detalhadas nunca expostas ao usuário
@@ -319,7 +319,7 @@ Se você encontrar uma falha de segurança, **não abra uma issue pública**. Em
 | Layout Responsivo | Feito |
 | Campo CPF (coluna no banco) | Coluna pronta, UI pendente |
 | Subcategorias | Não iniciado |
-| Testes automatizados | Feito — 82 testes (feature + unit) |
+| Testes automatizados | Feito — 92 testes (feature + unit) |
 
 ---
 
