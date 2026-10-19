@@ -370,7 +370,7 @@ const SEGMENTS = [
                 popover: {
                     title: 'Excluir conta',
                     description:
-                        'A zona de risco: apaga definitivamente a sua conta e todos os dados — transações, categorias, tags e simulações. Pedimos a senha para confirmar, e essa ação não pode ser desfeita.',
+                        'A zona de risco: apaga definitivamente a sua conta e todos os dados — transações, categorias, tags e simulações. Pedimos que você digite seu e-mail para confirmar, e essa ação não pode ser desfeita.',
                     side: 'top',
                 },
             },
