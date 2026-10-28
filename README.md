@@ -107,7 +107,7 @@ O modo offline é, portanto, de **leitura**: serve para consultar o que já foi 
 
 - PHP 8.1+
 - Composer 2.x
-- Node.js 18+ e npm
+- Node.js 20.19+ e npm (o Vite 7 exige essa versão)
 - PostgreSQL 14+ (ou conta no Supabase)
 - Conta na [Vercel](https://vercel.com) para deploy (opcional, apenas para publicar)
 
@@ -154,39 +154,59 @@ APP_KEY=base64:...
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
+LOG_CHANNEL=stderr
+
 # Banco de dados (PostgreSQL do Supabase)
+# A conexão padrão se chama "supabase" (config/database.php) e usa sslmode=require.
 # Local: host direto db.xxxxx.supabase.co (IPv6)
 # Produção (Vercel): session pooler IPv4 -> aws-1-sa-east-1.pooler.supabase.com
 #                    DB_USERNAME=postgres.xxxxx (ref anexada)
-DB_CONNECTION=pgsql
+DB_CONNECTION=supabase
 DB_HOST=db.xxxxx.supabase.co
 DB_PORT=5432
 DB_DATABASE=postgres
 DB_USERNAME=postgres
 DB_PASSWORD=sua-senha
 
-# Supabase (chaves em formato JWT, Dashboard -> Settings -> API)
+# Supabase (chaves LEGACY em formato JWT, Dashboard -> Settings -> API)
+# As chaves sb_secret_/sb_publishable_ não funcionam (Storage/PostgREST rejeitam).
 SUPABASE_URL=https://xxxxx.supabase.co
 SUPABASE_SERVICE_KEY=eyJ...     # service_role
-SUPABASE_PUBLISHABLE_KEY=eyJ... # anon
 
-# Sessão
-SESSION_DRIVER=database
+# Autenticação (Clerk) — login, cadastro e recuperação de senha
+# Chaves em dashboard.clerk.com -> API keys. Sem elas o acesso local não funciona.
+CLERK_PUBLISHABLE_KEY=pk_test_...
+# O Vite só injeta no bundle as variáveis com prefixo VITE_.
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+# Frontend API usada como `iss` na validação do session token.
+CLERK_FRONTEND_API_URL=https://SEU-DOMINIO.clerk.accounts.dev
+# Origem aceita no claim `azp`. Vazio = aceita APP_URL + localhost:5173/8000.
+CLERK_AUTHORIZED_PARTY=
+# Signing secret do endpoint do Svix (webhook de usuários).
+CLERK_WEBHOOK_SECRET=whsec_...
+
+# Sessão / cache (produção na Vercel: FS efêmero -> session em cookie, cache em memória)
+SESSION_DRIVER=cookie
 SESSION_LIFETIME=120
 SESSION_SECURE_COOKIE=true
+CACHE_DRIVER=array
 
-# E-mail (não é usado para autenticação — o Clerk cuida do "esqueci a senha")
-MAIL_MAILER=smtp
-MAIL_HOST=smtp-relay.brevo.com  # ou smtp.resend.com / smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=...
-MAIL_PASSWORD=...
-MAIL_ENCRYPTION=tls
+# Inertia
+INERTIA_SSR_ENABLED=false
+INERTIA_USE_SCRIPT_ELEMENT_FOR_INITIAL_PAGE=true
+
+# E-mail — hoje o projeto não envia nenhum e-mail: o "esqueci a senha" é
+# resolvido pela infraestrutura do próprio Clerk. Mantidos só o remetente.
+MAIL_MAILER=log
 MAIL_FROM_ADDRESS="nao-responda@seu-dominio.com"
 MAIL_FROM_NAME="Sistema Salomão"
 
 # Segredo do cron de transações recorrentes (Vercel cron -> /cron/recurring?secret=...)
 CRON_SECRET=uma-string-longa-e-aleatoria
+
+# Frontend
+VITE_APP_NAME="${APP_NAME}"
 ```
 
 > **Nunca commite o arquivo `.env`.** Ele contém credenciais sensíveis e já está listado no `.gitignore`.
@@ -197,14 +217,16 @@ CRON_SECRET=uma-string-longa-e-aleatoria
 
 ```
 app-salomao/
+├── api/
+│   └── index.php                     # Entry point do PHP na Vercel (rewrites do vercel.json)
 ├── app/
-│   ├── Console/Commands/            # transactions:spawn-recurring (transações recorrentes)
-│   ├── Exceptions/                  # Handler de erros
-│   ├── Facades/                     # Facade do Supabase
+│   ├── Console/Commands/             # transactions:spawn-recurring e clerk:import-users
+│   ├── Exceptions/                   # Handler de erros
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── Auth/AuthController.php   # Telas de login/cadastro e logout
 │   │   │   ├── Auth/ClerkCallbackController.php  # Troca a sessão do Clerk por uma do Laravel
+│   │   │   ├── Auth/ClerkWebhookController.php   # Webhook do Clerk (assinatura Svix)
 │   │   │   ├── AnalyticsController.php
 │   │   │   ├── CategoryController.php
 │   │   │   ├── DashboardController.php
@@ -219,7 +241,7 @@ app-salomao/
 │   ├── Providers/
 │   └── Services/                    # AnalyticsService, InvestmentForecastService,
 │                                    # SupabaseStorageService, ClerkTokenValidator,
-│                                    # ClerkUserSync
+│                                    # ClerkTokenException, ClerkUserSync
 ├── config/                          # Configuração da aplicação
 ├── database/
 │   ├── factories/
@@ -239,13 +261,16 @@ app-salomao/
 │   │   ├── lib/                     # Utilitários (decimal, contrast, pwa...)
 │   │   └── tour/                    # AppTour (driver.js)
 │   └── views/                       # Templates Blade
-├── routes/                          # web, api, console, channels
+├── routes/                          # web, api (webhook do Clerk), console, channels
+├── supabase/                        # config.toml do projeto Supabase
 ├── tests/                           # Testes (Unit e Feature)
 │   ├── Unit/
 │   └── Feature/
 ├── .github/workflows/ci.yml         # CI: Pint + testes a cada push/PR
 ├── vercel.json                      # Deploy + cron na Vercel
 ├── pint.json                        # Padronização de código PHP
+├── DEPLOY.md                        # Passo a passo de deploy e problemas comuns
+├── SUPABASE_SETUP.md                # Setup do banco, Storage e chaves
 ├── LICENSE                          # MIT
 ├── .env.example
 ├── composer.json
@@ -270,6 +295,7 @@ app-salomao/
 - **Validação de entrada** — todo input validado antes do processamento
 - **Recuperação de senha sem SMTP** — o "esqueci a senha" é resolvido pela infraestrutura de e-mail do próprio Clerk; o projeto não precisa de provedor
 - **Identidade provada por token** — a troca de sessão lê o `sub` de um JWT cuja assinatura é conferida contra o JWKS do Clerk, junto com `iss` e `azp`; o corpo da requisição não tem peso
+- **Webhook do Clerk validado por assinatura** — `/api/clerk/webhook` confere a assinatura Svix (`CLERK_WEBHOOK_SECRET`) antes de processar qualquer evento
 - **Exclusão de conta com confirmação de e-mail** — endpoint LGPD exige o e-mail da própria conta; a senha é do Clerk e o Laravel não a conhece
 - **Cron protegido por segredo** — `/cron/recurring` valida `CRON_SECRET` antes de rodar
 - **Proteção XSS** — escaping server-side do Inertia + proteção nativa do React
